@@ -8,15 +8,22 @@ const routes_1 = __importDefault(require("./routes/routes"));
 const mysql2_1 = __importDefault(require("mysql2"));
 const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const dotenv_1 = __importDefault(require("dotenv"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-console.log(process.env.DB_HOST);
+const string = process.env.FELIPE;
+console.log(string);
+console.log({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+});
 const db = mysql2_1.default.createConnection({
-    host: "143.106.241.4",
-    user: "cl204218",
-    password: "cl*10112007",
-    database: "cl204218",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
 });
 db.connect((err) => {
     if (err) {
@@ -31,7 +38,6 @@ const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json());
 app.use(routes_1.default);
-dotenv_1.default.config();
 app.use((0, cookie_parser_1.default)());
 const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => {

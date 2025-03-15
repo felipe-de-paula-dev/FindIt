@@ -3,17 +3,16 @@ import routes from "./routes/routes";
 import mysql, { Connection } from "mysql2";
 import cors from "cors";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+
 dotenv.config();
 
-console.log(process.env.DB_HOST);
-
 const db: Connection = mysql.createConnection({
-  host: "143.106.241.4",
-  user: "cl204218",
-  password: "cl*10112007",
-  database: "cl204218",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
 db.connect((err) => {
@@ -34,7 +33,6 @@ app.use(bodyParser.json());
 
 app.use(routes);
 
-dotenv.config();
 app.use(cookieParser());
 
 const PORT = process.env.PORT || 3333;
