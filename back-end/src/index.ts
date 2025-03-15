@@ -5,6 +5,9 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+dotenv.config();
+
+console.log(process.env.DB_HOST);
 
 const db: Connection = mysql.createConnection({
   host: "143.106.241.4",
@@ -34,7 +37,7 @@ app.use(routes);
 dotenv.config();
 app.use(cookieParser());
 
-const PORT = 3333;
+const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
