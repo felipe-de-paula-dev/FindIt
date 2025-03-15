@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <title>A&P - COTIL</title>
+</head>
+<style>
+    #pendentes{
+        background-color: rgb(158, 34, 34);
+    }
+
+    #pendentes:hover{
+        background-color: white;
+        border-color: rgb(158, 34, 34);
+    }
+    #pendentes:hover h1, 
+    #pendentes:hover svg{
+        color: rgb(158, 34, 34);
+        fill: rgb(158, 34, 34);
+    }
+</style>
+<body>
+    <nav>
+        <div class="logo" onclick="inicio()">
+        <h1>A</h1>
+        <p>&</p>
+        <H1>P</H1>
+        </div>
+        <ul>
+            <li>
+                <a href="">
+                    <p onclick="inicio()">INICIO</p>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <p>OBJETOS ENCONTRADOS</p>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <p>VISUALIZAR LOGS</p>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <p>RETIRADAS</p>
+                </a>
+            </li>
+                <li>
+                    <button id="Sair" onclick="Sair()">
+                        <p>SAIR</p>
+                    </button>
+                </li>
+                <li>
+                    <img src="felipe.webp" id="imgUsuario" alt="">
+                </li>
+        </ul>
+    </nav>
+
+    <div class="content">
+    <div class="sistema"><h1>SISTEMA</h1><p>COTIL</p><p id="urlSistema" style="font-size: 1.4rem;"> / Inicio</p></div>
+    <hr>
+    <div class="conteudo">
+        <div class="opcoes" id="opcoes">
+                <div class="opcao" id="aprovados" onclick="aprovados()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="currentColor">
+                        <path d="M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5ZM11.0026 16L6.75999 11.7574L8.17421 10.3431L11.0026 13.1716L16.6595 7.51472L18.0737 8.92893L11.0026 16Z"></path>
+                    </svg>
+                    <h1>OBJETOS APROVADOS</h1>
+                </div>
+                <div class="opcao" id="pendentes" onclick="pendentes()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="currentColor">
+                        <path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path>
+                    </svg>
+                    <h1>OBJETOS PENDENTES</h1>
+                </div>
+                <div class="opcao" id="log" onclick="logs()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="currentColor"><path d="M19 22H5C3.34315 22 2 20.6569 2 19V3C2 2.44772 2.44772 2 3 2H17C17.5523 2 18 2.44772 18 3V15H22V19C22 20.6569 20.6569 22 19 22ZM18 17V19C18 19.5523 18.4477 20 19 20C19.5523 20 20 19.5523 20 19V17H18ZM16 20V4H4V19C4 19.5523 4.44772 20 5 20H16ZM6 7H14V9H6V7ZM6 11H14V13H6V11ZM6 15H11V17H6V15Z"></path></svg>
+                    <h1>LOG DOS OBJETOS</h1>
+                </div>
+                <div class="opcao" id="retirada" onclick="retirada()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="64" height="64" fill="currentColor"><path d="M9 1V3H15V1H17V3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9ZM20 11H4V19H20V11ZM8 13V15H6V13H8ZM13 13V15H11V13H13ZM18 13V15H16V13H18ZM7 5H4V9H20V5H17V7H15V5H9V7H7V5Z"></path></svg>
+                    <h1>RETIRADA</h1>
+                </div>
+                <div class="opcao"  id="usuario" onclick="usuarios()" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" class="lucide lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/></svg>
+                    <h1>USUARIOS</h1>
+                </div>
+                
+        </div>
+        <div class="resumo" id="resumo">
+            <h1>RESUMO DOS ITENS</h1>
+            <p>ITENS ENCONTRADOS: 20</p>
+            <p>ITENS RETIRADOS: 40</p>
+            <canvas id="resumoChart" width="300" height="300"></canvas>
+        </div>
+        <div class="objetosAprovados" id="objetosAprovados" style="display: none;"></div>
+        <div class="objetosPendentes" id="objetosPendentes" style="display: none;"></div>
+        <div class="retiradaObjetos" id="retiradaObjetos" style="display: none;">
+        <h1>Solicitações De Retirada</h1>
+        </div>
+        <div class="logObjetos" id="logObjetos" style="display: none;">
+            <table id="tabelaLogs" border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>ID Log</th>
+                    <th>ID Item</th>
+                    <th>Nome Item</th>
+                    <th>Data Adicionado</th>
+                    <th>Última Movimentação</th>
+                    <th>Situação</th>
+                    <th>Retirado Por</th>
+                    <th>clAluno</th>
+                    <th id="acoes">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- As linhas serão inseridas aqui  -->
+                </tbody>
+              </table>
+        </div>
+        <div class="tabelaUser" id="usuariosAdmin" style="display: none;">
+            <table id="tabelaUser" border="1" cellpadding="10" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Senha</th>
+                    <th>Cargo</th>
+                    <th id="acoes">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- As linhas serão inseridas aqui  -->
+                </tbody>
+              </table>
+        </div>
+    </div>
+    </div>
+   
+    <footer>
+        <p><span>&copy; 2025</span>  - Achados e Perdidos</p>
+    </footer>
+</body>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+<script>
+
+  
+    
+
+    function photo(){    
+    const img = localStorage.getItem('imagemUsuario')
+    if(img){
+        document.getElementById('imgUsuario').src = img;
+    }
+    }
+
+   async function login(){
+    let token = "";
+    token = localStorage.getItem('token');
+
+  if (token) {
+  const response = await fetch('http://localhost:3333/rota-protegida', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}` 
+    }
+  });
+
+    if(!response.ok){
+     console.log('Erro na autenticação:', response.status);
+     return;
+    }
+
+     const data = await response.json();
+     if(data?.rota){
+        document.getElementById('usuario').style.display = 'flex';
+     } 
+
+   } else {
+     console.log('Token não encontrado!');
+   }   
+    }
+
+    login();
+    photo();
+</script>
+</html>

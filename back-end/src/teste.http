@@ -1,0 +1,12 @@
+POST http://localhost:3000/usuarios/disponiveis
+Content-type: application/json
+
+{
+    "nome": "Felipe",
+    "idade": 5
+    
+}
+
+###
+
+PUT http://localhost:3000/usuarios/pendentes/:1

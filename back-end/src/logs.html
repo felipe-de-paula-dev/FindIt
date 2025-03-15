@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .logs{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .log{
+        border: 1px solid gray;
+        padding: 20px;
+    }
+
+    @media print{
+        #acoes, #botoes{
+           display: none;
+        }
+    }
+</style>
+<body>
+    <button onclick="logs()">Clique</button>
+    <div class="logs" id="logs"></div>
+    <table id="tabelaLogs" border="1" cellpadding="10" cellspacing="0">
+        <thead>
+          <tr>
+            <th>ID Log</th>
+            <th>ID Item</th>
+            <th>Nome Item</th>
+            <th>Data Adicionado</th>
+            <th>Última Movimentação</th>
+            <th>Situação</th>
+            <th>Retirado Por</th>
+            <th>clAluno</th>
+            <th id="acoes">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- As linhas serão inseridas aqui  -->
+        </tbody>
+      </table>
+    <script src="script.js"></script>
+</body>
+</html>

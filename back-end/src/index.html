@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Dados</title>
+</head>
+<body>
+    <form id="meuForm">
+        <input type="text" id="nome_item" placeholder="Nome" required />
+        <input type="date" name="Data" id="date">
+        <select name="local" id="local">d
+            <option value="" selected disabled>Escolha uma Opção</option>
+            <option value="Sala">Sala De Aula</option>
+            <option value="Biblioteca">Biblioteca</option>
+            <option value="Portaria">Portaria</option>
+            <option value="Patio">Patio</option>
+            <option value="Faculdade">FT - Faculdade</option>
+            <option value="outro">Outros</option>
+        </select>
+        <input type="text" id="extra_local" placeholder="Informe a Sala" required disabled style="visibility: hidden;"/>
+        <input type="file" name="Imagem" id="imagem_url" name="arquivo" required>
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <form id="formulario">
+        <input type="text" id="text" name="Texto" />
+        <button type="button" onclick="enviar()">Enviar</button>
+    </form>
+    
+    
+    <button onclick="usuario()">Clique</button>
+    <button onclick="usuariodisponivel()">Clique para exibir</button>
+
+    <div id="tste"></div>
+    <script>
+    const local = document.getElementById('local');
+    const extra = document.getElementById('extra_local');
+
+    local.addEventListener('change', function() {
+    if (local.value === "Sala") {
+    extra.style.visibility = 'visible';
+    extra.disabled = false;
+    } else {
+    extra.style.visibility = 'hidden';
+    extra.disabled = true;
+    }
+    });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

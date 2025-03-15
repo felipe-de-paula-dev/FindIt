@@ -1,0 +1,531 @@
+body{
+    background-color: #f5f4f4;
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto Mono", serif;
+    user-select: none;
+    padding-bottom: 3rem;
+}
+
+#Sair{
+    transition: all .3s;
+}
+
+#Sair:hover{
+    cursor: pointer;
+    transform: scale(1.15);
+    background-color: #C0392B;
+    transition: all .3s;
+}
+
+nav{
+    margin-top: 1rem;
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+nav .logo{
+    display: flex;
+    align-items:  baseline;
+    color: #426B1F;
+    transition: all .2s ease-in-out;
+}
+
+nav .logo:hover{
+    cursor: pointer;
+    transform: scale(1.15);
+    transition: all .2s ease-in-out;
+}
+
+
+nav .logo h1{
+    font-family: "Playfair Display", serif;
+    font-size: 5rem;
+}
+
+nav .logo p{
+    font-size: 2rem;
+}
+
+nav ul{
+    display: flex;
+    list-style: none;
+    gap: 3rem;
+    align-items: center;
+}
+
+nav ul img{
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    border: 3px solid #426B1F;
+    box-shadow: 2px 2px 20px -5px rgba(0,0,0,0.75);
+}
+
+nav ul li button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    border: none;
+    background-color: #426B1F;
+    color: white;
+    width: 100px;
+    height: 40px;
+}
+
+nav ul li a{
+    text-decoration: none;
+    color: black;
+}
+
+.content{
+    width: 90%;
+    margin: 0 auto;
+}
+
+.content .sistema{
+    margin-top: -2rem;
+    gap: 1rem;
+    display: flex;
+    align-items: baseline;
+    margin-bottom: -2rem;
+}
+
+.content .sistema h1{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 3rem;
+    font-weight: 500;
+}
+
+.content .sistema p{
+    font-size: 2rem;
+}
+
+#txtMenu{
+    font-size: 2rem;
+}
+
+.content .opcoes {
+    margin-top: 2rem;
+    border: 1px solid rgb(202, 201, 201);
+    border-radius: 20px;
+    margin-right: 1rem;
+    padding: 20px;
+    background-color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    height: min-content;
+    width: max-content;
+    gap: .7rem;
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+}
+
+.content .opcoes .opcao {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    width: 150px;  
+    height: 150px;
+    justify-content: center;
+    align-items: center;
+    gap: .8rem;
+    padding: .7rem;
+    background-color: #426B1F;
+    border: 1px solid black;
+    border-radius: 5px;
+    transition: all .2s;
+    flex: 1 1 150px;
+}
+
+
+
+
+.content .opcoes .opcao svg{
+    transform: translateY(20px);
+    width: 60px;
+    height: 60px;
+}
+
+.content .opcoes .opcao:hover{
+    cursor: pointer;
+    transition: all .2s;
+    background-color: white;
+    border: 1px solid #426B1F;
+    transform: scale(1.05);
+}
+
+.content .opcoes .opcao:hover h1, 
+.content .opcoes .opcao:hover svg{
+    fill: #426B1F;
+    color: #426B1F;
+}
+
+.content .opcoes .opcao h1{
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.content .opcoes .opcao svg{
+    fill: white;
+}
+
+.content .conteudo{
+    display: flex;
+    justify-content: center;
+    align-items: safe;
+}
+
+.content .resumo{
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    height: 360px;
+    border: 1px solid rgb(202, 201, 201);
+    background-color: white;
+    border-radius: 20px;
+    padding: 15px;
+    text-wrap: nowrap;
+}
+
+.content .resumo h1{
+    font-size: 1.3rem;
+    margin-bottom: -.5rem;
+}
+
+.content .resumo h2{
+    background-color: #426B1F;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.content .resumo p{
+    margin-bottom: -.5rem;
+}
+
+footer{
+    height: 2rem;
+    width: 100%;
+    background-color: rgba(148, 148, 148, 0.1);
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.1rem;
+}
+
+footer span{
+    color: #426B1F;
+}
+#resumoChart {
+    margin-left: 1rem;
+    margin-top: 1.5rem;
+    max-width: 250px;
+    max-height: 250px;
+}
+
+.filtro {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.filtro h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.filtro input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+}
+
+.filtro button {
+    padding: 0.5rem;
+    background: #426B1F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.filtro button:hover {
+    background: #355315;
+}
+
+.fade-out {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease-in-out;
+}
+
+/* DIV Item */
+.retiradaObjetos .Item button {
+    background-color: #355315;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 1rem;
+}
+
+.retiradaObjetos .Item{
+    height: 400px;
+    padding-bottom: 3rem;
+}
+
+.Item{
+    width: 200px;
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    padding: 2rem;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+.Item:hover{
+    border-radius: 20px;
+}
+
+.Item p{
+    margin: 5px;
+}
+.Item button {
+    background-color: #355315;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 1.5rem;
+}
+
+.Item button:hover {
+    cursor: pointer;
+    background-color: #C0392B;
+    transform: scale(1.05);
+}
+
+.Item button:active {
+    background-color: #9B2D1D;
+}
+
+
+.Item:hover p{
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.Item img {
+    max-width: 100%;
+    max-height: 100%;
+    width: 192px;
+    height: 192px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease, object-fit 0.3s ease, border-radius 0.3s ease;
+}
+
+.Item:hover img {
+    object-fit: contain;
+    transform: scale(1.5) translateY(-20%);
+    border-radius: 20px;
+}
+
+/*--Mapa--*/
+
+.mapaObjeto h1{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: left;
+    margin: 0;
+    font-weight: 400;
+}
+
+.mapaObjeto{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    gap: 2rem;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+.mapaObjeto button {
+    background-color: #355315;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.mapaObjeto button:hover {
+    cursor: pointer;
+    background-color: #C0392B;
+    transform: scale(1.05);
+}
+
+.mapaObjeto button:active {
+    background-color: #9B2D1D;
+}
+
+.mapaObjeto svg{
+    transition: all .3s;
+    fill: red;
+    position: absolute;
+    left: 90%;
+    top: 5%;
+}
+
+.mapaObjeto svg:hover{
+    cursor: pointer;
+    transition: all .3s;
+    transform: scale(1.1) rotate(90deg);
+}
+
+/*--Produtos--*/
+
+.objetosAprovados, .objetosPendentes, .retiradaObjetos{
+    transform: translateY(2rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    gap: 2rem;
+    width: 90%;
+}
+
+/*--Tabela Log--*/
+
+#tabelaLogs {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-family: Arial, sans-serif;
+  }
+  
+  #tabelaLogs th, #tabelaLogs td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  #tabelaLogs th {
+    background-color: #355315;
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  
+  
+  #tabelaLogs tr:hover {
+    background-color: #ddd;
+  }
+  
+  #tabelaLogs button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    margin: 2px;
+  }
+  
+  #tabelaLogs button:first-child {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  #tabelaLogs button:first-child:hover {
+    background-color: #c82333;
+  }
+  
+
+
+
+/*--Tabela User--*/
+
+#tabelaUser {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-family: Arial, sans-serif;
+  }
+  
+  #tabelaUser th, #tabelaUser td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  #tabelaUser th {
+    background-color: #355315;
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  
+  
+  #tabelaUser tr:hover {
+    background-color: #ddd;
+  }
+  
+  #tabelaUser button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    margin: 2px;
+  }
+  
+  #tabelaUser button:first-child {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  #tabelaUser button:first-child:hover {
+    background-color: #c82333;
+  }
+  
+
+
+
