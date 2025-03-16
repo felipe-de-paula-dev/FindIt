@@ -39,7 +39,7 @@ export function ObjetosPendentes() {
     if (result.isConfirmed) {
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/usuarios/pendentes/${id}`,
+          `https://findit-08qb.onrender.com/itens/pendentes/${id}`,
           {
             method: "PUT",
             headers: {
@@ -82,7 +82,7 @@ export function ObjetosPendentes() {
     if (result.isConfirmed) {
       try {
         const responseUsuario = await fetch(
-          `https://findit-08qb.onrender.com/usuarios/excluir/${id}`,
+          `https://findit-08qb.onrender.com/itens/excluir/${id}`,
           {
             method: "DELETE",
             headers: {

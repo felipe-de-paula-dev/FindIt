@@ -218,16 +218,13 @@ routes.get("/itens/disponiveis/search", async (req: Request, res: Response) => {
   });
 });
 
-routes.put(
-  "/usuarios/pendentes/:id_item",
-  async (req: Request, res: Response) => {
-    const { id_item } = req.params;
-    const status = "Disponivel";
+routes.put("/itens/pendentes/:id_item", async (req: Request, res: Response) => {
+  const { id_item } = req.params;
+  const status = "Disponivel";
 
-    const sql = `UPDATE itens_perdidos SET status = ? WHERE id_item = ?`;
-    const [result] = await db.promise().query(sql, [status, id_item]);
-  }
-);
+  const sql = `UPDATE itens_perdidos SET status = ? WHERE id_item = ?`;
+  const [result] = await db.promise().query(sql, [status, id_item]);
+});
 
 routes.put("/retirarItem/:id_item", async (req: Request, res: Response) => {
   const { id_item } = req.params;
