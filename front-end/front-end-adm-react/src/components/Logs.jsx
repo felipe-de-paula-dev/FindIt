@@ -29,7 +29,7 @@ export function Logs() {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3333/logs/excluir/${id}`, {
+        fetch(`https://findit-08qb.onrender.com/logs/excluir/${id}`, {
           method: "DELETE",
         })
           .then(() => {
@@ -50,7 +50,7 @@ export function Logs() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("http://localhost:3333/logs", {
+        const response = await fetch("https://findit-08qb.onrender.com/logs", {
           method: "GET",
         });
         const data = await response.json();

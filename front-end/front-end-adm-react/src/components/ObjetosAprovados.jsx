@@ -31,7 +31,7 @@ export function ObjetosAprovados() {
     async function fetchData() {
       try {
         const response = await fetch(
-          `http://localhost:3333/itens/disponiveis/search?query=${search}&location=${locationObject}&campus=${campus}`
+          `https://findit-08qb.onrender.com/itens/disponiveis/search?query=${search}&location=${locationObject}&campus=${campus}`
         );
         const data = await response.json();
         setData(data);
@@ -62,7 +62,7 @@ export function ObjetosAprovados() {
     if (result.isConfirmed) {
       try {
         const responseItem = await fetch(
-          `http://localhost:3333/usuarios/excluir/${id}`,
+          `https://findit-08qb.onrender.com/usuarios/excluir/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -76,7 +76,7 @@ export function ObjetosAprovados() {
         }
 
         const responseLog = await fetch(
-          `http://localhost:3333/logs/excluirIdItem/${id}`,
+          `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`,
           {
             method: "DELETE",
             headers: {

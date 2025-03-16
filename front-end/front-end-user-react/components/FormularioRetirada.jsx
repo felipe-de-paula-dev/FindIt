@@ -52,13 +52,16 @@ export function FormularioRetirada() {
     };
 
     try {
-      const response = await fetch("http://localhost:3333/itens/retiradas", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dadosRetirada),
-      });
+      const response = await fetch(
+        "https://findit-08qb.onrender.com/itens/retiradas",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dadosRetirada),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erro ao registrar a retirada");

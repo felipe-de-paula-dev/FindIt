@@ -18,9 +18,12 @@ export function Map() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(`http://localhost:3333/mapa/${id}`, {
-          method: "GET",
-        });
+        const response = await fetch(
+          `https://findit-08qb.onrender.com/mapa/${id}`,
+          {
+            method: "GET",
+          }
+        );
         const data = await response.json();
         setLocalEncontrado(data[0].local_encontrado.toLowerCase());
         setCampus(data[0].campus);
@@ -74,7 +77,7 @@ export function Map() {
       locais = campus2;
     }
 
-    console.log(locais)
+    console.log(locais);
 
     if (!Object.keys(locais).includes(Mapa)) {
       if (campus == 1) {

@@ -24,10 +24,13 @@ export function UserAdd() {
     formData.append("imgUserPhoto", imgUserPhoto);
 
     try {
-      const response = await fetch("http://localhost:3333/user/create", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://findit-08qb.onrender.com/user/create",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         setAlert({ type: "success", message: "Usuário Criado Com Sucesso!" });

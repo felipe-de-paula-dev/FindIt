@@ -27,7 +27,7 @@ export function Objetos({ search, location, campus }) {
     async function fetchData() {
       try {
         const response = await fetch(
-          `http://findit/itens/disponiveis/search?query=${search}&location=${location}&campus=${campus}`
+          `https://findit-08qb.onrender.com/itens/disponiveis/search?query=${search}&location=${location}&campus=${campus}`
         );
         const result = await response.json();
         setData(result);

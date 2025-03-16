@@ -39,7 +39,7 @@ export function ObjetosPendentes() {
     if (result.isConfirmed) {
       try {
         const response = await fetch(
-          `http://localhost:3333/usuarios/pendentes/${id}`,
+          `https://findit-08qb.onrender.com/usuarios/pendentes/${id}`,
           {
             method: "PUT",
             headers: {
@@ -82,7 +82,7 @@ export function ObjetosPendentes() {
     if (result.isConfirmed) {
       try {
         const responseUsuario = await fetch(
-          `http://localhost:3333/usuarios/excluir/${id}`,
+          `https://findit-08qb.onrender.com/usuarios/excluir/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -98,7 +98,7 @@ export function ObjetosPendentes() {
         }
 
         const responseLog = await fetch(
-          `http://localhost:3333/logs/excluir/${id}`,
+          `https://findit-08qb.onrender.com/logs/excluir/${id}`,
           {
             method: "DELETE",
             headers: {
@@ -131,7 +131,7 @@ export function ObjetosPendentes() {
     async function fetchData() {
       try {
         const response = await fetch(
-          `http://localhost:3333/itens/pendentes/search?query=${search}&location=${locationObject}&campus=${campus}`
+          `https://findit-08qb.onrender.com/itens/pendentes/search?query=${search}&location=${locationObject}&campus=${campus}`
         );
         const data = await response.json();
         setData(data);

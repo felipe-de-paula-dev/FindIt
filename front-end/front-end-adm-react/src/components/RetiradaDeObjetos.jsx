@@ -16,7 +16,7 @@ export function RetiradaDeObjetos() {
     async function fetchData() {
       try {
         const response = await fetch(
-          `http://localhost:3333/retirada/search?query=${search}&location=${locationObject}&campus=${campus}`
+          `https://findit-08qb.onrender.com/retirada/search?query=${search}&location=${locationObject}&campus=${campus}`
         );
         const result = await response.json();
         setData(result);
@@ -75,9 +75,12 @@ export function RetiradaDeObjetos() {
         });
 
         if (result.isConfirmed) {
-          await fetch(`http://localhost:3333/retirada/excluir/${id}`, {
-            method: "DELETE",
-          });
+          await fetch(
+            `https://findit-08qb.onrender.com/retirada/excluir/${id}`,
+            {
+              method: "DELETE",
+            }
+          );
           Swal.fire({
             icon: "success",
             title: "Deletado!",
@@ -97,7 +100,7 @@ export function RetiradaDeObjetos() {
 
         if (result.isConfirmed) {
           response = await fetch(
-            `http://localhost:3333/retirada/aprovar/${id}`,
+            `https://findit-08qb.onrender.com/retirada/aprovar/${id}`,
             {
               method: "PUT",
             }
