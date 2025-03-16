@@ -23,4 +23,6 @@ Sistema de Achados e Perdidos desenvolvido com Node.js, TypeScript e MySQL.
    git clone https://github.com/felipe-de-paula-dev/FindIt
    ```
 
-## Feito Por: Felipe De Paula
+## Feito Por:
+
+- Felipe De Paula
