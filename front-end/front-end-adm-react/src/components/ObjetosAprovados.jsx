@@ -62,7 +62,7 @@ export function ObjetosAprovados() {
     if (result.isConfirmed) {
       try {
         const responseItem = await fetch(
-          `https://findit-08qb.onrender.com/usuarios/excluir/${id}`,
+          `https://findit-08qb.onrender.com/itens/excluir/${id}`,
           {
             method: "DELETE",
             headers: {
