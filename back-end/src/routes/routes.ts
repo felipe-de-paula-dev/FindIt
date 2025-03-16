@@ -55,7 +55,7 @@ routes.post(
     try {
       const { nome_item, data_encontrado, local_encontrado, campus } = req.body;
       const imagem_url = req.file
-        ? `http://localhost:3333/uploads/${req.file.filename}`
+        ? `https://findit-08qb.onrender.com/uploads/${req.file.filename}`
         : null;
       const status = "Pendente";
 
@@ -239,7 +239,7 @@ routes.put("/retirarItem/:id_item", async (req: Request, res: Response) => {
 
   try {
     const response = await axios.delete(
-      `http://localhost:3333/itens/excluir/${id_item}`
+      `https://findit-08qb.onrender.com/itens/excluir/${id_item}`
     );
 
     res.json({ message: "Rota chamada com sucesso", data: response.data });
@@ -408,10 +408,12 @@ routes.put("/retirada/aprovar/:id", async (req: Request, res: Response) => {
 
     try {
       await axios
-        .delete(`http://localhost:3333/itens/excluir/${id_item}`)
+        .delete(`https://findit-08qb.onrender.com/itens/excluir/${id_item}`)
         .catch(() => {});
       await axios
-        .delete(`http://localhost:3333/retirada/excluir/${id_retirada}`)
+        .delete(
+          `https://findit-08qb.onrender.com/retirada/excluir/${id_retirada}`
+        )
         .catch(() => {});
 
       res.status(200).json({ message: "Retirada aprovada com sucesso!" });
@@ -589,7 +591,7 @@ routes.post(
   (req: Request, res: Response): void => {
     const { user, senha, cargo_id } = req.body;
     const imgUserPhoto = req.file
-      ? `http://localhost:3333/uploadsUser/${req.file.filename}`
+      ? `https://findit-08qb.onrender.com/uploadsUser/${req.file.filename}`
       : null;
 
     db.query(
