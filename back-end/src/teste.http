@@ -1,9 +1,11 @@
-POST http://localhost:3000/usuarios/disponiveis
+POST https://findit-08qb.onrender.com/user/create
 Content-type: application/json
 
 {
-    "nome": "Felipe",
-    "idade": 5
+    "user": "felipe",
+    "senha": 1234,
+    "cargo_id": 1,
+    "imgUserPhoto": ""
     
 }
 

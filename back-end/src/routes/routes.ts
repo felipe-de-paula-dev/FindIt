@@ -220,6 +220,7 @@ routes.get("/itens/disponiveis/search", async (req: Request, res: Response) => {
 
 routes.get("/ping", (req: Request, res: Response) => {
   res.json({ status: "ok" });
+  console.log("Ping Ok!");
 });
 
 routes.put("/itens/pendentes/:id_item", async (req: Request, res: Response) => {
