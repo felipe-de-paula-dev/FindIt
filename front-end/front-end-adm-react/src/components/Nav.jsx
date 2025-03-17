@@ -12,28 +12,26 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-
 export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
   const [selected, setSelectedOption] = useState("");
   const navigate = useNavigate();
 
-
- async function goToLogin() {
-  const result = await Swal.fire({
-    title: "Você Deseja Sair?",
-    text: "Essa ação é irreversivel!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Sim, Sair",
-    cancelButtonText: "Cancelar",
-  });
-  if (result.isConfirmed) {
-    navigate("/");
-    document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  async function goToLogin() {
+    const result = await Swal.fire({
+      title: "Você Deseja Sair?",
+      text: "Essa ação é irreversivel!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, Sair",
+      cancelButtonText: "Cancelar",
+    });
+    if (result.isConfirmed) {
+      navigate("/");
+      document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
   }
- }
   useEffect(() => {
     onNavOptionComponent(selected);
   }, [selected, onNavOptionComponent]);
@@ -41,7 +39,12 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
   return (
     <div className="flex bg-slate-800 w-min h-screen justify-between items-center flex-col p-2">
       <ul>
-        <ul className="flex items-center mb-[3rem] mt-4">
+        <ul
+          className="flex items-center mb-[3rem] mt-4 hover:cursor-pointer"
+          onClick={() => {
+            onOptionClick("home"), setSelectedOption(""), idClick(1);
+          }}
+        >
           <li>
             <h1 className="text-white text-2xl font-Mulish font-bold">Find</h1>
           </li>
