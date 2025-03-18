@@ -29,6 +29,7 @@ export function Logs() {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
+        setReload(true);
         fetch(`https://findit-08qb.onrender.com/logs/excluir/${id}`, {
           method: "DELETE",
         })
@@ -38,7 +39,6 @@ export function Logs() {
               "O log foi removido com sucesso.",
               "success"
             );
-            setReload(true);
           })
           .catch(() => {
             Swal.fire("Erro!", "Falha ao excluir o log.", "error");
@@ -62,13 +62,13 @@ export function Logs() {
       }
     }
     fetchData();
-  }, [reload]);
+  }, [reload, setReload]);
 
   useEffect(() => {
     setTimeout(() => {
       setReload(false);
     }, 2000);
-  }, [reload]);
+  }, [reload, setReload]);
 
   return (
     <div className="w-full flex flex-col items-center overflow-y-auto h-[calc(100vh-8vh)]  px-6 py-8">

@@ -11,4 +11,9 @@ Content-type: application/json
 
 ###
 
-PUT http://localhost:3000/usuarios/pendentes/:1
+DELETE  http://localhost:3000/excluir-imagem
+Content-type: multipart/form-data
+
+{
+    imagemUrl: "https://res.cloudinary.com/dl8dwltol/image/upload/v1742264516/uploads/img_1742264476235.jpg";
+}

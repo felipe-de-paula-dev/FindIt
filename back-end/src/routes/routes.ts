@@ -8,43 +8,13 @@ import axios from "axios";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { RowDataPacket } from "mysql2"; // Importando tipo para garantir a tipagem
+import upload from "../uploads";
+import cloudinary from "cloudinary";
 
 const routes = Router();
 
 dotenv.config();
 routes.use(cookieParser());
-
-routes.use("/uploads", express.static(path.join(__dirname, "build/uploads")));
-routes.use("/uploads", express.static(path.resolve("build/uploads")));
-routes.use(
-  "/uploadsUser",
-  express.static(path.join(__dirname, "build/uploadsUser"))
-);
-routes.use("/uploadsUser", express.static(path.resolve("build/uploadsUser")));
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "../back-end/build/uploads");
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
-  },
-});
-
-const storageUser = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "..", "uploadsUser");
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, Date.now() + ext);
-  },
-});
-
-const upload = multer({ storage: storage });
-const uploadUser = multer({ storage: storageUser });
 
 // 'Pendente','Disponivel', 'Retirado'
 
@@ -54,9 +24,7 @@ routes.post(
   async (req: Request, res: Response): Promise<void> => {
     try {
       const { nome_item, data_encontrado, local_encontrado, campus } = req.body;
-      const imagem_url = req.file
-        ? `https://findit-08qb.onrender.com/uploads/${req.file.filename}`
-        : null;
+      const imagem_url = req.file ? req.file.path : null;
       const status = "Pendente";
 
       if (!req.file) {
@@ -274,23 +242,51 @@ routes.delete("/itens/excluir/:id", async (req: Request, res: Response) => {
 
     const imgUrl = results[0].imagem_url;
 
-    const fileName = path.basename(imgUrl);
-    const filePath = path.join(__dirname, "../uploads", fileName);
-
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        console.error("Erro ao excluir arquivo", err);
-        return res.status(500).json({ error: "Erro ao excluir arquivo" });
-      }
-
+    if (!imgUrl) {
       const sqlDelete = "DELETE FROM itens_perdidos WHERE id_item = ?";
-
       db.query(sqlDelete, [id], (err) => {
         if (err) {
-          return res.status(500).json({ error: "Item não encontrado" });
+          console.error("Erro ao excluir item", err);
+          return res.status(500).json({ error: "Erro ao excluir item" });
+        }
+        res.json({ message: "Item excluído, mas sem imagem para deletar." });
+      });
+      return;
+    }
+
+    const publicId = path.basename(imgUrl, path.extname(imgUrl));
+    const fullPublicId = `uploads/${publicId}`;
+
+    console.log("Tentando excluir imagem no Cloudinary:", fullPublicId);
+
+    cloudinary.v2.uploader.destroy(fullPublicId, async (err, result) => {
+      if (err) {
+        console.error("Erro ao excluir imagem no Cloudinary", err);
+        return res
+          .status(500)
+          .json({ error: "Erro ao excluir imagem no Cloudinary" });
+      }
+
+      console.log("Imagem excluída do Cloudinary", result);
+
+      const sqlDelete = "DELETE FROM itens_perdidos WHERE id_item = ?";
+      db.query(sqlDelete, [id], async (err) => {
+        if (err) {
+          console.error("Erro ao excluir item", err);
+          return res.status(500).json({ error: "Erro ao excluir item" });
         }
 
-        res.json({ message: "Arquivo Excluido Com Sucesso" });
+        // Exclui os logs associados ao item
+        try {
+          await axios.delete(`http://localhost:3333/logs/excluirIdItem/${id}`);
+          res.json({ message: "Item, imagem e logs excluídos com sucesso!" });
+          console.log("Item, imagem e logs excluídos com sucesso!");
+        } catch (logError) {
+          console.error("Erro ao excluir os logs", logError);
+          res.json({
+            message: "Item e imagem excluídos, mas falha ao excluir logs.",
+          });
+        }
       });
     });
   });
@@ -579,22 +575,71 @@ routes.get("/user", (req: Request, res: Response): void => {
 
 routes.delete("/user/delete/:id", (req: Request, res: Response) => {
   const id = req.params.id;
-  db.query("DELETE FROM usuarios WHERE id = ?", [id], (err) => {
+
+  const sql = "SELECT urlImagem FROM usuarios WHERE id = ?";
+
+  interface Iurl extends RowDataPacket {
+    imagem_url: string;
+  }
+
+  db.query<Iurl[]>(sql, [id], (err, results) => {
     if (err) {
-      return res.status(404).json({ message: "Erro ao deletar", err });
+      console.error("Erro Banco de dados", err);
+      return res.status(500).json({ error: "Erro ao buscar a imagem" });
     }
-    return res.status(202).json({ message: "Usuario Deletado Com Sucesso" });
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Usuario não encontrado" });
+    }
+
+    const urlImagem = results[0].urlImagem;
+
+    if (!urlImagem) {
+      const sqlDelete = "DELETE FROM usuarios WHERE id = ?";
+      db.query(sqlDelete, [id], (err) => {
+        if (err) {
+          console.error("Erro ao excluir Usuario", err);
+          return res.status(500).json({ error: "Erro ao excluir Usuario" });
+        }
+        res.json({ message: "Usuario excluído, mas sem imagem para deletar." });
+        console.log("Usuario excluído, mas sem imagem para deletar");
+      });
+      return;
+    }
+
+    const publicId = path.basename(urlImagem, path.extname(urlImagem));
+    const fullPublicId = `uploadsUser/${publicId}`;
+
+    console.log("Tentando excluir imagem no Cloudinary:", fullPublicId);
+
+    cloudinary.v2.uploader.destroy(fullPublicId, async (err, result) => {
+      if (err) {
+        console.error("Erro ao excluir imagem no Cloudinary", err);
+        return res
+          .status(500)
+          .json({ error: "Erro ao excluir imagem no Cloudinary" });
+      }
+
+      console.log("Imagem excluída do Cloudinary", result);
+
+      db.query("DELETE FROM usuarios WHERE id = ?", [id], (err) => {
+        if (err) {
+          return res.status(404).json({ message: "Erro ao deletar", err });
+        }
+        return res
+          .status(202)
+          .json({ message: "Usuario Deletado Com Sucesso" });
+      });
+    });
   });
 });
 
 routes.post(
   "/user/create",
-  uploadUser.single("imgUserPhoto"),
+  upload.single("imgUserPhoto"),
   (req: Request, res: Response): void => {
     const { user, senha, cargo_id } = req.body;
-    const imgUserPhoto = req.file
-      ? `https://findit-08qb.onrender.com/uploadsUser/${req.file.filename}`
-      : null;
+    const imgUserPhoto = req.file ? req.file.path : null;
 
     db.query(
       "SELECT * FROM usuarios WHERE user = ?",

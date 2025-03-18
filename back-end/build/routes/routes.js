@@ -1,37 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -45,49 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importStar(require("express"));
+const express_1 = require("express");
 const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
-const multer_1 = __importDefault(require("multer"));
 const index_1 = __importDefault(require("../index"));
 const axios_1 = __importDefault(require("axios"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const uploads_1 = __importDefault(require("../uploads"));
+const cloudinary_1 = __importDefault(require("cloudinary"));
 const routes = (0, express_1.Router)();
 dotenv_1.default.config();
 routes.use((0, cookie_parser_1.default)());
-routes.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "build/uploads")));
-routes.use("/uploads", express_1.default.static(path_1.default.resolve("build/uploads")));
-routes.use("/uploadsUser", express_1.default.static(path_1.default.join(__dirname, "build/uploadsUser")));
-routes.use("/uploadsUser", express_1.default.static(path_1.default.resolve("build/uploadsUser")));
-const storage = multer_1.default.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "../back-end/build/uploads");
-    },
-    filename: (req, file, cb) => {
-        const ext = path_1.default.extname(file.originalname);
-        cb(null, Date.now() + ext);
-    },
-});
-const storageUser = multer_1.default.diskStorage({
-    destination: (req, file, cb) => {
-        const uploadPath = path_1.default.join(__dirname, "..", "uploadsUser");
-        cb(null, uploadPath);
-    },
-    filename: (req, file, cb) => {
-        const ext = path_1.default.extname(file.originalname);
-        cb(null, Date.now() + ext);
-    },
-});
-const upload = (0, multer_1.default)({ storage: storage });
-const uploadUser = (0, multer_1.default)({ storage: storageUser });
 // 'Pendente','Disponivel', 'Retirado'
-routes.post("/adicionar", upload.single("imagem_url"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routes.post("/adicionar", uploads_1.default.single("imagem_url"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nome_item, data_encontrado, local_encontrado, campus } = req.body;
-        const imagem_url = req.file
-            ? `http://localhost:3333/uploads/${req.file.filename}`
-            : null;
+        const imagem_url = req.file ? req.file.path : null;
         const status = "Pendente";
         if (!req.file) {
             res.status(400).json({ error: "Nenhuma imagem enviada" });
@@ -212,7 +152,11 @@ routes.get("/itens/disponiveis/search", (req, res) => __awaiter(void 0, void 0, 
         res.json(results);
     });
 }));
-routes.put("/usuarios/pendentes/:id_item", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routes.get("/ping", (req, res) => {
+    res.json({ status: "ok" });
+    console.log("Ping Ok!");
+});
+routes.put("/itens/pendentes/:id_item", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id_item } = req.params;
     const status = "Disponivel";
     const sql = `UPDATE itens_perdidos SET status = ? WHERE id_item = ?`;
@@ -225,7 +169,7 @@ routes.put("/retirarItem/:id_item", (req, res) => __awaiter(void 0, void 0, void
     const sql = `UPDATE logs SET data_movimentacao = ?, situacao = ?, retirado_por = ?, clAluno = ? WHERE id_item = ?`;
     index_1.default.promise().query(sql, [data_movimentacao, situacao, retirado_por, id_item]);
     try {
-        const response = yield axios_1.default.delete(`http://localhost:3333/itens/excluir/${id_item}`);
+        const response = yield axios_1.default.delete(`https://findit-08qb.onrender.com/itens/excluir/${id_item}`);
         res.json({ message: "Rota chamada com sucesso", data: response.data });
     }
     catch (error) {
@@ -246,21 +190,48 @@ routes.delete("/itens/excluir/:id", (req, res) => __awaiter(void 0, void 0, void
             return res.status(404).json({ error: "Item não encontrado" });
         }
         const imgUrl = results[0].imagem_url;
-        const fileName = path_1.default.basename(imgUrl);
-        const filePath = path_1.default.join(__dirname, "../uploads", fileName);
-        fs_1.default.unlink(filePath, (err) => {
-            if (err) {
-                console.error("Erro ao excluir arquivo", err);
-                return res.status(500).json({ error: "Erro ao excluir arquivo" });
-            }
+        if (!imgUrl) {
             const sqlDelete = "DELETE FROM itens_perdidos WHERE id_item = ?";
             index_1.default.query(sqlDelete, [id], (err) => {
                 if (err) {
-                    return res.status(500).json({ error: "Item não encontrado" });
+                    console.error("Erro ao excluir item", err);
+                    return res.status(500).json({ error: "Erro ao excluir item" });
                 }
-                res.json({ message: "Arquivo Excluido Com Sucesso" });
+                res.json({ message: "Item excluído, mas sem imagem para deletar." });
             });
-        });
+            return;
+        }
+        const publicId = path_1.default.basename(imgUrl, path_1.default.extname(imgUrl));
+        const fullPublicId = `uploads/${publicId}`;
+        console.log("Tentando excluir imagem no Cloudinary:", fullPublicId);
+        cloudinary_1.default.v2.uploader.destroy(fullPublicId, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
+            if (err) {
+                console.error("Erro ao excluir imagem no Cloudinary", err);
+                return res
+                    .status(500)
+                    .json({ error: "Erro ao excluir imagem no Cloudinary" });
+            }
+            console.log("Imagem excluída do Cloudinary", result);
+            const sqlDelete = "DELETE FROM itens_perdidos WHERE id_item = ?";
+            index_1.default.query(sqlDelete, [id], (err) => __awaiter(void 0, void 0, void 0, function* () {
+                if (err) {
+                    console.error("Erro ao excluir item", err);
+                    return res.status(500).json({ error: "Erro ao excluir item" });
+                }
+                // Exclui os logs associados ao item
+                try {
+                    yield axios_1.default.delete(`http://localhost:3333/logs/excluirIdItem/${id}`);
+                    res.json({ message: "Item, imagem e logs excluídos com sucesso!" });
+                    console.log("Item, imagem e logs excluídos com sucesso!");
+                }
+                catch (logError) {
+                    console.error("Erro ao excluir os logs", logError);
+                    res.json({
+                        message: "Item e imagem excluídos, mas falha ao excluir logs.",
+                    });
+                }
+            }));
+        }));
     });
 }));
 routes.delete("/logs/excluir/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -284,7 +255,7 @@ routes.delete("/logs/excluirIdItem/:id", (req, res) => {
         res.status(200).json({ message: "Item excluído do DB" });
     });
 });
-routes.post("/upload/:id", upload.single("arquivo"), (req, res) => {
+routes.post("/upload/:id", uploads_1.default.single("arquivo"), (req, res) => {
     if (!req.file) {
         res.status(400).json({ error: "Nenhum arquivo enviado" });
         return;
@@ -349,10 +320,10 @@ routes.put("/retirada/aprovar/:id", (req, res) => __awaiter(void 0, void 0, void
             .query(sqlUpdate, [data_movimentacao, situacao, nome, cl, id_item]);
         try {
             yield axios_1.default
-                .delete(`http://localhost:3333/itens/excluir/${id_item}`)
+                .delete(`https://findit-08qb.onrender.com/itens/excluir/${id_item}`)
                 .catch(() => { });
             yield axios_1.default
-                .delete(`http://localhost:3333/retirada/excluir/${id_retirada}`)
+                .delete(`https://findit-08qb.onrender.com/retirada/excluir/${id_retirada}`)
                 .catch(() => { });
             res.status(200).json({ message: "Retirada aprovada com sucesso!" });
         }
@@ -483,18 +454,53 @@ routes.get("/user", (req, res) => {
 });
 routes.delete("/user/delete/:id", (req, res) => {
     const id = req.params.id;
-    index_1.default.query("DELETE FROM usuarios WHERE id = ?", [id], (err) => {
+    const sql = "SELECT urlImagem FROM usuarios WHERE id = ?";
+    index_1.default.query(sql, [id], (err, results) => {
         if (err) {
-            return res.status(404).json({ message: "Erro ao deletar", err });
+            console.error("Erro Banco de dados", err);
+            return res.status(500).json({ error: "Erro ao buscar a imagem" });
         }
-        return res.status(202).json({ message: "Usuario Deletado Com Sucesso" });
+        if (results.length === 0) {
+            return res.status(404).json({ error: "Usuario não encontrado" });
+        }
+        const urlImagem = results[0].urlImagem;
+        if (!urlImagem) {
+            const sqlDelete = "DELETE FROM usuarios WHERE id = ?";
+            index_1.default.query(sqlDelete, [id], (err) => {
+                if (err) {
+                    console.error("Erro ao excluir Usuario", err);
+                    return res.status(500).json({ error: "Erro ao excluir Usuario" });
+                }
+                res.json({ message: "Usuario excluído, mas sem imagem para deletar." });
+                console.log("Usuario excluído, mas sem imagem para deletar");
+            });
+            return;
+        }
+        const publicId = path_1.default.basename(urlImagem, path_1.default.extname(urlImagem));
+        const fullPublicId = `uploadsUser/${publicId}`;
+        console.log("Tentando excluir imagem no Cloudinary:", fullPublicId);
+        cloudinary_1.default.v2.uploader.destroy(fullPublicId, (err, result) => __awaiter(void 0, void 0, void 0, function* () {
+            if (err) {
+                console.error("Erro ao excluir imagem no Cloudinary", err);
+                return res
+                    .status(500)
+                    .json({ error: "Erro ao excluir imagem no Cloudinary" });
+            }
+            console.log("Imagem excluída do Cloudinary", result);
+            index_1.default.query("DELETE FROM usuarios WHERE id = ?", [id], (err) => {
+                if (err) {
+                    return res.status(404).json({ message: "Erro ao deletar", err });
+                }
+                return res
+                    .status(202)
+                    .json({ message: "Usuario Deletado Com Sucesso" });
+            });
+        }));
     });
 });
-routes.post("/user/create", uploadUser.single("imgUserPhoto"), (req, res) => {
+routes.post("/user/create", uploads_1.default.single("imgUserPhoto"), (req, res) => {
     const { user, senha, cargo_id } = req.body;
-    const imgUserPhoto = req.file
-        ? `http://localhost:3333/uploadsUser/${req.file.filename}`
-        : null;
+    const imgUserPhoto = req.file ? req.file.path : null;
     index_1.default.query("SELECT * FROM usuarios WHERE user = ?", [user], (err, results) => {
         if (err) {
             return res

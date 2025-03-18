@@ -45,19 +45,18 @@ export function AddItemComponent() {
     let localItem = local === "outro" ? extraLocal : local;
 
     const formData = new FormData();
+    const folderType = "uploads";
     formData.append("nome_item", nomeItem);
     formData.append("data_encontrado", dataEncontrado);
     formData.append("local_encontrado", localItem);
     formData.append("imagem_url", imagemUrl);
     formData.append("campus", campus);
+    formData.append("folder", folderType);
     try {
-      const response = await fetch(
-        "https://findit-08qb.onrender.com/adicionar",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("http://localhost:3333/adicionar", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error("Erro na resposta do servidor");

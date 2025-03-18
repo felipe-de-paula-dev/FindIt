@@ -21,16 +21,14 @@ export function UserAdd() {
     formData.append("user", user);
     formData.append("senha", password);
     formData.append("cargo_id", cargoId);
+    formData.append("folder", "user");
     formData.append("imgUserPhoto", imgUserPhoto);
 
     try {
-      const response = await fetch(
-        "https://findit-08qb.onrender.com/user/create",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const response = await fetch("http://localhost:3333/user/create", {
+        method: "POST",
+        body: formData,
+      });
 
       if (response.ok) {
         setAlert({ type: "success", message: "Usuário Criado Com Sucesso!" });
