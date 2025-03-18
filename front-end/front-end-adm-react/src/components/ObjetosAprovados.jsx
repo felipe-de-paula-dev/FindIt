@@ -48,7 +48,7 @@ export function ObjetosAprovados() {
   }, [reload, search, locationObject, campus]);
 
   async function deletarItem(id) {
-    const result = await Swal.fire({
+    const result2 = await Swal.fire({
       title: "Tem certeza?",
       text: "Essa ação não pode ser desfeita!",
       icon: "warning",
@@ -59,7 +59,7 @@ export function ObjetosAprovados() {
       cancelButtonText: "Cancelar",
     });
 
-    if (result.isConfirmed) {
+    if (result2.isConfirmed) {
       try {
         const responseItem = await fetch(
           `https://findit-08qb.onrender.com/itens/excluir/${id}`,
