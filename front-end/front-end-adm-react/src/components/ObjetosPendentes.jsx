@@ -97,20 +97,6 @@ export function ObjetosPendentes() {
           );
         }
 
-        const responseLog = await fetch(
-          `https://findit-08qb.onrender.com/logs/excluir/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!responseLog.ok) {
-          throw new Error(`Erro ao excluir log: ${responseLog.statusText}`);
-        }
-
         Swal.fire({
           icon: "success",
           title: "Sucesso",
