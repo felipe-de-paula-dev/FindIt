@@ -38,9 +38,12 @@ export function User() {
 
   async function deleteUser(id) {
     if (confirm("Deseja Excluir o usuario?")) {
-      const response = await fetch(`http://localhost:3333/user/delete/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://findit-08qb.onrender.com/user/delete/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (response.ok) {
         setAlert({
           type: "success",

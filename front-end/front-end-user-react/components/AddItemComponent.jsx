@@ -53,10 +53,13 @@ export function AddItemComponent() {
     formData.append("campus", campus);
     formData.append("folder", folderType);
     try {
-      const response = await fetch("http://localhost:3333/adicionar", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://findit-08qb.onrender.com/adicionar",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Erro na resposta do servidor");

@@ -82,7 +82,7 @@ export function ObjetosPendentes() {
     if (result.isConfirmed) {
       try {
         const responseUsuario = await fetch(
-          `http://localhost:3333/itens/excluir/${id}`,
+          `https://findit-08qb.onrender.com/itens/excluir/${id}`,
           {
             method: "DELETE",
             headers: {

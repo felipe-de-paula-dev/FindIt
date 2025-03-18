@@ -278,7 +278,9 @@ routes.delete("/itens/excluir/:id", async (req: Request, res: Response) => {
 
         // Exclui os logs associados ao item
         try {
-          await axios.delete(`http://localhost:3333/logs/excluirIdItem/${id}`);
+          await axios.delete(
+            `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`
+          );
           res.json({ message: "Item, imagem e logs excluídos com sucesso!" });
           console.log("Item, imagem e logs excluídos com sucesso!");
         } catch (logError) {
