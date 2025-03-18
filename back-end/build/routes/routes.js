@@ -220,7 +220,7 @@ routes.delete("/itens/excluir/:id", (req, res) => __awaiter(void 0, void 0, void
                 }
                 // Exclui os logs associados ao item
                 try {
-                    yield axios_1.default.delete(`http://localhost:3333/logs/excluirIdItem/${id}`);
+                    yield axios_1.default.delete(`https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`);
                     res.json({ message: "Item, imagem e logs excluídos com sucesso!" });
                     console.log("Item, imagem e logs excluídos com sucesso!");
                 }
