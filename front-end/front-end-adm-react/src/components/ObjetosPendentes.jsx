@@ -70,18 +70,20 @@ export function ObjetosPendentes() {
   }
 
   async function reprovar_item(id) {
-    const result = await Swal.fire({
+    const confirmationResult = await Swal.fire({
       title: "Tem certeza?",
-      text: "Você deseja apagar este item?",
+      text: "Essa ação não pode ser desfeita!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sim, apagar",
-      cancelButtonText: "Não, cancelar",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar",
     });
 
-    if (result.isConfirmed) {
+    if (confirmationResult.isConfirmed) {
       try {
-        const responseUsuario = await fetch(
+        const responseItem = await fetch(
           `https://findit-08qb.onrender.com/itens/excluir/${id}`,
           {
             method: "DELETE",
@@ -91,24 +93,16 @@ export function ObjetosPendentes() {
           }
         );
 
-        if (!responseUsuario.ok) {
-          throw new Error(
-            `Erro ao excluir item: ${responseUsuario.statusText}`
-          );
+        if (!responseItem.ok) {
+          throw new Error("Erro ao excluir o item.");
         }
 
-        Swal.fire({
-          icon: "success",
-          title: "Sucesso",
-          text: "Item Apagado Com Sucesso!",
-        });
+        Swal.fire("Excluído!", "O item foi removido com sucesso.", "success");
+        setReload(true);
       } catch (error) {
-        console.error("Erro ao atualizar status:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Erro",
-          text: "Ocorreu um erro ao excluir o item!",
-        });
+        console.error("Erro ao excluir item:", error);
+        Swal.fire("Erro!", `Falha ao excluir: ${error.message}`, "error");
+        setReload(true);
       }
     }
   }

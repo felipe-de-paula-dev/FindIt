@@ -48,7 +48,7 @@ export function ObjetosAprovados() {
   }, [reload, search, locationObject, campus]);
 
   async function deletarItem(id) {
-    const result2 = await Swal.fire({
+    const confirmationResult = await Swal.fire({
       title: "Tem certeza?",
       text: "Essa ação não pode ser desfeita!",
       icon: "warning",
@@ -59,7 +59,7 @@ export function ObjetosAprovados() {
       cancelButtonText: "Cancelar",
     });
 
-    if (result2.isConfirmed) {
+    if (confirmationResult.isConfirmed) {
       try {
         const responseItem = await fetch(
           `https://findit-08qb.onrender.com/itens/excluir/${id}`,
@@ -72,14 +72,10 @@ export function ObjetosAprovados() {
         );
 
         if (!responseItem.ok) {
-          throw new Error("Erro ao excluir o usuário");
+          throw new Error("Erro ao excluir o item.");
         }
 
-        Swal.fire(
-          "Excluído!",
-          "O item e o log foram removidos com sucesso.",
-          "success"
-        );
+        Swal.fire("Excluído!", "O item foi removido com sucesso.", "success");
         setReload(true);
       } catch (error) {
         console.error("Erro ao excluir item:", error);
