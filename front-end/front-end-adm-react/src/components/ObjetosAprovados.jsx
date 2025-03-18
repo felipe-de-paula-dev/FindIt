@@ -75,20 +75,6 @@ export function ObjetosAprovados() {
           throw new Error("Erro ao excluir o usuário");
         }
 
-        const responseLog = await fetch(
-          `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!responseLog.ok) {
-          throw new Error("Erro ao excluir o log");
-        }
-
         Swal.fire(
           "Excluído!",
           "O item e o log foram removidos com sucesso.",
