@@ -68,7 +68,7 @@ const Filter = forwardRef(
           <div className="w-[80%] flex items-center">
             <input
               type="search"
-              className="bg-gray-100 p-2 w-full rounded-sm focus:ring-1 focus:ring-red-500 border-none focus:outline-none transition-all"
+              className="bg-gray-100 p-2 w-full border  border-gray-300 rounded-sm focus:bg-red-50 focus:ring-1 focus:ring-red-500 border-none focus:outline-none transition-all"
               placeholder="Digite Aqui"
               value={search}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -96,7 +96,7 @@ const Filter = forwardRef(
               }}
             >
               <option value="">Selecione o Campus</option>
-              <option value="1">Campus 1 - Cotil</option>
+              <option value="1">Campus 1 - Cotil / FT</option>
               <option value="2">Campus 2 - FCA</option>
             </select>
             <select

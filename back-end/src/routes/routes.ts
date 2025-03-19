@@ -95,7 +95,7 @@ routes.get("/logs", (req: Request, res: Response) => {
   );
 });
 
-routes.get("/usuarios", async (req: Request, res: Response) => {
+routes.get("/itens", async (req: Request, res: Response) => {
   db.query("SELECT * FROM itens_perdidos", (err, results) => {
     if (err) {
       return res.status(500).send("Erro na consulta ao banco de dados");
@@ -156,7 +156,7 @@ routes.get("/itens/disponiveis/search", async (req: Request, res: Response) => {
   const { query, location, campus } = req.query;
 
   let sql =
-    "SELECT id_item, nome_item, data_encontrado, local_encontrado, imagem_url FROM itens_perdidos WHERE status = ?";
+    "SELECT id_item, nome_item, data_encontrado, local_encontrado, imagem_url, campus FROM itens_perdidos WHERE status = ?";
 
   const params: any[] = ["Disponivel"];
 

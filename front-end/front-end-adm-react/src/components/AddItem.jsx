@@ -1,4 +1,4 @@
-import { CirclePlus, Trash } from "lucide-react";
+import { CirclePlus, Loader2, Trash } from "lucide-react";
 import { useState } from "react";
 import { useRef } from "react";
 import Swal from "sweetalert2";
@@ -38,12 +38,14 @@ export function AddItem() {
   const [local, setLocal] = useState("");
   const [extraLocal, setExtraLocal] = useState("");
   const [imagemUrl, setImagemUrl] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [previewImage, setPreviewImage] = useState("/photos/uploadImg.jpg");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsButtonDisabled(true);
 
-    let localItem = local === "outro" ? extraLocal : local;
+    let localItem = local === "Outro" ? extraLocal : local;
 
     const formData = new FormData();
     const folderType = "uploads";
@@ -84,20 +86,21 @@ export function AddItem() {
         icon: "success",
         confirmButtonText: "OK",
       });
+      setIsButtonDisabled(false);
     } catch (error) {
       console.error("Erro ao enviar dados:", error);
-
       Swal.fire({
         title: "Erro!",
         text: `Erro ao enviar dados: ${error.message}`,
         icon: "error",
         confirmButtonText: "OK",
       });
+      setIsButtonDisabled(false);
     }
   };
 
   return (
-    <div className="flex w-full justify-center h-fit mt-2 items-center flex-col overflow-auto">
+    <div className="flex w-full h-[calc(100vh-10vh)] items-center mt-4 pb-5 flex-col overflow-auto">
       <h1 className="text-4xl font-semibold mb-6 text-gray-800 flex items-center gap-4">
         Adicione o Item <CirclePlus size={32} className="text-gray-800" />
       </h1>
@@ -128,7 +131,6 @@ export function AddItem() {
             />
           </div>
         </div>
-
         <div className="w-full md:w-[50%]">
           <form
             id="meuForm"
@@ -178,7 +180,7 @@ export function AddItem() {
               onChange={(e) => setCampus(e.target.value)}
             >
               <option value="">Selecione o Campus</option>
-              <option value="1">Campus 1 - Cotil</option>
+              <option value="1">Campus 1 - Cotil / FT</option>
               <option value="2">Campus 2 - FCA</option>
             </select>
 
@@ -233,7 +235,7 @@ export function AddItem() {
                   : "Campo exclusivo para 'Outros'"
               }
               disabled={local !== "Outro"}
-              maxLength="15"
+              maxLength="20"
               className={`px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
                 local === "outro" ? "text-black" : "text-gray-500"
               }`}
@@ -265,9 +267,14 @@ export function AddItem() {
 
             <button
               type="submit"
-              className="mt-4 py-2 bg-red-600 text-white transition-all rounded-md hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-400"
+              disabled={isButtonDisabled}
+              className="mt-4 py-2 bg-red-600 text-white transition-all rounded-md hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-400 text-center flex justify-center"
             >
-              Adicionar
+              {isButtonDisabled == true ? (
+                <Loader2 className="animate-loading" />
+              ) : (
+                "Adicionar"
+              )}
             </button>
           </form>
         </div>

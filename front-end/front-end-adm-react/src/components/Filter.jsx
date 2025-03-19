@@ -88,7 +88,7 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
             }}
           >
             <option value="">Selecione o Campus</option>
-            <option value="1">Campus 1 - Cotil</option>
+            <option value="1">Campus 1 - Cotil / FT</option>
             <option value="2">Campus 2 - FCA</option>
           </select>
           <select

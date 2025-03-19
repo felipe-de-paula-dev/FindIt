@@ -1,4 +1,4 @@
-import { MapIcon } from "lucide-react";
+import { MapIcon, RefreshCcw } from "lucide-react";
 import { GraficoPizza } from "./GraficoPizza";
 import { Grafico } from "./Grafico";
 import { GraficoObjetos } from "./GraficoObjetos";
@@ -11,6 +11,7 @@ export function VisaoGeral() {
   const [dadosDosObjetos, setDadosDosObjetos] = useState([]);
   const [campus, setCampus] = useState("");
   const [dados, setDados] = useState([]);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     async function fetchDataRetirada() {
@@ -34,36 +35,59 @@ export function VisaoGeral() {
         },
       ];
 
+      if (!reload) setReload(true);
+
       setDadosRetirados(dadosRetirados);
       setDadosDosObjetos(dadosDosObjetos);
       setDados(dados);
       setTotalObjetos(totalItens);
     }
     fetchDataRetirada();
-  }, [campus]);
+  }, [campus, reload]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setReload(false);
+    }, 2000);
+  }, [reload]);
 
   return (
     <div className="flex w-full items-center flex-col">
       <div className="w-[95%] border-b pb-4 border-gray-300 flex justify-between items-center  px-6 py-8">
         <h1 className="text-2xl font-semibold text-gray-800"> Visão Geral</h1>
-        <div className="flex p-1 shadow border border-slate-100 rounded-b-md w-min">
-          <MapIcon />
-          <select
-            name="date"
-            id="date"
-            onChange={(e) => setCampus(e.target.value)}
-            value={campus}
-          >
-            <option value="0">Todos os Campus</option>
-            <option value="1">COTIL - Campus 1</option>
-            <option value="2">FCA - Campus 2</option>
-          </select>
+        <div className="flex items-center gap-4">
+          <div className="flex p-1 gap-x-2 shadow border border-slate-100 rounded-b-md w-min">
+            <MapIcon />
+            <select
+              name="date"
+              id="date"
+              onChange={(e) => setCampus(e.target.value)}
+              value={campus}
+            >
+              <option value="0">Todos os Campus</option>
+              <option value="1">COTIL / FT - Campus 1</option>
+              <option value="2">FCA - Campus 2</option>
+            </select>
+          </div>
         </div>
       </div>
       <div className="w-full h-full p-6 flex flex-col  shadow overflow-hidden pb-3">
-        <div className="border-t-4 pr-15  rounded-tl-md rounded-tr-md p-3 border-slate-600 bg-slate-50 w-fit shadow">
-          <h2>Total De Objetos</h2>
-          <h1 className="text-4xl font-medium">{totalObjetos}</h1>
+        <div className="flex w-full justify-between">
+          <div className="border-t-4 pr-15  rounded-tl-md rounded-tr-md p-3 border-slate-600 bg-slate-50 w-fit shadow">
+            <h2>Total De Objetos</h2>
+            <h1 className="text-4xl font-medium">{totalObjetos}</h1>
+          </div>
+          <div
+            className="flex items-center pr-4 h-fit gap-2 p-1 rounded-lg cursor-pointer hover:bg-gray-100 transition active:bg-blue-100"
+            onClick={() => setReload(true)}
+          >
+            <RefreshCcw
+              className={`w-5 h-5 text-blue-600 ${
+                reload == true ? "animate-loading" : ""
+              }`}
+            />
+            <p className="font-semibold text-gray-800">Recarregar</p>
+          </div>
         </div>
         <div className="h-full w-full max-h-screen bg-slate-50 shadow flex flex-col p-3">
           <div className="flex-1 w-full rounded-md shadow overflow-hidden">

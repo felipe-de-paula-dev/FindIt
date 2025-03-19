@@ -38,7 +38,7 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
     options = [
       {
         icon: <PackageCheck size={20} />,
-        title: "Objetos Aprovados",
+        title: "Todos Os Objetos",
         descricao: "aprovados",
         id: 2,
       },

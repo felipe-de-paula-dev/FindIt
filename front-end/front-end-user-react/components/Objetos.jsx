@@ -81,6 +81,13 @@ export function Objetos({ search, location, campus }) {
               </span>
             </p>
 
+            <p className="text-gray-600 text-[17px]">
+              Campus:{" "}
+              <span className="font-medium text-gray-800">
+                {item.campus == 1 ? "Cotil / FT" : "FCA"}
+              </span>
+            </p>
+
             <div className="w-full h-[320px] overflow-hidden rounded-lg">
               <img
                 src={item.imagem_url}

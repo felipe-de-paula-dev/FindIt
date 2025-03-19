@@ -47,6 +47,10 @@ export function ObjetosAprovados() {
     fetchData();
   }, [reload, search, locationObject, campus]);
 
+  function carregar() {
+    setReload(true);
+  }
+
   async function deletarItem(id) {
     const confirmationResult = await Swal.fire({
       title: "Tem certeza?",
@@ -61,7 +65,7 @@ export function ObjetosAprovados() {
 
     if (confirmationResult.isConfirmed) {
       try {
-        const responseLog = await fetch(
+        await fetch(
           `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`,
           {
             method: "DELETE",
@@ -71,34 +75,24 @@ export function ObjetosAprovados() {
           }
         );
 
-        if (!responseLog.ok) {
-          throw new Error("Erro ao excluir o log.");
-        }
+        await fetch(`https://findit-08qb.onrender.com/itens/excluir/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
-        console.log("logs excluídos com sucesso!");
+        Swal.fire({
+          title: "Excluído!",
+          text: "O item foi removido com sucesso.",
+          icon: "success",
+          timer: 4500,
+        });
+        carregar();
+        console.log("logs e Item excluídos com sucesso!");
       } catch (err) {
-        console.error("Erro ao excluir os logs", err);
-      }
-      try {
-        const responseItem = await fetch(
-          `https://findit-08qb.onrender.com/itens/excluir/${id}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!responseItem.ok) {
-          throw new Error("Erro ao excluir o item.");
-        }
-
-        Swal.fire("Excluído!", "O item foi removido com sucesso.", "success");
-        setReload(true);
-      } catch (error) {
-        console.error("Erro ao excluir item:", error);
-        Swal.fire("Erro!", `Falha ao excluir: ${error.message}`, "error");
+        console.error("Erro ao excluir item:", err);
+        Swal.fire("Erro!", `Falha ao excluir: ${err.message}`, "error");
         setReload(true);
       }
     }
@@ -183,6 +177,12 @@ export function ObjetosAprovados() {
                     Local:{" "}
                     <span className="font-medium text-gray-800">
                       {item.local_encontrado}
+                    </span>
+                  </p>
+                  <p className="text-gray-600 text-[17px]">
+                    Campus:{" "}
+                    <span className="font-medium text-gray-800">
+                      {item.campus == 1 ? "Cotil / FT" : "FCA"}
                     </span>
                   </p>
                 </div>
