@@ -1,4 +1,4 @@
-import { MapIcon, RefreshCcw } from "lucide-react";
+import { MapIcon } from "lucide-react";
 import { GraficoPizza } from "./GraficoPizza";
 import { Grafico } from "./Grafico";
 import { GraficoObjetos } from "./GraficoObjetos";
@@ -11,7 +11,6 @@ export function VisaoGeral() {
   const [dadosDosObjetos, setDadosDosObjetos] = useState([]);
   const [campus, setCampus] = useState("");
   const [dados, setDados] = useState([]);
-  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     async function fetchDataRetirada() {
@@ -35,21 +34,13 @@ export function VisaoGeral() {
         },
       ];
 
-      if (!reload) setReload(true);
-
       setDadosRetirados(dadosRetirados);
       setDadosDosObjetos(dadosDosObjetos);
       setDados(dados);
       setTotalObjetos(totalItens);
     }
     fetchDataRetirada();
-  }, [campus, reload]);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setReload(false);
-    }, 2000);
-  }, [reload]);
+  }, [campus]);
 
   return (
     <div className="flex w-full items-center flex-col">
@@ -72,22 +63,9 @@ export function VisaoGeral() {
         </div>
       </div>
       <div className="w-full h-full p-6 flex flex-col  shadow overflow-hidden pb-3">
-        <div className="flex w-full justify-between">
-          <div className="border-t-4 pr-15  rounded-tl-md rounded-tr-md p-3 border-slate-600 bg-slate-50 w-fit shadow">
-            <h2>Total De Objetos</h2>
-            <h1 className="text-4xl font-medium">{totalObjetos}</h1>
-          </div>
-          <div
-            className="flex items-center pr-4 h-fit gap-2 p-1 rounded-lg cursor-pointer hover:bg-gray-100 transition active:bg-blue-100"
-            onClick={() => setReload(true)}
-          >
-            <RefreshCcw
-              className={`w-5 h-5 text-blue-600 ${
-                reload == true ? "animate-loading" : ""
-              }`}
-            />
-            <p className="font-semibold text-gray-800">Recarregar</p>
-          </div>
+        <div className="border-t-4 pr-15  rounded-tl-md rounded-tr-md p-3 border-slate-600 bg-slate-50 w-fit shadow">
+          <h2>Total De Objetos</h2>
+          <h1 className="text-4xl font-medium">{totalObjetos}</h1>
         </div>
         <div className="h-full w-full max-h-screen bg-slate-50 shadow flex flex-col p-3">
           <div className="flex-1 w-full rounded-md shadow overflow-hidden">
