@@ -76,6 +76,7 @@ export function AddItem() {
       setImagemUrl("");
       setCampus("");
       inputRef.current.value = "";
+      setPreviewImage("/photos/uploadImg.jpg");
 
       Swal.fire({
         title: "Sucesso!",
@@ -100,7 +101,7 @@ export function AddItem() {
       <h1 className="text-4xl font-semibold mb-6 text-gray-800 flex items-center gap-4">
         Adicione o Item <CirclePlus size={32} className="text-gray-800" />
       </h1>
-      <div className="flex flex-wrap items-start gap-10 max-w-4xl w-full">
+      <div className="flex flex-wrap items-center gap-10 max-w-4xl w-full">
         <div className="flex flex-col items-center w-full md:w-[40%]">
           <div
             className="border-dashed border-2 rounded-xl border-gray-400 p-2 h-[400px] w-[400px] flex items-center justify-center overflow-hidden cursor-pointer bg-white shadow-md"

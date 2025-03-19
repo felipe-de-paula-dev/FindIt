@@ -101,7 +101,7 @@ export function User() {
               <img
                 src={item.urlImagem}
                 alt="Usuário"
-                className="w-24 h-24 rounded-full border-4 border-gray-400 transition-all hover:brightness-110"
+                className="w-24 h-24 rounded-full overflow-hidden object-cover border-4 border-gray-400 transition-all hover:brightness-110"
               />
               <div className="mt-4 text-center">
                 <p className="text-lg font-semibold text-gray-800">

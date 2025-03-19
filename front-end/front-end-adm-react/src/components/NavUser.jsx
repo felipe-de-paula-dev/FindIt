@@ -38,12 +38,11 @@ export function NavUser(props) {
             </option>
           </select>
         </div>
-        <div className="flex">
+        <div className="flex w-[36px] h-[36px] items-center justify-center  overflow-hidden object-cover rounded-full">
           <img
             src={props.imagemUser}
-            alt=""
+            alt="Imagem do usuário"
             className="rounded-full"
-            width={38}
           />
         </div>
       </ul>

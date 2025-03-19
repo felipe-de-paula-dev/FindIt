@@ -150,7 +150,7 @@ export function UserAdd() {
               accept="image/*"
               required
               onChange={handleImageChange}
-              className="border border-gray-300 p-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 p-2 rounded-md w-full  overflow-hidden object-cover focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
