@@ -73,7 +73,7 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
             className="text-[16px] font-[400] text-white flex  items-center space-y-2 flex-col transform transition-all hover:scale-105 cursor-pointer hover:text-green-400 "
             onClick={() => {
               onOptionClick("objetos"),
-                setSelectedOption("pendentes"),
+                setSelectedOption("aprovados"),
                 idClick(2);
             }}
           >

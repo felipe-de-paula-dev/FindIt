@@ -25,7 +25,7 @@ routes.post(
     try {
       const { nome_item, data_encontrado, local_encontrado, campus } = req.body;
       const imagem_url = req.file ? req.file.path : null;
-      const status = "Pendente";
+      const status = "Disponivel";
 
       if (!req.file) {
         res.status(400).json({ error: "Nenhuma imagem enviada" });
@@ -274,20 +274,6 @@ routes.delete("/itens/excluir/:id", async (req: Request, res: Response) => {
         if (err) {
           console.error("Erro ao excluir item", err);
           return res.status(500).json({ error: "Erro ao excluir item" });
-        }
-
-        // Exclui os logs associados ao item
-        try {
-          await axios.delete(
-            `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`
-          );
-          res.json({ message: "Item, imagem e logs excluídos com sucesso!" });
-          console.log("Item, imagem e logs excluídos com sucesso!");
-        } catch (logError) {
-          console.error("Erro ao excluir os logs", logError);
-          res.json({
-            message: "Item e imagem excluídos, mas falha ao excluir logs.",
-          });
         }
       });
     });

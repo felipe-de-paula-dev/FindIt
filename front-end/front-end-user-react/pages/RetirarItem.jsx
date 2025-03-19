@@ -1,4 +1,3 @@
-import { AddItemComponent } from "../components/AddItemComponent";
 import { Filter } from "../components/Filter";
 import { Footer } from "../components/Footer";
 import { FormularioRetirada } from "../components/FormularioRetirada";

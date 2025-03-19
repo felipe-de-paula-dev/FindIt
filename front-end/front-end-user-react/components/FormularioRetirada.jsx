@@ -70,7 +70,7 @@ export function FormularioRetirada() {
         title: "Solicitação de retirada enviada!",
         text: "Dirija-Se Ao Local Enviado Ao Seu Email Para Efetuar A Retirada",
         icon: "success",
-        timer: 1500,
+        timer: 5000,
       });
       setCl("");
       setNome("");
@@ -87,45 +87,54 @@ export function FormularioRetirada() {
 
   return (
     <div className="flex items-center justify-center flex-col w-full text-center mt-9">
-      <h1 className="text-2xl font-semibold">Confirme a Retirada</h1>
-      <div className="flex flex-col w-[100%] sm:w-[60%] mt-5 items-center gap-2">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+        Confirme a Retirada
+      </h1>
+      <div className="flex flex-col w-[100%] sm:w-[60%] mt-5 items-center gap-6">
         <div className="w-full flex flex-col items-center">
           <label
             htmlFor="cl"
-            className="font-semibold flex items-center text-xl text-slate-800"
+            className="font-semibold text-xl text-slate-800 mb-2"
           >
             CL:
           </label>
           <input
             type="number"
             id="cl"
-            maxLength={6}
+            max={999999}
             value={cl}
-            onChange={(e) => setCl(e.target.value)}
+            onChange={(e) => {
+              if (e.target.value.length < 8) {
+                setCl(e.target.value);
+              }
+            }}
             required
-            className="border-b rounded-md p-1 outline-none focus:bg-red-50 focus:border-red-600 w-[90%]"
+            className="border-b border-gray-300 rounded-md p-2 w-[90%] outline-none focus:ring-2 focus:ring-red-600 transition duration-300"
           />
         </div>
+
         <div className="w-full flex flex-col items-center">
           <label
             htmlFor="nome"
-            className="font-semibold flex items-center text-xl text-slate-800"
+            className="font-semibold text-xl text-slate-800 mb-2"
           >
             Nome:
           </label>
           <input
             type="text"
             id="nome"
+            maxLength={20}
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             required
-            className="border-b rounded-md p-1 outline-none focus:bg-red-50 focus:border-red-600 w-[90%]"
+            className="border-b border-gray-300 rounded-md p-2 w-[90%] outline-none focus:ring-2 focus:ring-red-600 transition duration-300"
           />
         </div>
+
         <div className="w-full flex flex-col items-center">
           <label
             htmlFor="email"
-            className="font-semibold flex items-center text-xl text-slate-800"
+            className="font-semibold text-xl text-slate-800 mb-2"
           >
             Email:
           </label>
@@ -135,13 +144,14 @@ export function FormularioRetirada() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="border-b rounded-md p-1 outline-none focus:bg-red-50 focus:border-red-600 w-[90%]"
+            className="border-b border-gray-300 rounded-md p-2 w-[90%] outline-none focus:ring-2 focus:ring-red-600 transition duration-300"
           />
         </div>
+
         <button
           type="button"
           onClick={confirmarretirada}
-          className="bg-red-600 p-1 w-[90%] h-[40px] rounded-2xl text-white mt-5 hover:cursor-pointer"
+          className="bg-red-600 p-3 w-[90%] h-[45px] rounded-full text-white mt-6 transition-all duration-300 transform hover:scale-105 hover:bg-red-700 hover:cursor-pointer"
         >
           Confirmar Retirada
         </button>

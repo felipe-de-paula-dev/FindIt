@@ -15,7 +15,7 @@ export function PrimaryContent({ onRolagem }) {
           Consulte a lista de achados e recupere seu item facilmente.
         </p>
         <button
-          className="z-20 bg-red-700 text-white p-2 rounded-xl w-fit text-[20px] hover:scale-105 transition-all hover: cursor-pointer"
+          className="z-20 bg-red-700 text-white py-2 px-3 rounded-xl w-fit text-[20px] hover:scale-105 transition-all hover: cursor-pointer"
           onClick={onRolagem}
         >
           Ver Achados

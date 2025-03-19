@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 import {
   ChartColumn,
-  ListCheck,
-  ClockAlert,
   CalendarClock,
   UserRoundPlus,
   User,
   Layers,
+  CopyPlus,
+  PackageCheck,
 } from "lucide-react";
 import { ReportOption } from "./ReportOption";
 import { useEffect, useState } from "react";
@@ -37,15 +37,15 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
     title = "Objetos";
     options = [
       {
-        icon: <ClockAlert size={20} />,
-        title: "Objetos Pendentes",
-        descricao: "pendentes",
+        icon: <PackageCheck size={20} />,
+        title: "Objetos Aprovados",
+        descricao: "aprovados",
         id: 2,
       },
       {
-        icon: <ListCheck size={20} />,
-        title: "Objetos aprovados",
-        descricao: "aprovados",
+        icon: <CopyPlus size={20} />,
+        title: "Adicionar Objeto",
+        descricao: "adicionar",
         id: 3,
       },
       {

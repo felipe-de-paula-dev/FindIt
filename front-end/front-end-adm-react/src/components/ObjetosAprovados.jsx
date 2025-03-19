@@ -61,6 +61,25 @@ export function ObjetosAprovados() {
 
     if (confirmationResult.isConfirmed) {
       try {
+        const responseLog = await fetch(
+          `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!responseLog.ok) {
+          throw new Error("Erro ao excluir o log.");
+        }
+
+        console.log("logs excluídos com sucesso!");
+      } catch (err) {
+        console.error("Erro ao excluir os logs", err);
+      }
+      try {
         const responseItem = await fetch(
           `https://findit-08qb.onrender.com/itens/excluir/${id}`,
           {
@@ -143,38 +162,51 @@ export function ObjetosAprovados() {
             Nenhum Objeto Encontrado.
           </p>
         ) : (
-          <div className="flex flex-wrap justify-center gap-5 w-[95%] h-full mt-5">
+          <div className="flex flex-wrap justify-center gap-5 w-[95%] h-full mt-10">
             {data.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-col gap-4 w-[200px] h-fit items-center p-3 bg-slate-50 rounded-md border border-slate-200 shadow-md"
+                className="w-full sm:w-[290px] h-fit bg-white rounded-lg border border-gray-200 shadow-lg p-4 flex flex-col gap-3"
               >
                 <div className="w-full">
-                  <p className="text-sm text-gray-600">
-                    <strong>Nome:</strong> {item.nome_item}
+                  <p className="text-lg font-semibold text-gray-700">
+                    Nome:{" "}
+                    <span className="text-gray-900">{item.nome_item}</span>
                   </p>
-                  <p className="text-sm text-gray-600">
-                    <strong>Data:</strong> {formatarData(item.data_encontrado)}
+                  <p className="text-gray-600 text-[17px]">
+                    Data:{" "}
+                    <span className="font-medium text-gray-800">
+                      {formatarData(item.data_encontrado)}
+                    </span>
                   </p>
-                  <p className="text-sm text-gray-600">
-                    <strong>Local:</strong> {item.local_encontrado}
+                  <p className="text-gray-600 text-[17px]">
+                    Local:{" "}
+                    <span className="font-medium text-gray-800">
+                      {item.local_encontrado}
+                    </span>
                   </p>
                 </div>
+
                 {item.imagem_url ? (
-                  <img
-                    className="w-full h-[200px] object-cover rounded-md shadow-sm"
-                    src={item.imagem_url}
-                    alt={`Imagem de ${item.nome_item}`}
-                  />
+                  <div className="w-full h-[300px] overflow-hidden rounded-md">
+                    <img
+                      src={item.imagem_url}
+                      alt={item.nome_item}
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </div>
                 ) : (
                   <p className="text-gray-400 text-sm">Sem imagem disponível</p>
                 )}
-                <button
-                  className="bg-red-500 text-white w-[100%] py-1 rounded hover:cursor-pointer"
-                  onClick={() => deletarItem(item.id_item)}
-                >
-                  Excluir Item?
-                </button>
+
+                <div className="flex flex-col gap-2 w-full mt-3">
+                  <button
+                    className="bg-red-500 text-white w-full py-2 rounded-md hover:bg-red-600 transition-all shadow-md hover:scale-105"
+                    onClick={() => deletarItem(item.id_item)}
+                  >
+                    Excluir Item?
+                  </button>
+                </div>
               </div>
             ))}
           </div>

@@ -4,14 +4,15 @@ export function Nav() {
   return (
     <div className="w-screen flex items-center justify-center mt-5 mx-auto max-w-4xl lg:justify-between">
       <img src="/unicamp.png" alt="" width={256} />
-      <div className="hidden items-center gap-6 lg:flex">
-        <p className="font-semibold">
-          <span className="text-red-600">A</span>chados e{" "}
-          <span className="text-red-600">P</span>erdidos
-        </p>
-        <div className="bg-slate-100 border border-slate-300 shadow  h-fit p-1 w-[60px] justify-center rounded-md flex items-center gap-2 hover:cursor-pointer">
-          <p className="font-semibold">
-            <span className="text-red-600">L</span>ogin
+      <div className="hidden lg:flex items-center gap-8 p-4">
+        <div className="bg-red-600 py-2 px-4 flex items-center justify-center gap-3 rounded-full shadow-2xl transform hover:bg-red-700 hover:scale-105 transition-all duration-300">
+          <p
+            className="font-bold text-white text-xl hover:cursor-pointer"
+            onClick={() =>
+              window.open("https://find-it-adm.vercel.app/", "_blank")
+            }
+          >
+            <span className="text-white">L</span>ogin
           </p>
         </div>
       </div>

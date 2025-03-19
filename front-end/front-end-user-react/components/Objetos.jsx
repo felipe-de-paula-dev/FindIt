@@ -13,7 +13,7 @@ function formatarData(data) {
   const mes = String(dataObj.getMonth() + 1).padStart(2, "0");
   const ano = dataObj.getFullYear();
 
-  return `${mes}/${dia}/${ano}`;
+  return `${dia}/${mes}/${ano}`;
 }
 
 // ---------------------------
@@ -60,31 +60,42 @@ export function Objetos({ search, location, campus }) {
       ) : (
         data.map((item, index) => (
           <div
-            className="w-[100%] h-fit text-xl flex flex-col gap-2 bg-slate-50 rounded-md border-2 border-slate-200 p-3 md:w-[300px] shadow"
+            className="w-full md:w-[290px] bg-white rounded-lg border border-gray-200 shadow-lg p-4 flex flex-col gap-3"
             key={index}
           >
-            <p>
-              Nome: <b>{item.nome_item}</b>
+            <p className="text-lg font-semibold text-gray-700">
+              Nome: <span className="text-gray-900">{item.nome_item}</span>
             </p>
-            <p>
-              Data: <b>{formatarData(item.data_encontrado)}</b>
+
+            <p className="text-gray-600 text-[17px]">
+              Data:{" "}
+              <span className="font-medium text-gray-800">
+                {formatarData(item.data_encontrado)}
+              </span>
             </p>
-            <p>
-              Local: <b>{item.local_encontrado}</b>
+
+            <p className="text-gray-600 text-[17px]">
+              Local:{" "}
+              <span className="font-medium text-gray-800">
+                {item.local_encontrado}
+              </span>
             </p>
+
+            <div className="w-full h-[320px] overflow-hidden rounded-lg">
+              <img
+                src={item.imagem_url}
+                alt={item.nome_item}
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+
             <button
-              className="bg-green-700 text-white p-1 rounded-sm border border-transparent hover:cursor-pointer hover:bg-white hover:border-green-600 hover:text-green-600 transition-all"
-              onClick={() => {
-                handleClick(item);
-              }}
+              className="bg-green-600 text-white font-medium py-2 rounded-lg mt-2 transition-all border border-transparent 
+               hover:bg-white hover:text-green-600 hover:border-green-600 shadow-md hover:cursor-pointer"
+              onClick={() => handleClick(item)}
             >
               Agendar Retirada
             </button>
-            <img
-              src={item.imagem_url}
-              alt=""
-              className="rounded-sm h-[300px] object-cover"
-            />
           </div>
         ))
       )}

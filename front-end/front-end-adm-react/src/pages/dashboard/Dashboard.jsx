@@ -3,7 +3,7 @@ import { Nav } from "../../components/Nav";
 import { NavUser } from "../../components/NavUser";
 import { Report } from "../../components/Report";
 import { VisaoGeral } from "../../components/VisaoGeral";
-import { ObjetosPendentes } from "../../components/ObjetosPendentes";
+import { AddItem } from "../../components/AddItem";
 import { ObjetosAprovados } from "../../components/ObjetosAprovados";
 import { RetiradaDeObjetos } from "../../components/RetiradaDeObjetos";
 import { useEffect, useState } from "react";
@@ -54,11 +54,11 @@ export function Dashboard() {
   let renderedComponent;
 
   switch (onOptionComponent) {
-    case "pendentes":
-      renderedComponent = <ObjetosPendentes />;
-      break;
     case "aprovados":
       renderedComponent = <ObjetosAprovados />;
+      break;
+    case "adicionar":
+      renderedComponent = <AddItem />;
       break;
     case "retirada":
       renderedComponent = <RetiradaDeObjetos />;
