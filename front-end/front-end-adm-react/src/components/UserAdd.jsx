@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export function UserAdd() {
   const [user, setUser] = useState("");
@@ -34,7 +35,12 @@ export function UserAdd() {
       );
 
       if (response.ok) {
-        setAlert({ type: "success", message: "Usuário Criado Com Sucesso!" });
+        Swal.fire({
+          icon: "success",
+          title: "Adicionado!",
+          text: "Usuário Criado Com Sucesso!",
+          timer: 3000,
+        });
         setTimeout(() => {
           setUser("");
           setPassword("");
@@ -46,9 +52,11 @@ export function UserAdd() {
         throw new Error("Erro ao criar usuário");
       }
     } catch (error) {
-      setAlert({
-        type: "error",
-        message: error.message || "Erro desconhecido",
+      Swal.fire({
+        icon: "error",
+        title: "Erro!",
+        text: error.message || "Erro desconhecido",
+        timer: 3000,
       });
     }
   };

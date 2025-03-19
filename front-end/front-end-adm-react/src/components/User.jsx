@@ -1,5 +1,6 @@
 import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 export function User() {
   const [data, setData] = useState([]);
@@ -37,7 +38,15 @@ export function User() {
   }, [alert]);
 
   async function deleteUser(id) {
-    if (confirm("Deseja Excluir o usuario?")) {
+    const result = await Swal.fire({
+      title: "Você quer deletar o Usuario?",
+      text: "Esta ação não pode ser desfeita!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+    });
+    if (result.isConfirmed) {
       const response = await fetch(
         `https://findit-08qb.onrender.com/user/delete/${id}`,
         {
@@ -45,16 +54,20 @@ export function User() {
         }
       );
       if (response.ok) {
-        setAlert({
-          type: "success",
-          message: "Usuário Deletado",
+        Swal.fire({
+          icon: "success",
+          title: "Deletado!",
+          text: "O Usuario Foi Deletado Com Sucesso!",
+          timer: 3000,
         });
         const updatedData = data.filter((user) => user.id !== id);
         setData(updatedData);
       } else {
-        setAlert({
-          type: "error",
-          message: "Erro desconhecido",
+        Swal.fire({
+          icon: "error",
+          title: "Erro!",
+          text: "Erro desconhecido",
+          timer: 2000,
         });
       }
     }
