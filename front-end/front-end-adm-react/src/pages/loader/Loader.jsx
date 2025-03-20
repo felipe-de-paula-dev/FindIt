@@ -57,11 +57,11 @@ export function Loader() {
           <div className="flex flex-col items-center">
             <p className="text-8xl font-semibold flex items-baseline text-white gap-1 absolute top-[45%] translate-y-[-50%]">
               <p>Find</p>
-              <p className="text-vermelhointenso">It</p>
+              <p className="text-red-600">It</p>
               <Search
                 size={72}
                 strokeWidth={3.3}
-                className="text-vermelhointenso animate-searchSvg"
+                className="text-red-600 animate-searchSvg"
               />
             </p>
             <LoaderCircle
@@ -72,7 +72,7 @@ export function Loader() {
             <LoaderCircle
               size={36}
               strokeWidth={3}
-              className="text-vermelhointenso animate-loading-2 absolute bottom-[13%] z-[5]"
+              className="text-red-600 animate-loading-2 absolute bottom-[13%] z-[5]"
             />
             <p className="text-white absolute bottom-[8%] text-[20px] font-[400]">
               {text}

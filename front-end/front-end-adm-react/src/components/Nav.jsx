@@ -46,18 +46,16 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
           }}
         >
           <li>
-            <h1 className="text-white text-2xl font-Mulish font-bold">Find</h1>
+            <h1 className="text-white text-2xl font-Mulish font-semibold">
+              Find
+            </h1>
           </li>
           <li>
-            <h1 className="text-vermelhointenso text-2xl font-Mulish font-extrabold">
+            <h1 className="text-red-500 text-2xl font-Mulish font-semibold">
               It
             </h1>
           </li>
-          <Search
-            className="text-vermelhointenso ml-1"
-            strokeWidth={3}
-            size={20}
-          />
+          <Search className="text-red-500 ml-1" strokeWidth={3} size={20} />
         </ul>
         <ul className="flex space-y-10 items-center flex-col">
           <li
@@ -108,7 +106,7 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
           Ajuda
         </li>
         <button
-          className="mt-4 p-1.5 bg-vermelhointenso w-[70px] rounded-[8px] text-white hover:scale-110   cursor-pointer transform transition-all font-semibold"
+          className="mt-4 p-1.5 bg-red-700 w-[70px] rounded-[8px] text-white hover:scale-110   cursor-pointer transform transition-all font-semibold"
           onClick={goToLogin}
         >
           Sair

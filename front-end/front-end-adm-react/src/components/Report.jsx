@@ -89,7 +89,7 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
   }
 
   return (
-    <div className="flex-col flex justify-between h-full w-min border-r-1 border-slate-200 bg-slate-50">
+    <div className="flex-col flex justify-between h-full w-min border-r-1 border-slate-200 bg-slate-100">
       <div>
         <h1 className="text-xl font-medium pl-4 mt-3">{title}</h1>
         <ul className="flex flex-col mt-3 w-[250px]">

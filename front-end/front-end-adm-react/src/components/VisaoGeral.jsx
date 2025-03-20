@@ -63,19 +63,19 @@ export function VisaoGeral() {
         </div>
       </div>
       <div className="w-full h-full p-6 flex flex-col  shadow overflow-hidden pb-3">
-        <div className="border-t-4 pr-15  rounded-tl-md rounded-tr-md p-3 border-slate-600 bg-slate-50 w-fit shadow">
+        <div className="border-t-4 pr-15  rounded-tl-md rounded-tr-md p-3 border-slate-600 bg-slate-100 w-fit shadow">
           <h2>Total De Objetos</h2>
           <h1 className="text-4xl font-medium">{totalObjetos}</h1>
         </div>
-        <div className="h-full w-full max-h-screen bg-slate-50 shadow flex flex-col p-3">
+        <div className="h-full w-full max-h-screen bg-slate-100 shadow flex flex-col p-3">
           <div className="flex-1 w-full rounded-md shadow overflow-hidden">
             <Grafico key={campus} dados={dados} />
           </div>
           <div className="flex w-full gap-4 mt-4">
-            <div className="h-[210px] w-fit bg-slate-50 rounded-md p-2 shadow border border-slate-200">
+            <div className="h-[210px] w-fit bg-slate-100 rounded-md p-2 shadow border border-slate-200">
               <GraficoPizza key={campus} dados={dadosRetirados} />
             </div>
-            <div className="h-[210px] w-full bg-slate-50 rounded-md p-2 shadow flex justify-center border border-slate-100">
+            <div className="h-[210px] w-full bg-slate-100 rounded-md p-2 shadow flex justify-center border border-slate-100">
               <GraficoObjetos key={campus} dados={dadosDosObjetos} />
             </div>
           </div>

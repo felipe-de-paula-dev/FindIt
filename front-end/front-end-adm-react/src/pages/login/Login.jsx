@@ -55,7 +55,7 @@ export function Login() {
   };
 
   return (
-    <div className="bg-slate-900 w-screen h-screen flex items-center justify-center overflow-hidden">
+    <div className="bg-gray-900 w-screen h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute w-96 h-96 bg-red-500 opacity-10 blur-3xl animate-blur1"></div>
       <div className="absolute w-80 h-80 bg-red-400 opacity-10 blur-3xl animate-blur2"></div>
       <div className="absolute w-96 h-96 bg-red-600 opacity-10 blur-3xl animate-blur3"></div>
@@ -63,47 +63,45 @@ export function Login() {
       <div className="flex flex-col items-center z-10">
         <ul className="flex items-baseline mb-2">
           <li>
-            <h1 className="text-white text-4xl font-Mulish font-bold">Find</h1>
+            <h1 className="text-white text-4xl font-Mulish font-semibold">
+              Find
+            </h1>
           </li>
           <li>
-            <h1 className="text-vermelhointenso text-5xl font-Mulish font-extrabold">
+            <h1 className="text-red-500 text-5xl font-Mulish font-semibold">
               It
             </h1>
           </li>
-          <Search
-            className="text-vermelhointenso ml-1"
-            strokeWidth={3}
-            size={32}
-          />
+          <Search className="text-red-500 ml-1" strokeWidth={3} size={32} />
         </ul>
-        <div className="bg-white shadow rouded-[10px] flex items-center justify-center flex-col w-[400px] h-[350px] pt-4 pb-2">
+        <div className="bg-gray-200 shadow rouded-[10px] flex items-center justify-center flex-col w-[400px] h-[350px] pt-4 pb-2">
           <h1 className="self-start ml-6 text-xl font-medium">
-            Find<span className="text-vermelhointenso">It</span> Admin Login
+            Find<span className="text-red-500">It</span> Admin Login
           </h1>
           <p className="self-start ml-6 font-normal">
             Por Favor, Preencha Os Campos Abaixo
           </p>
 
-          <form action="" className="flex flex-col m-2 gap-5 space-y-2">
+          <form action="" className="flex flex-col m-2 gap-5 space-y-3">
             <input
               type="text"
               placeholder="User"
               value={user}
               onChange={(event) => setUser(event.target.value)}
-              className="p-2 w-[350px] bg-transparent border-b-1 border-black shadow focus:outline-none focus:ring focus:border-b-vermelhointenso focus:bg-red-50 ring-transparent"
+              className="p-2 w-[350px] bg-transparent border-b border-black shadow focus:outline-none focus:ring focus:border-b-red-500 focus:bg-red-100 ring-transparent"
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="p-2 w-[350px] bg-transparent border-b-1 border-black shadow focus:outline-none focus:ring focus:border-b-vermelhointenso focus:bg-red-50 ring-transparent"
+              className="p-2 w-[350px] bg-transparent border-b border-black shadow focus:outline-none focus:ring focus:border-b-red-500 focus:bg-red-100 ring-transparent"
             />
             <input
               type="button"
               value="Login"
               onClick={goToDashboard}
-              className="p-2 w-[350px] shadow mt-6 bg-linear-65 from-red-900 to-vermelhointenso text-white font-medium rounded-[5px] hover:cursor-pointer"
+              className="p-2 w-[350px] shadow mt-6 bg-red-700 text-white font-medium rounded-[5px] hover:cursor-pointer"
             />
           </form>
         </div>

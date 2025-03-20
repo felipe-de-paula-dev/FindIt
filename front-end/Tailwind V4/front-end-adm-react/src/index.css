@@ -1,0 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import "tailwindcss";
+
+* {
+  user-select: none;
+}
+
+@theme {
+  --font-Playfair: "Playfair Display", serif;
+  --font-Mulish: "Mulish", serif;
+  --color-verdesuave: #a7c5bd; /* Verde suave */
+  --color-begeclaro: #e5ddcb; /* Bege claro */
+  --color-coralvibrante: #eb7b59; /* Coral vibrante */
+  --color-vermelhointenso: #cf4647; /* Vermelho intenso */
+  --color-mauveescuro: #524656; /* Mauve escuro */
+  --color-verdemata: #548b54;
+}
+
+@keyframes error {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 3px 3px 30px -3px rgba(255, 0, 0, 0.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes blur1 {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(60vw, 20vh);
+  }
+  50% {
+    transform: translate(30vw, 60vh);
+  }
+  75% {
+    transform: translate(10vw, 30vh);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes blur2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-60vw, 30vh);
+  }
+  50% {
+    transform: translate(-20vw, 70vh);
+  }
+  75% {
+    transform: translate(-10vw, 10vh);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes blur3 {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(50vw, -30vh);
+  }
+  50% {
+    transform: translate(20vw, -70vh);
+  }
+  75% {
+    transform: translate(10vw, -20vh);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes searchSvg {
+  0% {
+    opacity: 0;
+    transform: translateY(3rem) skewY(30deg);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-1rem) skewY(-10deg);
+  }
+  100% {
+    transform: translateY(0) skewY(0);
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes loading-2 {
+  0% {
+    transform: rotate(-60deg);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(300deg);
+    opacity: 0.9;
+  }
+}
+
+.animate-loading {
+  animation: loading 2s linear infinite;
+}
+
+.animate-loading-2 {
+  animation: loading-2 2s linear infinite;
+}
+
+.animate-searchSvg {
+  animation: searchSvg 1s ease-in-out;
+}
+
+.animate-blur1 {
+  animation: blur1 10s infinite alternate ease-in-out;
+}
+
+.animate-blur2 {
+  animation: blur2 12s infinite alternate ease-in-out;
+}
+
+.animate-blur3 {
+  animation: blur3 14s infinite alternate ease-in-out;
+}
+
+.animate-error {
+  animation: error 1s infinite ease-in-out;
+}

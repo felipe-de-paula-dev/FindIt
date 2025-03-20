@@ -3,7 +3,7 @@ import { BellRing, MessageCircleMore, Search } from "lucide-react";
 
 export function NavUser(props) {
   return (
-    <div className="bg-slate-50 w-full h-min p-2 flex justify-between overflow-hidden border-b-1 border-slate-200">
+    <div className="bg-slate-100 w-full h-min p-2 flex justify-between overflow-hidden border-b-1 border-slate-200">
       <ul>
         <select
           name="status"
