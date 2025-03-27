@@ -573,8 +573,8 @@ routes.post("/user/login", (req: Request, res: Response): void => {
 
         res.cookie("authToken", token, {
           httpOnly: true,
-          secure: false, // process.env.NODE_ENV === "production",
-          sameSite: "lax",
+          secure: true,
+          sameSite: "none",
           maxAge: 60 * 60 * 1000,
         });
 
