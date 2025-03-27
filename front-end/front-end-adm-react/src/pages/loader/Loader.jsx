@@ -12,7 +12,7 @@ export function Loader() {
     async function isAuthenticated() {
       try {
         const response = await fetch(
-          "https://findit-08qb.onrender.com/check-auth",
+          "http://localhost:3333/check-auth",
           {
             method: "GET",
             credentials: "include",

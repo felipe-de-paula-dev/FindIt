@@ -14,7 +14,7 @@ export function Login() {
   const goToDashboard = async () => {
     try {
       const response = await fetch(
-        "https://findit-08qb.onrender.com/user/login",
+        "http://localhost:3333/user/login",
         {
           method: "POST",
           credentials: "include",

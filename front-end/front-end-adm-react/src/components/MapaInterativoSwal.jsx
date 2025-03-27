@@ -17,7 +17,7 @@ export function MapaInterativoSwal() {
 
   async function setarNomeDescricao() {
     const responseToken = await fetch(
-      "https://findit-08qb.onrender.com/auth-enter",
+      "http://localhost:3333/auth-enter",
       {
         method: "GET",
         credentials: "include",
