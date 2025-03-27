@@ -32,7 +32,11 @@ db.getConnection((err, connection) => {
 });
 exports.default = db;
 const app = (0, express_1.default)();
-const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+const allowedOrigins = [
+    "https://find-it-adm.vercel.app",
+    "https://find-it-user.vercel.app",
+    "https://findit-08qb.onrender.com",
+];
 app.use((0, cors_1.default)({
     origin: (origin, callback) => {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {

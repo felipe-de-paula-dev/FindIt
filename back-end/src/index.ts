@@ -33,8 +33,6 @@ export default db;
 const app = express();
 
 const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
   "https://find-it-adm.vercel.app",
   "https://find-it-user.vercel.app",
   "https://findit-08qb.onrender.com",
@@ -44,7 +42,7 @@ app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true); // permite a origem
+        callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
       }
