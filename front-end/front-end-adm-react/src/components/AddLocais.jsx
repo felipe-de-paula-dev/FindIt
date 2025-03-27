@@ -11,7 +11,7 @@ export function AddLocais() {
 
   async function deletarLocal(id) {
     const responseToken = await fetch(
-      "http://localhost:3333/auth-enter",
+      "https://findit-08qb.onrender.com/auth-enter",
       {
         method: "GET",
         credentials: "include",

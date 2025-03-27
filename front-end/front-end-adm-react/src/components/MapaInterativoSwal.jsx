@@ -17,7 +17,7 @@ export function MapaInterativoSwal() {
 
   async function setarNomeDescricao() {
     const responseToken = await fetch(
-      "http://localhost:3333/auth-enter",
+      "https://findit-08qb.onrender.com/auth-enter",
       {
         method: "GET",
         credentials: "include",
@@ -96,7 +96,7 @@ export function MapaInterativoSwal() {
       alert(novoLocal.longitude);
       try {
         const data = { nome, descricao, localizacao: novoLocal, campus };
-        const res = await fetch("http://localhost:3333/api/adicionarLocal", {
+        const res = await fetch("https://findit-08qb.onrender.com/api/adicionarLocal", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
