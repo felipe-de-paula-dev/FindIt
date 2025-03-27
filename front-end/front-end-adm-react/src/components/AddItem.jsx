@@ -19,7 +19,7 @@ export function AddItem() {
       if (campus == 0) return;
       try {
         const response = await fetch(
-          `http://localhost:3333/api/campus/${campus}`,
+          `https://findit-08qb.onrender.com/api/campus/${campus}`,
           {
             method: "GET",
           }
@@ -36,7 +36,7 @@ export function AddItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const responseToken = await fetch("http://localhost:3333/auth-enter", {
+    const responseToken = await fetch("https://findit-08qb.onrender.com/auth-enter", {
       method: "GET",
       credentials: "include",
     });

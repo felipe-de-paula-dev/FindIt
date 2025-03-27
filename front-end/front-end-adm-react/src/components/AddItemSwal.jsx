@@ -19,7 +19,7 @@ export function AddItemSwal() {
     setIsButtonDisabled(true); // Disable button while submitting
 
     const responseToken = await fetch(
-      "http:localhost:3333/auth-enter",
+      "https://findit-08qb.onrender.com/auth-enter",
       {
         method: "GET",
         credentials: "include",
@@ -38,7 +38,7 @@ export function AddItemSwal() {
 
       try {
         const response = await fetch(
-          "http:localhost:3333/adicionar",
+          "https://findit-08qb.onrender.com/adicionar",
           {
             method: "POST",
             body: formData,
