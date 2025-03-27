@@ -17,6 +17,7 @@ export function Login() {
         "https://findit-08qb.onrender.com/user/login",
         {
           method: "POST",
+          mode: "no-cors",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
