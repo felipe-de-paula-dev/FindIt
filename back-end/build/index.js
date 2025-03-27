@@ -32,24 +32,14 @@ db.getConnection((err, connection) => {
 });
 exports.default = db;
 const app = (0, express_1.default)();
-const allowedOrigins = [
-    "https://find-it-adm.vercel.app",
-    "https://find-it-user.vercel.app",
-    "https://findit-08qb.onrender.com",
-];
 app.use((0, cors_1.default)({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: ["https://find-it-adm.vercel.app", "https://find-it-adm.vercel.app", "http://localhost:5173", "http://localhost:5174"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    allowedHeaders: ['Content-Type']
 }));
 app.use(body_parser_1.default.json());
+app.use(express_1.default.json());
 app.use(routes_1.default);
 app.use((0, cookie_parser_1.default)());
 const PORT = process.env.PORT || 3333;
