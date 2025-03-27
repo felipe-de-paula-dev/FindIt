@@ -33,14 +33,17 @@ export default db;
 const app = express();
 
 
+app.use(cors());
 
-app.use(cors({
-    origin: "https://find-it-adm.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-    allowedHeaders: ['Content-Type']
-  })
-);
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials');
+  res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
 
 app.use(bodyParser.json());
 app.use(express.json());
