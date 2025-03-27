@@ -37,6 +37,7 @@ const allowedOrigins = [
   "http://localhost:5174",
   "https://find-it-adm.vercel.app",
   "https://find-it-user.vercel.app",
+  "https://findit-08qb.onrender.com",
 ];
 
 app.use(
