@@ -1,7 +1,7 @@
 import { RefreshCcw } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Filter } from "./Filter";
-
+import { DescricaoItem } from "./DescricaoItem";
 import Swal from "sweetalert2";
 
 function formatarData(data) {
@@ -15,7 +15,7 @@ function formatarData(data) {
   const mes = String(dataObj.getMonth() + 1).padStart(2, "0");
   const ano = dataObj.getFullYear();
 
-  return `${mes}/${dia}/${ano}`;
+  return `${dia}/${mes}/${ano}`;
 }
 
 export function ObjetosAprovados() {
@@ -52,56 +52,86 @@ export function ObjetosAprovados() {
   }
 
   async function deletarItem(id) {
-    const confirmationResult = await Swal.fire({
-      title: "Tem certeza?",
-      text: "Essa ação não pode ser desfeita!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sim, excluir!",
-      cancelButtonText: "Cancelar",
-    });
+    const responseToken = await fetch(
+      "https://findit-08qb.onrender.com/auth-enter",
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
 
-    if (confirmationResult.isConfirmed) {
-      try {
-        await fetch(
-          `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`,
-          {
+    const dataToken = await responseToken.json();
+    console.log(dataToken);
+
+    alert(id);
+
+    if (dataToken.code.cargoId == 1 || dataToken.code.cargoId == 3) {
+      const confirmationResult = await Swal.fire({
+        backdrop: `
+        rgba(0,0,0,0.6)
+        left top
+        no-repeat
+      `,
+        title: "Tem certeza?",
+        text: "Essa ação não pode ser desfeita!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Sim, excluir!",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (confirmationResult.isConfirmed) {
+        try {
+          await fetch(
+            `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          await fetch(`https://findit-08qb.onrender.com/itens/excluir/${id}`, {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
             },
-          }
-        );
+          });
 
-        await fetch(`https://findit-08qb.onrender.com/itens/excluir/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        Swal.fire({
-          title: "Excluído!",
-          text: "O item foi removido com sucesso.",
-          icon: "success",
-          timer: 4500,
-        });
-        carregar();
-        console.log("logs e Item excluídos com sucesso!");
-      } catch (err) {
-        console.error("Erro ao excluir item:", err);
-        Swal.fire("Erro!", `Falha ao excluir: ${err.message}`, "error");
-        setReload(true);
+          Swal.fire({
+            backdrop: `
+            rgba(0,0,0,0.6)
+            left top
+            no-repeat
+          `,
+            title: "Excluído!",
+            text: "O item foi removido com sucesso.",
+            icon: "success",
+            timer: 4500,
+          });
+          carregar();
+        } catch (err) {
+          console.error("Erro ao excluir item:", err);
+          Swal.fire("Erro!", `Falha ao excluir: ${err.message}`, "error");
+        }
       }
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Atenção",
+        text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
+        confirmButtonText: "Entendi",
+      });
     }
   }
 
   if (loading) {
     return (
-      <div className="flex w-full h-[calc(100vh-8vh)]  items-center flex-col">
-        <div className="w-[95%] border-b pb-4 border-gray-300 flex justify-between items-center  px-6 py-8">
+      <div className="flex w-full h-[calc(100vh-8vh)] items-center flex-col">
+        <div className="w-[95%] border-b pb-4 border-gray-300 flex justify-between items-center px-6 py-8">
           <h1 className="text-2xl font-semibold text-gray-800">
             Visão Geral - Objetos Aprovados
           </h1>
@@ -126,7 +156,7 @@ export function ObjetosAprovados() {
 
   return (
     <div className="flex w-full h-[calc(100vh-8vh)] items-center flex-col">
-      <div className="w-[95%] border-b pb-4 border-gray-300 flex justify-between items-center  px-6 py-8">
+      <div className="w-[95%] border-b pb-4 border-gray-300 flex justify-between items-center px-6 py-8">
         <h1 className="text-2xl font-semibold text-gray-800">
           Visão Geral - Objetos Aprovados
         </h1>
@@ -176,7 +206,11 @@ export function ObjetosAprovados() {
                   <p className="text-gray-600 text-[17px]">
                     Local:{" "}
                     <span className="font-medium text-gray-800">
-                      {item.local_encontrado}
+                      {item.local_encontrado ? (
+                        <DescricaoItem nome={item.local_encontrado} />
+                      ) : (
+                        "Carregando..."
+                      )}
                     </span>
                   </p>
                   <p className="text-gray-600 text-[17px]">
@@ -201,10 +235,12 @@ export function ObjetosAprovados() {
 
                 <div className="flex flex-col gap-2 w-full mt-3">
                   <button
-                    className="bg-red-500 text-white w-full py-2 rounded-md hover:bg-red-600 transition-all shadow-md hover:scale-105"
-                    onClick={() => deletarItem(item.id_item)}
+                    className="bg-red-500 text-white w-full py-2 rounded-md hover:bg-red-600"
+                    onClick={() => {
+                      deletarItem(item.id_item);
+                    }}
                   >
-                    Excluir Item?
+                    Excluir Item
                   </button>
                 </div>
               </div>

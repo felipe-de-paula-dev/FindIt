@@ -2,8 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+.image-custom {
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 * {
   user-select: none;
+}
+
+@media print {
+  .no-print {
+    display: none;
+  }
+}
+
+.alerta-personalizado {
+  width: 600px; /* Ajuste a largura */
+  height: 600px; /* Ajuste a altura */
+  font-size: 18px; /* Ajuste o tamanho da fonte */
+  padding: 40px; /* Ajuste o padding conforme necessário */
 }
 
 @theme {

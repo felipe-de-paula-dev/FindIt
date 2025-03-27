@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { Logs } from "../../components/Logs";
 import { User } from "../../components/User";
 import { UserAdd } from "../../components/UserAdd";
+import { AddLocais } from "../../components/AddLocais";
 
 export function Dashboard() {
   const [selectedOption, setSelectedOption] = useState("");
@@ -24,13 +25,18 @@ export function Dashboard() {
         return;
       }
 
-      document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      fetch("https://findit-08qb.onrender.com/logout", {
+        method: "POST",
+        credentials: "include",
+      });
     };
 
     const handlePageShow = (event) => {
       if (event.persisted) {
-        document.cookie =
-          "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        fetch("https://findit-08qb.onrender.com/logout", {
+          method: "POST",
+          credentials: "include",
+        });
       }
     };
 
@@ -62,6 +68,9 @@ export function Dashboard() {
       break;
     case "retirada":
       renderedComponent = <RetiradaDeObjetos />;
+      break;
+    case "mapas":
+      renderedComponent = <AddLocais />;
       break;
     case "usuarios":
       renderedComponent = <User />;

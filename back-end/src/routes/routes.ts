@@ -1,8 +1,7 @@
 import express, { Request, Response, NextFunction, Router } from "express";
 import path from "path";
 import mysql from "mysql2";
-import fs from "fs";
-import multer from "multer";
+import jwt from "jsonwebtoken";
 import db from "../index";
 import axios from "axios";
 import dotenv from "dotenv";
@@ -10,13 +9,53 @@ import cookieParser from "cookie-parser";
 import { RowDataPacket } from "mysql2"; // Importando tipo para garantir a tipagem
 import upload from "../uploads";
 import cloudinary from "cloudinary";
+import crypto from "crypto";
 
+const JWT_SECRET = process.env.JWT_SECRET_CODE || "default-secret-code";
 const routes = Router();
 
 dotenv.config();
 routes.use(cookieParser());
 
 // 'Pendente','Disponivel', 'Retirado'
+
+const AES_SECRET_KEY = process.env.AES_SECRET_KEY || "crypto-password";
+
+function getAESKey(key: any) {
+  return crypto.createHash("sha256").update(key).digest();
+}
+
+function encryptPassword(password: string) {
+  const key = getAESKey(AES_SECRET_KEY);
+  const cipher = crypto.createCipheriv("aes-256-cbc", key, Buffer.alloc(16, 0));
+  let encrypted = cipher.update(password, "utf8", "hex");
+  encrypted += cipher.final("hex");
+  return encrypted;
+}
+
+function decryptPassword(encryptedPassword: string) {
+  const key = getAESKey(AES_SECRET_KEY);
+  try {
+    const decipher = crypto.createDecipheriv(
+      "aes-256-cbc",
+      key,
+      Buffer.alloc(16, 0)
+    );
+    let decrypted = decipher.update(encryptedPassword, "hex", "utf8");
+    decrypted += decipher.final("utf8");
+    return decrypted;
+  } catch (error) {
+    console.error("Erro ao descriptografar:", error);
+    return "Erro na descriptografia";
+  }
+}
+
+routes.post("/decryptPass", (req: Request, res: Response) => {
+  const pass = req.body;
+  const password = pass.pass;
+  console.log(password);
+  res.json(decryptPassword(password));
+});
 
 routes.post(
   "/adicionar",
@@ -518,19 +557,40 @@ routes.post("/user/login", (req: Request, res: Response): void => {
 
         const usuario = results[0];
 
-        if (usuario.senha !== password) {
+        const decryptedPassword = decryptPassword(usuario.senha);
+
+        if (decryptedPassword !== password) {
           return res.status(401).json({ message: "Senha incorreta" });
         }
-
-        const response = {
-          message: "Login Bem Sucedido.",
-          token: null as string | null,
-          urlImagem: usuario.urlImagem || "",
+        const payload = {
+          userId: usuario.id,
+          cargoId: usuario.cargoId,
         };
 
-        if (usuario.cargoId === 1) {
-          response.message = "Login Bem Sucedido - Adm";
-        }
+        const token = jwt.sign(payload, process.env.JWT_SECRET_CODE!, {
+          expiresIn: "1h",
+        });
+
+        res.cookie("authToken", token, {
+          httpOnly: true,
+          secure: false, // process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 1000,
+        });
+
+        console.log("Cookie Enviado!");
+
+        const response = {
+          message:
+            usuario.cargoId === 1
+              ? "Login bem sucedido - adm"
+              : "Login bem sucedido",
+          token: token as string | null,
+          urlImagem: usuario.urlImagem || "",
+          user: usuario.user,
+          codigo: usuario.cargoId,
+          userId: usuario.id,
+        };
 
         return res.status(200).json(response);
       }
@@ -538,6 +598,41 @@ routes.post("/user/login", (req: Request, res: Response): void => {
   } catch (error) {
     console.error("Erro ao processar login:", error);
     res.status(500).json({ message: "Erro ao processar login", error });
+    return;
+  }
+});
+
+routes.post("/logout", (req: Request, res: Response): void => {
+  res.clearCookie("authToken", { path: "/", sameSite: "lax", httpOnly: true });
+  res.status(200).json({ message: "Logout realizado com sucesso" });
+});
+
+routes.get("/check-auth", (req: Request, res: Response): void => {
+  const token = req.cookies.authToken;
+
+  if (!token) {
+    res.status(401).json({ authenticated: false });
+    return;
+  }
+
+  res.json({ authenticated: true });
+  return;
+});
+
+routes.get("/auth-enter", (req: Request, res: Response): void => {
+  const token = req.cookies.authToken;
+
+  if (!token) {
+    res.status(401).json({ message: "Token Invalido" });
+    return;
+  }
+
+  try {
+    const decoded = jwt.verify(token, "default-secret-code");
+    res.status(200).json({ code: decoded });
+    return;
+  } catch (error) {
+    res.status(403).json({ message: "Erro no token" });
     return;
   }
 });
@@ -629,6 +724,20 @@ routes.post(
     const { user, senha, cargo_id } = req.body;
     const imgUserPhoto = req.file ? req.file.path : null;
 
+    if (!user || !senha || !cargo_id) {
+      console.log("imagem" + imgUserPhoto);
+      res.status(400).json({ message: "Todos os campos são obrigatórios!" });
+      return;
+    }
+
+    if (!req.file) {
+      console.log("imagem" + imgUserPhoto);
+      res.status(400).json({ message: "A imagem é obrigatória" });
+      return;
+    }
+
+    const encryptedPassword = encryptPassword(senha);
+
     db.query(
       "SELECT * FROM usuarios WHERE user = ?",
       [user],
@@ -645,21 +754,9 @@ routes.post(
             .json({ message: "Já existe um usuário com este nome" });
         }
 
-        if (!user || !senha || !cargo_id) {
-          console.log("imagem" + imgUserPhoto);
-          return res
-            .status(400)
-            .json({ message: "Todos os campos são obrigatórios!" });
-        }
-
-        if (!req.file) {
-          console.log("imagem" + imgUserPhoto);
-          return res.status(400).json({ message: "A imagem é obrigatória" });
-        }
-
         db.query(
           "INSERT INTO usuarios (user, senha, urlImagem, cargoId) VALUES (?, ?, ?, ?)",
-          [user, senha, imgUserPhoto, cargo_id],
+          [user, encryptedPassword, imgUserPhoto, cargo_id],
           (err, results: any) => {
             if (err) {
               return res
@@ -781,6 +878,125 @@ routes.get("/itens/contagem-itens", (req: Request, res: Response) => {
       );
     }
   );
+});
+
+routes.get("/api/campus/:campus", (req: Request, res: Response) => {
+  const campus = req.params.campus;
+  let params: any;
+
+  let sql = "SELECT * FROM localizacoes ";
+
+  if (Number(campus) != 0) {
+    sql += " WHERE campus = ?";
+    params = [campus];
+  } else {
+    params = [];
+  }
+
+  db.query(sql, params, (err, result) => {
+    if (err) res.status(403).json({ message: "Erro ao buscar Localizações" });
+
+    res.json(result);
+  });
+});
+
+routes.get("/api/campusDesc/:descricao", (req: Request, res: Response) => {
+  const descricao = req.params.descricao;
+  const campus = req.query;
+  let params: any;
+
+  console.log(descricao);
+  console.log(campus.campus);
+
+  let sql = "SELECT * FROM localizacoes ";
+
+  if (descricao != "") {
+    sql += " WHERE descricao = ? AND campus = ?";
+    params = [descricao, campus.campus];
+  } else {
+    params = [];
+  }
+  db.query(sql, params, (err, result) => {
+    if (err) res.status(403).json({ message: "Erro ao buscar Localizações" });
+
+    res.json(result);
+  });
+});
+
+routes.post("/api/adicionarLocal", (req: Request, res: Response) => {
+  const { nome, descricao, localizacao, campus } = req.body;
+  const { longitude, latitude } = localizacao;
+  const criado_em = new Date().toISOString().slice(0, 19).replace("T", " ");
+
+  const sqlSelect =
+    "SELECT COUNT(*) AS count FROM localizacoes where nome = ? AND campus = ?";
+
+  db.query(sqlSelect, [nome, campus], (err, result: mysql.RowDataPacket[]) => {
+    if (err) {
+      console.error("Erro ao realizar a consulta", err);
+      return;
+    }
+    if (result[0]?.count > 0) {
+      res
+        .status(500)
+        .json({ message: "Já existe um local com esse nome nesse campus" });
+      return;
+    }
+  });
+
+  const sql =
+    "INSERT INTO localizacoes (nome, descricao, latitude, longitude, campus, criado_em) VALUES (?,?,?,?,?,?)";
+  const values = [nome, descricao, latitude, longitude, campus, criado_em];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Ocorreu um erro ao inserir a localização nova",
+        error: err,
+      });
+    }
+
+    console.log("Localizacao Inserida");
+    res.status(200).json({
+      message: "Localização inserida com sucesso!",
+    });
+  });
+});
+
+routes.get("/api/descricao/:nome", (req: Request, res: Response) => {
+  const nome = req.params.nome;
+  const sql = "SELECT descricao FROM localizacoes where nome = ?";
+
+  db.query(sql, [nome], (err, results) => {
+    if (err) {
+      return res
+        .status(404)
+        .json({ message: "Ococrreu um erro ao buscar a descricao", err: err });
+    }
+
+    return res.status(200).json({
+      message: "Descricao encontrada com sucesso!",
+      descricao: results,
+    });
+  });
+});
+
+routes.delete("/api/deletarLocal/:id", (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const sql = "DELETE FROM localizacoes WHERE id = ?";
+
+  db.query(sql, [id], (err, result: mysql.ResultSetHeader) => {
+    if (err) {
+      res.status(500).json({ message: "Ocorreu um erro ao deletar o local" });
+    }
+    if (result.affectedRows > 0) {
+      res.status(200).json({ message: "Local deletado com sucesso!" });
+    } else {
+      res.status(404).json({ message: "Local não encontrado." });
+    }
+  });
 });
 
 export default routes;

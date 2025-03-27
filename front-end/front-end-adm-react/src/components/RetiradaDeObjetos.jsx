@@ -58,68 +58,87 @@ export function RetiradaDeObjetos() {
   }
 
   async function handleAction(action, id) {
-    try {
-      let response;
-      if (action === "deletar") {
-        const result = await Swal.fire({
-          title: "Você tem certeza?",
-          text: "Esta ação não pode ser desfeita!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Sim, excluir",
-          cancelButtonText: "Cancelar",
-        });
+    const responseToken = await fetch(
+      "https://findit-08qb.onrender.com/auth-enter",
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
 
-        if (result.isConfirmed) {
-          await fetch(
-            `https://findit-08qb.onrender.com/retirada/excluir/${id}`,
-            {
-              method: "DELETE",
-            }
-          );
-          Swal.fire({
-            icon: "success",
-            title: "Deletado!",
-            text: "A retirada foi rejeitada com sucesso.",
+    const dataToken = await responseToken.json();
+
+    if (dataToken.code.cargoId == 1) {
+      try {
+        let response;
+        if (action === "deletar") {
+          const result = await Swal.fire({
+            title: "Você tem certeza?",
+            text: "Esta ação não pode ser desfeita!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim, excluir",
+            cancelButtonText: "Cancelar",
           });
-          setReload(true);
-        }
-      } else if (action === "aprovar") {
-        const result = await Swal.fire({
-          title: "Você tem certeza?",
-          text: "Deseja aprovar esta retirada?",
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonText: "Sim, aprovar",
-          cancelButtonText: "Cancelar",
-        });
 
-        if (result.isConfirmed) {
-          response = await fetch(
-            `https://findit-08qb.onrender.com/retirada/aprovar/${id}`,
-            {
-              method: "PUT",
-            }
-          );
-          if (!response.ok) {
-            console.error("Erro Ao Aprovar Retirada");
-            Swal.fire({
-              icon: "error",
-              title: "Erro",
-              text: "Ocorreu um erro ao aprovar a retirada.",
-            });
-          } else {
+          if (result.isConfirmed) {
+            await fetch(
+              `https://findit-08qb.onrender.com/retirada/excluir/${id}`,
+              {
+                method: "DELETE",
+              }
+            );
             Swal.fire({
               icon: "success",
-              title: "Aprovado!",
-              text: "A retirada foi aprovada com sucesso.",
+              title: "Deletado!",
+              text: "A retirada foi rejeitada com sucesso.",
             });
             setReload(true);
           }
+        } else if (action === "aprovar") {
+          const result = await Swal.fire({
+            title: "Você tem certeza?",
+            text: "Deseja aprovar esta retirada?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Sim, aprovar",
+            cancelButtonText: "Cancelar",
+          });
+
+          if (result.isConfirmed) {
+            response = await fetch(
+              `https://findit-08qb.onrender.com/retirada/aprovar/${id}`,
+              {
+                method: "PUT",
+              }
+            );
+            if (!response.ok) {
+              console.error("Erro Ao Aprovar Retirada");
+              Swal.fire({
+                icon: "error",
+                title: "Erro",
+                text: "Ocorreu um erro ao aprovar a retirada.",
+              });
+            } else {
+              Swal.fire({
+                icon: "success",
+                title: "Aprovado!",
+                text: "A retirada foi aprovada com sucesso.",
+              });
+              setReload(true);
+            }
+          }
         }
+      } catch (error) {
+        console.error(`Erro ao ${action} retirada:`, error);
       }
-    } catch (error) {
-      console.error(`Erro ao ${action} retirada:`, error);
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Atenção",
+        text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
+        confirmButtonText: "Entendi",
+      });
     }
   }
 

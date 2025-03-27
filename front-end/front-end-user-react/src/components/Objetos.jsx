@@ -1,6 +1,7 @@
 import { Link } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DescricaoItem } from "./DescricaoItem";
 
 function formatarData(data) {
   const dataObj = new Date(data);
@@ -77,7 +78,11 @@ export function Objetos({ search, location, campus }) {
             <p className="text-gray-600 text-[17px]">
               Local:{" "}
               <span className="font-medium text-gray-800">
-                {item.local_encontrado}
+                {item.local_encontrado ? (
+                  <DescricaoItem nome={item.local_encontrado} />
+                ) : (
+                  "Carregando..."
+                )}
               </span>
             </p>
 

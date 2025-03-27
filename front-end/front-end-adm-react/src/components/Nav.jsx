@@ -1,12 +1,5 @@
 /* eslint-disable react/prop-types */
-import {
-  CircleHelp,
-  Home,
-  NotepadText,
-  Package,
-  Search,
-  User,
-} from "lucide-react";
+import { Home, NotepadText, Package, Search, User, Map } from "lucide-react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -28,8 +21,11 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
       cancelButtonText: "Cancelar",
     });
     if (result.isConfirmed) {
+      await fetch("https://findit-08qb.onrender.com/logout", {
+        method: "POST",
+        credentials: "include",
+      });
       navigate("/");
-      document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
   }
   useEffect(() => {
@@ -79,11 +75,20 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
             Objetos
           </li>
           <li
+            className="text-[16px] font-[400] text-white flex  items-center space-y-2 flex-col transform transition-all hover:scale-105 cursor-pointer hover:text-red-400 "
+            onClick={() => {
+              onOptionClick("mapas"), setSelectedOption("mapas"), idClick(10);
+            }}
+          >
+            <Map size={36} />
+            Mapa
+          </li>
+          <li
             className="text-[16px] font-[400] text-white flex  items-center space-y-2 flex-col transform transition-all hover:scale-105 cursor-pointer hover:text-purple-400"
             onClick={() => {
               onOptionClick("usuarios"),
                 setSelectedOption("usuarios"),
-                idClick(5);
+                idClick(6);
             }}
           >
             <User size={36} />
@@ -92,7 +97,7 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
           <li
             className="text-[16px] font-[400] text-white flex  items-center space-y-2 flex-col transform transition-all hover:scale-105 cursor-pointer hover:text-yellow-400"
             onClick={() => {
-              onOptionClick("logs"), setSelectedOption("logs"), idClick(7);
+              onOptionClick("logs"), setSelectedOption("logs"), idClick(8);
             }}
           >
             <NotepadText size={36} />
@@ -101,10 +106,6 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
         </ul>
       </ul>
       <ul>
-        <li className="text-[18px] text-white flex  items-center space-y-2 flex-col transform transition-all hover:scale-105 cursor-pointer hover:text-red-600">
-          <CircleHelp size={32} />
-          Ajuda
-        </li>
         <button
           className="mt-4 p-1.5 bg-red-700 w-[70px] rounded-[8px] text-white hover:scale-110   cursor-pointer transform transition-all font-semibold"
           onClick={goToLogin}

@@ -1,3 +1,4 @@
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
@@ -8,6 +9,7 @@ export function UserAdd() {
   const [imgUserPhoto, setImgUserPhoto] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [alert, setAlert] = useState(null);
+  const [disabledButton, setdisabledButton] = useState(false);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -17,46 +19,67 @@ export function UserAdd() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const responseToken = await fetch(
+      "hhttps://findit-08qb.onrender.com/auth-enter",
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
 
-    const formData = new FormData();
-    formData.append("user", user);
-    formData.append("senha", password);
-    formData.append("cargo_id", cargoId);
-    formData.append("folder", "user");
-    formData.append("imgUserPhoto", imgUserPhoto);
+    const dataToken = await responseToken.json();
 
-    try {
-      const response = await fetch(
-        "https://findit-08qb.onrender.com/user/create",
-        {
-          method: "POST",
-          body: formData,
+    if (dataToken.code.cargoId == 1) {
+      setdisabledButton(true);
+      const formData = new FormData();
+      formData.append("user", user);
+      formData.append("senha", password);
+      formData.append("cargo_id", cargoId);
+      formData.append("folder", "user");
+      formData.append("imgUserPhoto", imgUserPhoto);
+
+      try {
+        const response = await fetch(
+          "https://findit-08qb.onrender.com/user/create",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (response.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Adicionado!",
+            text: "Usuário Criado Com Sucesso!",
+            timer: 3000,
+          });
+          setTimeout(() => {
+            setUser("");
+            setPassword("");
+            setCargoId("");
+            setImgUserPhoto(null);
+            setPreviewImage(null);
+            setdisabledButton(false);
+          }, 2000);
+        } else {
+          throw new Error("Erro ao criar usuário");
         }
-      );
-
-      if (response.ok) {
+      } catch (error) {
         Swal.fire({
-          icon: "success",
-          title: "Adicionado!",
-          text: "Usuário Criado Com Sucesso!",
+          icon: "error",
+          title: "Erro!",
+          text: error.message || "Erro desconhecido",
           timer: 3000,
         });
-        setTimeout(() => {
-          setUser("");
-          setPassword("");
-          setCargoId("");
-          setImgUserPhoto(null);
-          setPreviewImage(null);
-        }, 2000);
-      } else {
-        throw new Error("Erro ao criar usuário");
+        setdisabledButton(false);
       }
-    } catch (error) {
+    } else {
       Swal.fire({
-        icon: "error",
-        title: "Erro!",
-        text: error.message || "Erro desconhecido",
-        timer: 3000,
+        icon: "warning",
+        title: "Atenção",
+        text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
+        confirmButtonText: "Entendi",
       });
     }
   };
@@ -141,7 +164,8 @@ export function UserAdd() {
                 Selecione o cargo
               </option>
               <option value="1">Administrador</option>
-              <option value="2">Funcionário</option>
+              <option value="3">Funcionário</option>
+              <option value="2">Demo</option>
             </select>
           </div>
 
@@ -164,9 +188,14 @@ export function UserAdd() {
 
           <button
             type="submit"
-            className="mt-4 bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-all"
+            disabled={disabledButton}
+            className="mt-4 bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition-all hover:cursor-pointer flex items-center justify-center"
           >
-            Cadastrar
+            {disabledButton ? (
+              <Loader2 className="animate-loading" />
+            ) : (
+              "Cadastrar"
+            )}
           </button>
         </form>
 

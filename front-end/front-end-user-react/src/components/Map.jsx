@@ -15,6 +15,28 @@ export function Map() {
   const [typeMessage, setTypeMessage] = useState("");
   const [messageBox, setMessageBox] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (campus == 0) return;
+      try {
+        const response = await fetch(
+          `https://findit-08qb.onrender.com/api/campus/${campus}`,
+          {
+            method: "GET",
+          }
+        );
+
+        const data = await response.json();
+        console.log(data);
+        setData(data);
+      } catch (err) {
+        console.log("Ocorreu um erro:", err);
+      }
+    }
+    fetchData();
+  }, [campus]);
 
   useEffect(() => {
     async function fetchData() {
@@ -26,7 +48,7 @@ export function Map() {
           }
         );
         const data = await response.json();
-        setLocalEncontrado(data[0].local_encontrado.toLowerCase());
+        setLocalEncontrado(data[0].local_encontrado);
         setCampus(data[0].campus);
       } catch (err) {
         console.error("Erro ao buscar o mapa:", err);
@@ -38,49 +60,26 @@ export function Map() {
   }, [id]);
 
   useEffect(() => {
-    if (!loading && localEncontrado !== null && !mapa) {
-      CreateMap(localEncontrado);
-    }
-  }, [loading, localEncontrado]);
+    console.log(localEncontrado);
+  }, [localEncontrado]);
+
+  useEffect(() => {
+    CreateMap(localEncontrado);
+  }, [data]);
 
   function CreateMap(Mapa) {
-    const campus1 = {
-      sala: [-22.562426, -47.425279],
-      biblioteca: [-22.562178, -47.423553],
-      portaria1: [-22.56258826525875, -47.42350342386182],
-      portaria2: [-22.561311457413293, -47.42352302262576],
-      rucotil: [-22.561948507540837, -47.42510397673924],
-      patio: [-22.562397644064124, -47.425140851896494],
-      faculdade: [-22.561941990488954, -47.423929602715695],
-      outro: [-22.562424, -47.425008],
-    };
-
-    const campus2 = {
-      sala: [-22.55541486085191, -47.42898455670213],
-      labmateriais: [-22.554583709662193, -47.429902189883435],
-      labdisturbios: [-22.55439154782403, -47.43015133475157],
-      biblioteca: [-22.55538621602273, -47.42985167033761],
-      congregacao: [-22.555596248707783, -47.429172956810454],
-      portaria1: [-22.557460810429514, -47.42971757993756],
-      portaria2: [-22.557276242457565, -47.4266802410635],
-      portariacarros: [-22.55403412154558, -47.431491385961706],
-      rurestaurante: [-22.55443107835698, -47.42888029249364],
-      patio: [-22.55561936784757, -47.42950863720489],
-      outro: [-22.55581914093393, -47.42948548947745],
-    };
-
     let localEncontrado;
     let locais = 0;
 
-    if (campus == 1) {
-      locais = campus1;
-    } else if (campus == 2) {
-      locais = campus2;
-    }
-
     console.log(locais);
 
-    if (!Object.keys(locais).includes(Mapa)) {
+    const objetoEncontrado = data.find((objeto) => objeto.nome.includes(Mapa));
+
+    console.log(data);
+    console.log(Mapa);
+    console.log(objetoEncontrado);
+
+    if (objetoEncontrado == undefined) {
       if (campus == 1) {
         localEncontrado = [-22.562424, -47.425008];
       } else if (campus == 2) {
@@ -90,7 +89,8 @@ export function Map() {
       setMessageBox("Local Não Encontrado");
       setTypeMessage("err");
     } else {
-      localEncontrado = locais[Mapa];
+      const { latitude, longitude } = objetoEncontrado;
+      localEncontrado = [latitude, longitude];
       setTypeMessage("success");
       setShowMessage(true);
       setMessageBox("Local Encontrado");
@@ -111,31 +111,44 @@ export function Map() {
     const mapContainer = document.getElementById("mapa");
 
     if (mapContainer && !mapa) {
-      const novoMapa = L.map("mapa").setView(localEncontrado, 17);
+      const map = L.map("mapa", {
+        zoomControl: true,
+        dragging: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        touchZoom: false,
+      });
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap",
-      }).addTo(novoMapa);
+      map.setView(localEncontrado, 15);
+
+      map.attributionControl.setPrefix("By Felipe De Paula");
+
+      L.tileLayer("https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
+        attribution: "&copy; Google Maps",
+      }).addTo(map);
 
       const iconeAlfinete = L.icon({
-        iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+        iconUrl: "https://i.imgur.com/ig0b9hc.png",
         iconSize: [40, 40],
         iconAnchor: [20, 40],
       });
 
-      const iconeCasa = L.icon({
-        iconUrl: "https://cdn-icons-png.flaticon.com/512/484/484167.png",
+      const iconeRetirada = L.icon({
+        iconUrl: "https://i.imgur.com/qmzZ24l.png",
         iconSize: [40, 40],
         iconAnchor: [25, 50],
       });
 
-      L.marker(localEncontrado, { icon: iconeAlfinete })
-        .addTo(novoMapa)
-        .bindPopup(`<b>Item Encontrado Aqui!</b>`);
+      L.marker(localEncontrado, { icon: iconeAlfinete }).addTo(map);
 
-      L.marker(retirada, { icon: iconeCasa })
-        .addTo(novoMapa)
-        .bindPopup("<b>Local de Retirada</b>");
+      L.marker(retirada, { icon: iconeRetirada }).addTo(map);
+
+      const bounds = new L.LatLngBounds(localEncontrado, retirada);
+
+      map.fitBounds(bounds, {
+        padding: [50, 50],
+      });
 
       const legenda = L.control({ position: "bottomleft" });
 
@@ -143,13 +156,13 @@ export function Map() {
         const div = L.DomUtil.create("div", "legenda");
         div.innerHTML = `
     <strong>Legenda</strong><br>
-    <span style="display: inline-flex; align-items: center; margin-bottom: 5px;">
-        <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" width="20" style="margin-top:7px; margin-right: 5px;">
+    <span style="display: inline-flex; align-items: baseline; margin-bottom: 5px;">
+        <img src="https://i.imgur.com/ig0b9hc.png" width="20" style="margin-top:7px; margin-right: 5px;">
         Item Encontrado
     </span>
     <br>
     <span style="display: inline-flex; align-items: center;">
-        <img src="https://cdn-icons-png.flaticon.com/512/484/484167.png" width="20" style="margin-right: 5px;">
+        <img src="https://i.imgur.com/qmzZ24l.png" width="20" style="margin-right: 5px;">
         Local de Retirada
     </span>
 `;
@@ -163,8 +176,8 @@ export function Map() {
         return div;
       };
 
-      legenda.addTo(novoMapa);
-      setMapa(novoMapa);
+      legenda.addTo(map);
+      setMapa(map);
     }
   }
 
@@ -188,7 +201,7 @@ export function Map() {
     <div className="flex flex-col items-center mt-4 text-center w-full">
       <div className="w-[95%] border-t border-slate-300 mb-5"></div>
       <h1 className="text-4xl font-[600]">Local Do Seu Item</h1>
-      <p className="text-[17px] my-3">
+      <p className="text-[19px] my-3">
         Retire Seu Item Preenchendo o formulario{" "}
         <span className="text-red-600 font-semibold">abaixo</span>
       </p>

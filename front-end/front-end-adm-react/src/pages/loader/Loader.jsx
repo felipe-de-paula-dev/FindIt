@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { LoaderCircle, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,46 +5,48 @@ import { Dashboard } from "../dashboard/Dashboard";
 
 export function Loader() {
   const [text, setText] = useState("Sincronizando Dados");
-  const [verifyLogin, setVerifyLogin] = useState(false);
+  const [verifyLogin, setVerifyLogin] = useState(null);
   const navigate = useNavigate();
 
-  function isAuthenticated() {
-    return document.cookie.includes("auth=true");
-  }
-
   useEffect(() => {
-    const handlePageLoad = () => {
-      if (isAuthenticated) setVerifyLogin(true);
-    };
-
-    window.addEventListener("pageshow", handlePageLoad);
-
-    return () => {
-      window.removeEventListener("pageshow", handlePageLoad);
-    };
+    async function isAuthenticated() {
+      try {
+        const response = await fetch(
+          "https://findit-08qb.onrender.com/check-auth",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        setVerifyLogin(data.authenticated);
+      } catch (error) {
+        console.log("Erro na autenticação:", error);
+        setVerifyLogin(false);
+      }
+    }
+    isAuthenticated();
   }, []);
 
   useEffect(() => {
+    if (verifyLogin == null) return;
+
+    console.log(verifyLogin);
+
     const verificarUsuario = () => {
-      if (!isAuthenticated())
-        setText("Dados Não Localizados No Banco Dados"),
-          setTimeout(() => {
-            navigate("/");
-          }, 1500);
-      else {
-        setText("Dados Confirmados"),
-          setTimeout(() => {
-            setVerifyLogin(true);
-          }, 1500);
+      if (verifyLogin == true) {
+        setText("Dados Confirmados");
+      } else {
+        setText("Dados Não Localizados No Banco de Dados");
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       }
     };
-    setTimeout(() => {
-      setText("Verificando Dados Do Usuario");
-      setTimeout(() => {
-        verificarUsuario();
-      }, 1500);
-    }, 2000);
-  }, []);
+
+    setText("Verificando Dados Do Usuario");
+    verificarUsuario();
+  }, [verifyLogin, navigate]);
 
   return (
     <div className="w-screen h-screen bg-slate-900 flex justify-center items-center">

@@ -1,34 +1,7 @@
 import { CirclePlus, Loader2, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
 import Swal from "sweetalert2";
-
-const Campus1 = [
-  { value: "", label: "Escolha uma Opção" },
-  { value: "Sala", label: "Sala de Aula" },
-  { value: "Biblioteca", label: "Biblioteca" },
-  { value: "Portaria1", label: "Portaria Principal" },
-  { value: "Portaria2", label: "Portaria Secundária" },
-  { value: "RUCotil", label: "Restaurante Universitário" },
-  { value: "Patio", label: "Pátio" },
-  { value: "Faculdade", label: "FT - Faculdade" },
-  { value: "Outro", label: "Outros" },
-];
-
-const Campus2 = [
-  { value: "", label: "Escolha uma Opção" },
-  { value: "Sala", label: "Sala de Aula" },
-  { value: "LabMateriais", label: "Laboratório de Materiais" },
-  { value: "LabDisturbios", label: "Laboratório de Distúrbios" },
-  { value: "Biblioteca", label: "Biblioteca" },
-  { value: "Congregacao", label: "Sala de Congregação" },
-  { value: "Portaria1", label: "Portaria Principal" },
-  { value: "Portaria2", label: "Portaria Secundária" },
-  { value: "PortariaCarros", label: "Portaria Carros" },
-  { value: "RURestaurante", label: "Restaurante Universitário" },
-  { value: "Patio", label: "Pátio" },
-  { value: "Outro", label: "Outros" },
-];
 
 export function AddItem() {
   const [campus, setCampus] = useState("");
@@ -36,66 +9,97 @@ export function AddItem() {
   const [nomeItem, setNomeItem] = useState("");
   const [dataEncontrado, setDataEncontrado] = useState("");
   const [local, setLocal] = useState("");
-  const [extraLocal, setExtraLocal] = useState("");
   const [imagemUrl, setImagemUrl] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [previewImage, setPreviewImage] = useState("/photos/uploadImg.jpg");
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (campus == 0) return;
+      try {
+        const response = await fetch(
+          `http://localhost:3333/api/campus/${campus}`,
+          {
+            method: "GET",
+          }
+        );
+
+        const data = await response.json();
+        setData(data);
+      } catch (err) {
+        console.log("Ocorreu um erro:", err);
+      }
+    }
+    fetchData();
+  }, [campus]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsButtonDisabled(true);
+    const responseToken = await fetch("http://localhost:3333/auth-enter", {
+      method: "GET",
+      credentials: "include",
+    });
+    const dataToken = await responseToken.json();
+    if (dataToken.code.cargoId == 1 || dataToken.code.cargoId == 3) {
+      setIsButtonDisabled(true);
 
-    let localItem = local === "Outro" ? extraLocal : local;
+      const formData = new FormData();
+      const folderType = "uploads";
+      formData.append("nome_item", nomeItem);
+      formData.append("data_encontrado", dataEncontrado);
+      formData.append("local_encontrado", local);
+      formData.append("imagem_url", imagemUrl);
+      formData.append("campus", campus);
+      formData.append("folder", folderType);
+      try {
+        const response = await fetch(
+          "https://findit-08qb.onrender.com/adicionar",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
-    const formData = new FormData();
-    const folderType = "uploads";
-    formData.append("nome_item", nomeItem);
-    formData.append("data_encontrado", dataEncontrado);
-    formData.append("local_encontrado", localItem);
-    formData.append("imagem_url", imagemUrl);
-    formData.append("campus", campus);
-    formData.append("folder", folderType);
-    try {
-      const response = await fetch(
-        "https://findit-08qb.onrender.com/adicionar",
-        {
-          method: "POST",
-          body: formData,
+        if (!response.ok) {
+          throw new Error("Erro na resposta do servidor");
         }
-      );
 
-      if (!response.ok) {
-        throw new Error("Erro na resposta do servidor");
+        const data = await response.json();
+        console.log("Resposta do servidor:", data);
+
+        setNomeItem("");
+        setDataEncontrado("");
+        setLocal("");
+        setImagemUrl("");
+        setCampus("");
+        inputRef.current.value = "";
+        setPreviewImage("/photos/uploadImg.jpg");
+
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Item adicionado com sucesso!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        setIsButtonDisabled(false);
+      } catch (error) {
+        console.error("Erro ao enviar dados:", error);
+        Swal.fire({
+          title: "Erro!",
+          text: `Erro ao enviar dados: ${error.message}`,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+        setIsButtonDisabled(false);
       }
-
-      const data = await response.json();
-      console.log("Resposta do servidor:", data);
-
-      setNomeItem("");
-      setDataEncontrado("");
-      setLocal("");
-      setExtraLocal("");
-      setImagemUrl("");
-      setCampus("");
-      inputRef.current.value = "";
-      setPreviewImage("/photos/uploadImg.jpg");
-
+    } else {
       Swal.fire({
-        title: "Sucesso!",
-        text: "Item adicionado com sucesso!",
-        icon: "success",
-        confirmButtonText: "OK",
+        icon: "warning",
+        title: "Atenção",
+        text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
+        confirmButtonText: "Entendi",
       });
-      setIsButtonDisabled(false);
-    } catch (error) {
-      console.error("Erro ao enviar dados:", error);
-      Swal.fire({
-        title: "Erro!",
-        text: `Erro ao enviar dados: ${error.message}`,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-      setIsButtonDisabled(false);
     }
   };
 
@@ -104,7 +108,7 @@ export function AddItem() {
       <h1 className="text-4xl font-semibold mb-6 text-gray-800 flex items-center gap-4">
         Adicione o Item <CirclePlus size={32} className="text-gray-800" />
       </h1>
-      <div className="flex flex-wrap items-center gap-10 max-w-4xl w-full">
+      <div className="flex flex-col flex-wrap items-center gap-10 max-w-4xl w-full xl:flex-row">
         <div className="flex flex-col items-center w-full md:w-[40%]">
           <div
             className="border-dashed border-2 rounded-xl border-gray-400 p-2 h-[400px] w-[400px] flex items-center justify-center overflow-hidden cursor-pointer bg-white shadow-md"
@@ -191,24 +195,14 @@ export function AddItem() {
               required
               className="px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              {campus === "1" ? (
-                Campus1.map((option, index) => (
+              {campus === "1" || campus === "2" ? (
+                data.map((option, index) => (
                   <option
                     key={index}
-                    value={option.value}
+                    value={option.nome}
                     disabled={option.disabled}
                   >
-                    {option.label}
-                  </option>
-                ))
-              ) : campus === "2" ? (
-                Campus2.map((option, index) => (
-                  <option
-                    key={index}
-                    value={option.value}
-                    disabled={option.disabled}
-                  >
-                    {option.label}
+                    {option.descricao}
                   </option>
                 ))
               ) : (
@@ -217,29 +211,6 @@ export function AddItem() {
                 </option>
               )}
             </select>
-
-            <label
-              htmlFor="extra_local"
-              className="text-lg font-medium text-gray-700"
-            >
-              Informe o Local:
-            </label>
-            <input
-              type="text"
-              id="extra_local"
-              value={extraLocal}
-              onChange={(e) => setExtraLocal(e.target.value)}
-              placeholder={
-                local === "Outro"
-                  ? "Digite o Local"
-                  : "Campo exclusivo para 'Outros'"
-              }
-              disabled={local !== "Outro"}
-              maxLength="20"
-              className={`px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 ${
-                local === "outro" ? "text-black" : "text-gray-500"
-              }`}
-            />
 
             <label
               htmlFor="imagem_url"

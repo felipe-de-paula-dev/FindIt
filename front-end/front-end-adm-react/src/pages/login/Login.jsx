@@ -17,6 +17,7 @@ export function Login() {
         "https://findit-08qb.onrender.com/user/login",
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -36,17 +37,13 @@ export function Login() {
         return;
       }
 
-      if (response.ok) {
-        document.cookie = "auth=true; path=/";
-      }
-
       setAlertMessage("Login realizado com sucesso!");
       setAlertType("success");
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
         navigate("/dashboard", { state: data });
-      }, 2000);
+      }, 3000);
     } catch {
       setAlertMessage("Banco de Dados Não Conectado");
       setAlertType("error");

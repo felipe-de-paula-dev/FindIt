@@ -1,6 +1,7 @@
 import { RefreshCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { Password } from "./Password";
 
 export function User() {
   const [data, setData] = useState([]);
@@ -38,38 +39,56 @@ export function User() {
   }, [alert]);
 
   async function deleteUser(id) {
-    const result = await Swal.fire({
-      title: "Você quer deletar o Usuario?",
-      text: "Esta ação não pode ser desfeita!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sim, excluir",
-      cancelButtonText: "Cancelar",
-    });
-    if (result.isConfirmed) {
-      const response = await fetch(
-        `https://findit-08qb.onrender.com/user/delete/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (response.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "Deletado!",
-          text: "O Usuario Foi Deletado Com Sucesso!",
-          timer: 3000,
-        });
-        const updatedData = data.filter((user) => user.id !== id);
-        setData(updatedData);
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Erro!",
-          text: "Erro desconhecido",
-          timer: 2000,
-        });
+    const responseToken = await fetch(
+      "https://findit-08qb.onrender.com/auth-enter",
+      {
+        method: "GET",
+        credentials: "include",
       }
+    );
+
+    const dataToken = await responseToken.json();
+
+    if (dataToken.code.cargoId == 1) {
+      const result = await Swal.fire({
+        title: "Você quer deletar o Usuario?",
+        text: "Esta ação não pode ser desfeita!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sim, excluir",
+        cancelButtonText: "Cancelar",
+      });
+      if (result.isConfirmed) {
+        const response = await fetch(
+          `https://findit-08qb.onrender.com/user/delete/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
+        if (response.ok) {
+          Swal.fire({
+            icon: "success",
+            title: "Deletado!",
+            text: "O Usuario Foi Deletado Com Sucesso!",
+            timer: 3000,
+          });
+          setReload(true);
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: "Erro desconhecido",
+            timer: 2000,
+          });
+        }
+      }
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: "Atenção",
+        text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
+        confirmButtonText: "Entendi",
+      });
     }
   }
 
@@ -120,8 +139,8 @@ export function User() {
                 <p className="text-lg font-semibold text-gray-800">
                   {item.user}
                 </p>
-                <p className="text-gray-600">
-                  <b>Senha:</b> ******
+                <p className="text-gray-600 flex items-center gap-2">
+                  <Password key={index} password={item.senha} index={index} />
                 </p>
                 <p className="text-gray-600">
                   <b>Cargo:</b>{" "}
@@ -129,10 +148,16 @@ export function User() {
                     className={`px-2 py-1 rounded-full text-sm font-medium ${
                       item.cargoId === 1
                         ? "bg-blue-200 text-blue-800"
+                        : item.cargoId === 2
+                        ? "bg-orange-200 text-orange-800"
                         : "bg-green-200 text-green-800"
                     }`}
                   >
-                    {item.cargoId === 1 ? "Administrador" : "Funcionário"}
+                    {item.cargoId === 1
+                      ? "Administrador"
+                      : item.cargoId === 2
+                      ? "Demo"
+                      : "Funcionario"}
                   </span>
                 </p>
                 <button

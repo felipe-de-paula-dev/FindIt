@@ -14,21 +14,54 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const path_1 = __importDefault(require("path"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const index_1 = __importDefault(require("../index"));
 const axios_1 = __importDefault(require("axios"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const uploads_1 = __importDefault(require("../uploads"));
 const cloudinary_1 = __importDefault(require("cloudinary"));
+const crypto_1 = __importDefault(require("crypto"));
+const JWT_SECRET = process.env.JWT_SECRET_CODE || "default-secret-code";
 const routes = (0, express_1.Router)();
 dotenv_1.default.config();
 routes.use((0, cookie_parser_1.default)());
 // 'Pendente','Disponivel', 'Retirado'
+const AES_SECRET_KEY = process.env.AES_SECRET_KEY || "crypto-password";
+function getAESKey(key) {
+    return crypto_1.default.createHash("sha256").update(key).digest();
+}
+function encryptPassword(password) {
+    const key = getAESKey(AES_SECRET_KEY);
+    const cipher = crypto_1.default.createCipheriv("aes-256-cbc", key, Buffer.alloc(16, 0));
+    let encrypted = cipher.update(password, "utf8", "hex");
+    encrypted += cipher.final("hex");
+    return encrypted;
+}
+function decryptPassword(encryptedPassword) {
+    const key = getAESKey(AES_SECRET_KEY);
+    try {
+        const decipher = crypto_1.default.createDecipheriv("aes-256-cbc", key, Buffer.alloc(16, 0));
+        let decrypted = decipher.update(encryptedPassword, "hex", "utf8");
+        decrypted += decipher.final("utf8");
+        return decrypted;
+    }
+    catch (error) {
+        console.error("Erro ao descriptografar:", error);
+        return "Erro na descriptografia";
+    }
+}
+routes.post("/decryptPass", (req, res) => {
+    const pass = req.body;
+    const password = pass.pass;
+    console.log(password);
+    res.json(decryptPassword(password));
+});
 routes.post("/adicionar", uploads_1.default.single("imagem_url"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { nome_item, data_encontrado, local_encontrado, campus } = req.body;
         const imagem_url = req.file ? req.file.path : null;
-        const status = "Pendente";
+        const status = "Disponivel";
         if (!req.file) {
             res.status(400).json({ error: "Nenhuma imagem enviada" });
             return;
@@ -85,7 +118,7 @@ routes.get("/logs", (req, res) => {
         res.json(results);
     });
 });
-routes.get("/usuarios", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+routes.get("/itens", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     index_1.default.query("SELECT * FROM itens_perdidos", (err, results) => {
         if (err) {
             return res.status(500).send("Erro na consulta ao banco de dados");
@@ -129,7 +162,7 @@ routes.get("/itens/pendentes/search", (req, res) => __awaiter(void 0, void 0, vo
 }));
 routes.get("/itens/disponiveis/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query, location, campus } = req.query;
-    let sql = "SELECT id_item, nome_item, data_encontrado, local_encontrado, imagem_url FROM itens_perdidos WHERE status = ?";
+    let sql = "SELECT id_item, nome_item, data_encontrado, local_encontrado, imagem_url, campus FROM itens_perdidos WHERE status = ?";
     const params = ["Disponivel"];
     if (query) {
         sql += " AND nome_item LIKE ?";
@@ -217,18 +250,6 @@ routes.delete("/itens/excluir/:id", (req, res) => __awaiter(void 0, void 0, void
                 if (err) {
                     console.error("Erro ao excluir item", err);
                     return res.status(500).json({ error: "Erro ao excluir item" });
-                }
-                // Exclui os logs associados ao item
-                try {
-                    yield axios_1.default.delete(`https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`);
-                    res.json({ message: "Item, imagem e logs excluídos com sucesso!" });
-                    console.log("Item, imagem e logs excluídos com sucesso!");
-                }
-                catch (logError) {
-                    console.error("Erro ao excluir os logs", logError);
-                    res.json({
-                        message: "Item e imagem excluídos, mas falha ao excluir logs.",
-                    });
                 }
             }));
         }));
@@ -413,23 +434,69 @@ routes.post("/user/login", (req, res) => {
                 return res.status(404).json({ message: "Usuário não encontrado" });
             }
             const usuario = results[0];
-            if (usuario.senha !== password) {
+            const decryptedPassword = decryptPassword(usuario.senha);
+            if (decryptedPassword !== password) {
                 return res.status(401).json({ message: "Senha incorreta" });
             }
-            const response = {
-                message: "Login Bem Sucedido.",
-                token: null,
-                urlImagem: usuario.urlImagem || "",
+            const payload = {
+                userId: usuario.id,
+                cargoId: usuario.cargoId,
             };
-            if (usuario.cargoId === 1) {
-                response.message = "Login Bem Sucedido - Adm";
-            }
+            const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET_CODE, {
+                expiresIn: "1h",
+            });
+            res.cookie("authToken", token, {
+                httpOnly: true,
+                secure: false, // process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 60 * 60 * 1000,
+            });
+            console.log("Cookie Enviado!");
+            const response = {
+                message: usuario.cargoId === 1
+                    ? "Login bem sucedido - adm"
+                    : "Login bem sucedido",
+                token: token,
+                urlImagem: usuario.urlImagem || "",
+                user: usuario.user,
+                codigo: usuario.cargoId,
+                userId: usuario.id,
+            };
             return res.status(200).json(response);
         });
     }
     catch (error) {
         console.error("Erro ao processar login:", error);
         res.status(500).json({ message: "Erro ao processar login", error });
+        return;
+    }
+});
+routes.post("/logout", (req, res) => {
+    res.clearCookie("authToken", { path: "/", sameSite: "lax", httpOnly: true });
+    res.status(200).json({ message: "Logout realizado com sucesso" });
+});
+routes.get("/check-auth", (req, res) => {
+    const token = req.cookies.authToken;
+    if (!token) {
+        res.status(401).json({ authenticated: false });
+        return;
+    }
+    res.json({ authenticated: true });
+    return;
+});
+routes.get("/auth-enter", (req, res) => {
+    const token = req.cookies.authToken;
+    if (!token) {
+        res.status(401).json({ message: "Token Invalido" });
+        return;
+    }
+    try {
+        const decoded = jsonwebtoken_1.default.verify(token, "default-secret-code");
+        res.status(200).json({ code: decoded });
+        return;
+    }
+    catch (error) {
+        res.status(403).json({ message: "Erro no token" });
         return;
     }
 });
@@ -501,6 +568,17 @@ routes.delete("/user/delete/:id", (req, res) => {
 routes.post("/user/create", uploads_1.default.single("imgUserPhoto"), (req, res) => {
     const { user, senha, cargo_id } = req.body;
     const imgUserPhoto = req.file ? req.file.path : null;
+    if (!user || !senha || !cargo_id) {
+        console.log("imagem" + imgUserPhoto);
+        res.status(400).json({ message: "Todos os campos são obrigatórios!" });
+        return;
+    }
+    if (!req.file) {
+        console.log("imagem" + imgUserPhoto);
+        res.status(400).json({ message: "A imagem é obrigatória" });
+        return;
+    }
+    const encryptedPassword = encryptPassword(senha);
     index_1.default.query("SELECT * FROM usuarios WHERE user = ?", [user], (err, results) => {
         if (err) {
             return res
@@ -512,17 +590,7 @@ routes.post("/user/create", uploads_1.default.single("imgUserPhoto"), (req, res)
                 .status(400)
                 .json({ message: "Já existe um usuário com este nome" });
         }
-        if (!user || !senha || !cargo_id) {
-            console.log("imagem" + imgUserPhoto);
-            return res
-                .status(400)
-                .json({ message: "Todos os campos são obrigatórios!" });
-        }
-        if (!req.file) {
-            console.log("imagem" + imgUserPhoto);
-            return res.status(400).json({ message: "A imagem é obrigatória" });
-        }
-        index_1.default.query("INSERT INTO usuarios (user, senha, urlImagem, cargoId) VALUES (?, ?, ?, ?)", [user, senha, imgUserPhoto, cargo_id], (err, results) => {
+        index_1.default.query("INSERT INTO usuarios (user, senha, urlImagem, cargoId) VALUES (?, ?, ?, ?)", [user, encryptedPassword, imgUserPhoto, cargo_id], (err, results) => {
             if (err) {
                 return res
                     .status(500)
@@ -603,6 +671,107 @@ routes.get("/itens/contagem-itens", (req, res) => {
                 });
             });
         });
+    });
+});
+routes.get("/api/campus/:campus", (req, res) => {
+    const campus = req.params.campus;
+    let params;
+    let sql = "SELECT * FROM localizacoes ";
+    if (Number(campus) != 0) {
+        sql += " WHERE campus = ?";
+        params = [campus];
+    }
+    else {
+        params = [];
+    }
+    index_1.default.query(sql, params, (err, result) => {
+        if (err)
+            res.status(403).json({ message: "Erro ao buscar Localizações" });
+        res.json(result);
+    });
+});
+routes.get("/api/campusDesc/:descricao", (req, res) => {
+    const descricao = req.params.descricao;
+    const campus = req.query;
+    let params;
+    console.log(descricao);
+    console.log(campus.campus);
+    let sql = "SELECT * FROM localizacoes ";
+    if (descricao != "") {
+        sql += " WHERE descricao = ? AND campus = ?";
+        params = [descricao, campus.campus];
+    }
+    else {
+        params = [];
+    }
+    index_1.default.query(sql, params, (err, result) => {
+        if (err)
+            res.status(403).json({ message: "Erro ao buscar Localizações" });
+        res.json(result);
+    });
+});
+routes.post("/api/adicionarLocal", (req, res) => {
+    const { nome, descricao, localizacao, campus } = req.body;
+    const { longitude, latitude } = localizacao;
+    const criado_em = new Date().toISOString().slice(0, 19).replace("T", " ");
+    const sqlSelect = "SELECT COUNT(*) AS count FROM localizacoes where nome = ? AND campus = ?";
+    index_1.default.query(sqlSelect, [nome, campus], (err, result) => {
+        var _a;
+        if (err) {
+            console.error("Erro ao realizar a consulta", err);
+            return;
+        }
+        if (((_a = result[0]) === null || _a === void 0 ? void 0 : _a.count) > 0) {
+            res
+                .status(500)
+                .json({ message: "Já existe um local com esse nome nesse campus" });
+            return;
+        }
+    });
+    const sql = "INSERT INTO localizacoes (nome, descricao, latitude, longitude, campus, criado_em) VALUES (?,?,?,?,?,?)";
+    const values = [nome, descricao, latitude, longitude, campus, criado_em];
+    index_1.default.query(sql, values, (err, result) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({
+                message: "Ocorreu um erro ao inserir a localização nova",
+                error: err,
+            });
+        }
+        console.log("Localizacao Inserida");
+        res.status(200).json({
+            message: "Localização inserida com sucesso!",
+        });
+    });
+});
+routes.get("/api/descricao/:nome", (req, res) => {
+    const nome = req.params.nome;
+    const sql = "SELECT descricao FROM localizacoes where nome = ?";
+    index_1.default.query(sql, [nome], (err, results) => {
+        if (err) {
+            return res
+                .status(404)
+                .json({ message: "Ococrreu um erro ao buscar a descricao", err: err });
+        }
+        return res.status(200).json({
+            message: "Descricao encontrada com sucesso!",
+            descricao: results,
+        });
+    });
+});
+routes.delete("/api/deletarLocal/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = "DELETE FROM localizacoes WHERE id = ?";
+    index_1.default.query(sql, [id], (err, result) => {
+        if (err) {
+            res.status(500).json({ message: "Ocorreu um erro ao deletar o local" });
+        }
+        if (result.affectedRows > 0) {
+            res.status(200).json({ message: "Local deletado com sucesso!" });
+        }
+        else {
+            res.status(404).json({ message: "Local não encontrado." });
+        }
     });
 });
 exports.default = routes;

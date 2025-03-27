@@ -8,18 +8,23 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const db: Connection = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  connectTimeout: 10000,
 });
 
-db.connect((err) => {
+db.getConnection((err, connection) => {
   if (err) {
     console.error("Erro ao conectar ao MySQL:", err);
   } else {
     console.log("Conectado ao MySQL");
+    connection.release();
   }
 });
 
@@ -27,7 +32,21 @@ export default db;
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(bodyParser.json());
 

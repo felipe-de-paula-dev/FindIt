@@ -17,3 +17,7 @@ Content-type: multipart/form-data
 {
     imagemUrl: "https://res.cloudinary.com/dl8dwltol/image/upload/v1742264516/uploads/img_1742264476235.jpg";
 }
+
+###
+
+GET http://localhost:3333/api/descricao/estacionamento

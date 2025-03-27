@@ -7,9 +7,11 @@ import {
   Layers,
   CopyPlus,
   PackageCheck,
+  Map,
 } from "lucide-react";
 import { ReportOption } from "./ReportOption";
 import { useEffect, useState } from "react";
+import { MapaInterativoSwal } from "./MapaInterativoSwal";
 
 export function Report({ selectedOption, onOptionComponent, idClick }) {
   const [clicou, setarclick] = useState(0);
@@ -55,6 +57,16 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
         id: 4,
       },
     ];
+  } else if (selectedOption === "mapas") {
+    title = "Mapa Do Campus";
+    options = [
+      {
+        icon: <Map size={20} />,
+        title: "Listar Locais",
+        descricao: "mapas",
+        id: 10,
+      },
+    ];
   } else if (selectedOption === "usuarios") {
     title = "Usuarios";
     options = [
@@ -62,13 +74,13 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
         icon: <User size={20} />,
         title: "Todos os usuários",
         descricao: "usuarios",
-        id: 5,
+        id: 6,
       },
       {
         icon: <UserRoundPlus size={20} />,
         title: "Adiconar um Novo Usuario",
         descricao: "usuariosadicionar",
-        id: 6,
+        id: 7,
       },
     ];
   } else if (selectedOption === "logs") {
@@ -78,7 +90,7 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
         icon: <Layers size={20} />,
         title: "Logs gerais",
         descricao: "logs",
-        id: 7,
+        id: 8,
       },
     ];
   } else {
@@ -107,8 +119,11 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
               {option.title}
             </ReportOption>
           ))}
+          {selectedOption == "mapas" ? <MapaInterativoSwal /> : ""}
         </ul>
       </div>
     </div>
   );
 }
+
+//  { selectedOption == "objetos" ? <AddItemSwal /> : ""}

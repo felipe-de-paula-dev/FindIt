@@ -2,38 +2,32 @@
 import { FilterIcon, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const Campus1 = [
-  { value: "", label: "Escolha uma Opção" },
-  { value: "Sala", label: "Sala de Aula" },
-  { value: "Biblioteca", label: "Biblioteca" },
-  { value: "Portaria1", label: "Portaria Principal" },
-  { value: "Portaria2", label: "Portaria Secundária" },
-  { value: "RUCotil", label: "Restaurante Universitário" },
-  { value: "Patio", label: "Pátio" },
-  { value: "Faculdade", label: "FT - Faculdade" },
-  { value: "Outro", label: "Outros" },
-];
-
-const Campus2 = [
-  { value: "", label: "Escolha uma Opção" },
-  { value: "Sala", label: "Sala de Aula" },
-  { value: "LabMateriais", label: "Laboratório de Materiais" },
-  { value: "LabDisturbios", label: "Laboratório de Distúrbios" },
-  { value: "Biblioteca", label: "Biblioteca" },
-  { value: "Congregacao", label: "Sala de Congregação" },
-  { value: "Portaria1", label: "Portaria Principal" },
-  { value: "Portaria2", label: "Portaria Secundária" },
-  { value: "PortariaCarros", label: "Portaria Carros" },
-  { value: "RURestaurante", label: "Restaurante Universitário" },
-  { value: "Patio", label: "Pátio" },
-  { value: "Outro", label: "Outros" },
-];
-
 const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
   const localRef = useRef(null);
   const [search, setSearchInput] = useState("");
   const [location, setLocationSelect] = useState("");
   const [campus, setCampus] = useState(0);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (campus == 0) return;
+      try {
+        const response = await fetch(
+          `https://findit-08qb.onrender.com/api/campus/${campus}`,
+          {
+            method: "GET",
+          }
+        );
+
+        const data = await response.json();
+        setData(data);
+      } catch (err) {
+        console.log("Ocorreu um erro:", err);
+      }
+    }
+    fetchData();
+  }, [campus]);
 
   useEffect(() => {
     if (campus === "") {
@@ -44,6 +38,13 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
       setLocationSelect("");
     }
   }, [campus, setLocation]);
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      setSearch(event.target.value);
+    }
+  };
 
   return (
     <div
@@ -62,6 +63,7 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
             className="bg-slate-100 p-1 shadow rounded-sm rounded-br-none rounded-tr-none w-full focus:ring-red-600 focus:border-b-1 focus:bg-red-100 border-red-600 focus:outline-none transition-all pl-2"
             placeholder="Digite Aqui"
             value={search}
+            onKeyDown={handleKeyDown}
             onChange={(e) => setSearchInput(e.target.value)}
           />
           <Search
@@ -102,24 +104,14 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
               setLocation(selectedLocation);
             }}
           >
-            {campus === "1" ? (
-              Campus1.map((option, index) => (
+            {campus === "1" || campus === "2" ? (
+              data.map((option, index) => (
                 <option
                   key={index}
-                  value={option.value}
+                  value={option.nome}
                   disabled={option.disabled}
                 >
-                  {option.label}
-                </option>
-              ))
-            ) : campus === "2" ? (
-              Campus2.map((option, index) => (
-                <option
-                  key={index}
-                  value={option.value}
-                  disabled={option.disabled}
-                >
-                  {option.label}
+                  {option.descricao}
                 </option>
               ))
             ) : (
