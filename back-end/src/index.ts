@@ -32,27 +32,18 @@ export default db;
 
 const app = express();
 
-const allowedOrigins = [
-  "https://find-it-adm.vercel.app",
-  "https://find-it-user.vercel.app",
-  "https://findit-08qb.onrender.com",
-];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+
+app.use(cors({
+    origin: "https://find-it-adm.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
+    allowedHeaders: ['Content-Type']
   })
 );
 
 app.use(bodyParser.json());
+app.use(express.json());
 
 app.use(routes);
 
