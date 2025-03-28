@@ -30,6 +30,8 @@ export function AddLocais() {
         showConfirmButton: true,
         showCancelButton: true,
         cancelButtonText: "Cancelar",
+        cancelButtonColor: "#696969",
+        confirmButtonColor: "#B22222",
         confirmButtonText: "Deletar",
       }).then((response) => {
         if (response.isConfirmed) {

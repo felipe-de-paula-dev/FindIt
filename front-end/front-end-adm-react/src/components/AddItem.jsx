@@ -88,6 +88,7 @@ export function AddItem() {
           text: "Item adicionado com sucesso!",
           icon: "success",
           confirmButtonText: "OK",
+          confirmButtonColor: "#696969",
         });
         setIsButtonDisabled(false);
       } catch (error) {
@@ -97,6 +98,7 @@ export function AddItem() {
           text: `Erro ao enviar dados: ${error.message}`,
           icon: "error",
           confirmButtonText: "OK",
+          confirmButtonColor: "#696969",
         });
         setIsButtonDisabled(false);
       }
@@ -106,6 +108,7 @@ export function AddItem() {
         title: "Atenção",
         text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
         confirmButtonText: "Entendi",
+        confirmButtonColor: "#696969",
       });
     }
   };

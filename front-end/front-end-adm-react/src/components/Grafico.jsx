@@ -1,5 +1,5 @@
+/* eslint-disable react/prop-types */
 import { Bar } from "react-chartjs-2";
-import PropTypes from "prop-types";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useEffect, useState } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -20,6 +21,37 @@ ChartJS.register(
 );
 
 export function Grafico({ dados }) {
+  const [data, setData] = useState([]);
+
+  async function fetchDescricao(nome) {
+    try {
+      const response = await fetch(
+        `https://findit-08qb.onrender.com/api/descricao/${nome}`,
+        {
+          method: "GET",
+        }
+      );
+      const data = await response.json();
+      return data.descricao[0].descricao;
+    } catch (error) {
+      console.log("Descrição não encontrada", error);
+      return nome;
+    }
+  }
+
+  useEffect(() => {
+    async function createData() {
+      const dadosEffect = await Promise.all(
+        dados.map(async (item) => ({
+          localizacao: await fetchDescricao(item.localizacao.toLowerCase()),
+          count: item.count,
+        }))
+      );
+      setData(dadosEffect);
+    }
+    createData();
+  }, [dados]);
+
   const cores = [
     { cor: "#C0392B", nome: "Vermelho Escuro" },
     { cor: "#27AE60", nome: "Verde Escuro" },
@@ -29,13 +61,11 @@ export function Grafico({ dados }) {
     { cor: "#1ABC9C", nome: "Verde Água Escuro" },
   ];
 
-  const data = {
-    labels: dados.map((item) =>
-      item.localizacao ? item.localizacao : "Sem Local"
-    ),
+  const dataLocal = {
+    labels: data.map((item) => item.localizacao || "Sem Local"),
     datasets: [
       {
-        data: dados.map((item) => item.count),
+        data: data.map((item) => item.count),
         backgroundColor: cores.map((item) => item.cor),
         borderColor: cores.map((item) => item.cor),
         borderWidth: 1,
@@ -64,14 +94,5 @@ export function Grafico({ dados }) {
       },
     },
   };
-  return <Bar data={data} options={options} />;
+  return <Bar data={dataLocal} options={options} />;
 }
-
-Grafico.propTypes = {
-  dados: PropTypes.arrayOf(
-    PropTypes.shape({
-      local: PropTypes.string.isRequired,
-      quantidade: PropTypes.number.isRequired,
-    })
-  ).isRequired,
-};

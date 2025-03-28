@@ -37,6 +37,7 @@ const corsOptions = {
         "https://find-it-adm.vercel.app",
         "https://find-it-user.vercel.app",
         "http://localhost:5174",
+        "http://localhost:5173",
     ],
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",

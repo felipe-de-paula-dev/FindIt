@@ -55,6 +55,7 @@ export function UserAdd() {
             title: "Adicionado!",
             text: "Usuário Criado Com Sucesso!",
             timer: 3000,
+            confirmButtonColor: "#696969",
           });
           setTimeout(() => {
             setUser("");
@@ -73,6 +74,7 @@ export function UserAdd() {
           title: "Erro!",
           text: error.message || "Erro desconhecido",
           timer: 3000,
+          confirmButtonColor: "#696969",
         });
         setdisabledButton(false);
       }
@@ -82,6 +84,7 @@ export function UserAdd() {
         title: "Atenção",
         text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
         confirmButtonText: "Entendi",
+        confirmButtonColor: "#696969",
       });
     }
   };

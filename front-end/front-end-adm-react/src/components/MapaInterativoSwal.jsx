@@ -35,6 +35,8 @@ export function MapaInterativoSwal() {
         icon: "question",
         showCancelButton: true,
         confirmButtonText: "Confirmar",
+        confirmButtonColor: "#006400",
+        cancelButtonColor: "#696969",
       }).then((resultado) => {
         if (resultado.isConfirmed) {
           const text = document.getElementById("nome").value.trim();
@@ -47,6 +49,7 @@ export function MapaInterativoSwal() {
               icon: "warning",
               title: "Nome não pode estar vazio!",
               timer: 2500,
+              confirmButtonColor: "#696969",
             });
           }
         }
@@ -57,6 +60,7 @@ export function MapaInterativoSwal() {
         title: "Atenção",
         text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
         confirmButtonText: "Entendi",
+        confirmButtonColor: "#696969",
       });
     }
   }
@@ -73,6 +77,9 @@ export function MapaInterativoSwal() {
       confirmButtonText: "Campus 1 - Cotil | FT",
       denyButtonText: "Campus 2 - FCA",
       cancelButtonText: "Cancelar",
+      confirmButtonColor: "#B22222",
+      denyButtonColor: "#1E90FF",
+      cancelButtonColor: "#696969",
     }).then((resultado) => {
       if (resultado.isConfirmed) {
         setCampus(1);
@@ -87,6 +94,7 @@ export function MapaInterativoSwal() {
           icon: "warning",
           title: "Você não selecionou nenhum campus!",
           timer: 2500,
+          confirmButtonColor: "#696969",
         });
       }
     });
@@ -94,8 +102,6 @@ export function MapaInterativoSwal() {
 
   const addLocate = useCallback(
     async (novoLocal) => {
-      alert(novoLocal.latitude);
-      alert(novoLocal.longitude);
       try {
         const data = { nome, descricao, localizacao: novoLocal, campus };
         const res = await fetch(
@@ -112,6 +118,7 @@ export function MapaInterativoSwal() {
           icon: "success",
           title: "Local Adicionado!",
           timer: 2000,
+          confirmButtonColor: "#696969",
         });
       } catch {
         Swal.fire({
@@ -131,9 +138,6 @@ export function MapaInterativoSwal() {
       title: "Mapa Interativo",
       html: '<div id="mapaAdd" style="width: 100%; height: 400px;"></div>',
       width: 800,
-      customClass: {
-        popup: "alerta-personalizado",
-      },
       showCancelButton: true,
       cancelButtonText: "Cancelar",
       cancelButtonColor: "#B22222",
@@ -177,6 +181,7 @@ export function MapaInterativoSwal() {
           icon: "warning",
           title: "Você não selecionou nenhum Local!",
           timer: 2500,
+          confirmButtonColor: "#696969",
         });
       }
     });

@@ -81,6 +81,8 @@ export function RetiradaDeObjetos() {
             showCancelButton: true,
             confirmButtonText: "Sim, excluir",
             cancelButtonText: "Cancelar",
+            confirmButtonColor: "#00BFFF",
+            cancelButtonColor: "#696969",
           });
 
           if (result.isConfirmed) {
@@ -94,6 +96,7 @@ export function RetiradaDeObjetos() {
               icon: "success",
               title: "Deletado!",
               text: "A retirada foi rejeitada com sucesso.",
+              confirmButtonColor: "#696969",
             });
             setReload(true);
           }
@@ -105,6 +108,8 @@ export function RetiradaDeObjetos() {
             showCancelButton: true,
             confirmButtonText: "Sim, aprovar",
             cancelButtonText: "Cancelar",
+            confirmButtonColor: "#00BFFF",
+            cancelButtonColor: "#696969",
           });
 
           if (result.isConfirmed) {
@@ -120,12 +125,14 @@ export function RetiradaDeObjetos() {
                 icon: "error",
                 title: "Erro",
                 text: "Ocorreu um erro ao aprovar a retirada.",
+                confirmButtonColor: "#696969",
               });
             } else {
               Swal.fire({
                 icon: "success",
                 title: "Aprovado!",
                 text: "A retirada foi aprovada com sucesso.",
+                confirmButtonColor: "#696969",
               });
               setReload(true);
             }
@@ -140,6 +147,7 @@ export function RetiradaDeObjetos() {
         title: "Atenção",
         text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
         confirmButtonText: "Entendi",
+        confirmButtonColor: "#696969",
       });
     }
   }
