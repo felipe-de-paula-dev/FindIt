@@ -445,13 +445,7 @@ routes.post("/user/login", (req, res) => {
             const token = jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET_CODE, {
                 expiresIn: "1h",
             });
-            res.cookie("authToken", token, {
-                httpOnly: true,
-                secure: false, // process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                maxAge: 60 * 60 * 1000,
-            });
-            console.log("Cookie Enviado!");
+            console.log("Token Enviado!");
             const response = {
                 message: usuario.cargoId === 1
                     ? "Login bem sucedido - adm"
@@ -475,24 +469,16 @@ routes.post("/logout", (req, res) => {
     res.clearCookie("authToken", { path: "/", sameSite: "lax", httpOnly: true });
     res.status(200).json({ message: "Logout realizado com sucesso" });
 });
-routes.get("/check-auth", (req, res) => {
-    const token = req.cookies.authToken;
-    if (!token) {
-        res.status(401).json({ authenticated: false });
+routes.post("/auth-enter", (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        res.status(401).json({ message: "Token Não Fornecido" });
         return;
     }
-    res.json({ authenticated: true });
-    return;
-});
-routes.get("/auth-enter", (req, res) => {
-    const token = req.cookies.authToken;
-    if (!token) {
-        res.status(401).json({ message: "Token Invalido" });
-        return;
-    }
+    const token = authHeader.split(" ")[1];
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, "default-secret-code");
-        res.status(200).json({ code: decoded });
+        const decoded = jsonwebtoken_1.default.decode(token);
+        res.status(200).json({ cargoId: decoded });
         return;
     }
     catch (error) {

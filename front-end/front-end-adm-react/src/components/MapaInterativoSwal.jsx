@@ -16,17 +16,19 @@ export function MapaInterativoSwal() {
   const local = useRef({ latitude: 0, longitude: 0 });
 
   async function setarNomeDescricao() {
+    const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
       "https://findit-08qb.onrender.com/auth-enter",
       {
-        method: "GET",
-        credentials: "include",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
     );
-
     const dataToken = await responseToken.json();
-    console.log(dataToken);
-    if (dataToken.code.cargoId == 1 || dataToken.code.cargoId == 3) {
+    if (dataToken.cargoId.cargoId == 1 || dataToken.cargoId.cargoId == 3) {
       Swal.fire({
         title: "Digite o nome do Local",
         html: '<input id="nome" type="text" maxlength="25" placeholder="Digite o nome aqui..." class="w-[80%] m-auto pl-4 pr-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />',
@@ -96,11 +98,14 @@ export function MapaInterativoSwal() {
       alert(novoLocal.longitude);
       try {
         const data = { nome, descricao, localizacao: novoLocal, campus };
-        const res = await fetch("https://findit-08qb.onrender.com/api/adicionarLocal", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
+        const res = await fetch(
+          "https://findit-08qb.onrender.com/api/adicionarLocal",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          }
+        );
 
         if (!res.ok) throw new Error("Erro na requisição");
         Swal.fire({

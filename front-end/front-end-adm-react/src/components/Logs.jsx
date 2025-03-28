@@ -19,17 +19,19 @@ export function Logs() {
   const [reload, setReload] = useState(false);
 
   async function removerLog(id) {
+    const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
       "https://findit-08qb.onrender.com/auth-enter",
       {
-        method: "GET",
-        credentials: "include",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
     );
-
     const dataToken = await responseToken.json();
-
-    if (dataToken.code.cargoId == 1) {
+    if (dataToken.cargoId.cargoId == 1) {
       Swal.fire({
         title: "Você tem certeza?",
         text: "Essa ação não pode ser desfeita!",
@@ -62,6 +64,7 @@ export function Logs() {
         icon: "warning",
         title: "Atenção",
         text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
+        showConfirmButton: true,
         confirmButtonText: "Entendi",
       });
     }

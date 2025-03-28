@@ -18,15 +18,19 @@ export function AddItemSwal() {
     e.preventDefault();
     setIsButtonDisabled(true); // Disable button while submitting
 
+    const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
       "https://findit-08qb.onrender.com/auth-enter",
       {
-        method: "GET",
-        credentials: "include",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
     );
     const dataToken = await responseToken.json();
-    if (dataToken.code.cargoId == 1 || dataToken.code.cargoId == 3) {
+    if (dataToken.cargoId.cargoId == 1 || dataToken.cargoId.cargoId == 3) {
       const formData = new FormData();
       const folderType = "uploads";
       formData.append("nome_item", nomeItem);

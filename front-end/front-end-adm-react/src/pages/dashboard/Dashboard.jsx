@@ -24,19 +24,12 @@ export function Dashboard() {
       if (navEntry && navEntry.type === "reload") {
         return;
       }
-
-      fetch("https://findit-08qb.onrender.com/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      sessionStorage.clear();
     };
 
     const handlePageShow = (event) => {
       if (event.persisted) {
-        fetch("https://findit-08qb.onrender.com/logout", {
-          method: "POST",
-          credentials: "include",
-        });
+        sessionStorage.clear();
       }
     };
 

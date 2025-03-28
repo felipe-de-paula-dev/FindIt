@@ -39,17 +39,19 @@ export function User() {
   }, [alert]);
 
   async function deleteUser(id) {
+    const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
       "https://findit-08qb.onrender.com/auth-enter",
       {
-        method: "GET",
-        credentials: "include",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
     );
-
     const dataToken = await responseToken.json();
-
-    if (dataToken.code.cargoId == 1) {
+    if (dataToken.cargoId.cargoId == 1) {
       const result = await Swal.fire({
         title: "Você quer deletar o Usuario?",
         text: "Esta ação não pode ser desfeita!",

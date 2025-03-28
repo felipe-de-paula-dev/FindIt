@@ -19,17 +19,19 @@ export function UserAdd() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
-      "hhttps://findit-08qb.onrender.com/auth-enter",
+      "https://findit-08qb.onrender.com/auth-enter",
       {
-        method: "GET",
-        credentials: "include",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
     );
-
     const dataToken = await responseToken.json();
-
-    if (dataToken.code.cargoId == 1) {
+    if (dataToken.cargoId.cargoId == 1) {
       setdisabledButton(true);
       const formData = new FormData();
       formData.append("user", user);

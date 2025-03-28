@@ -562,6 +562,7 @@ routes.post("/user/login", (req: Request, res: Response): void => {
         if (decryptedPassword !== password) {
           return res.status(401).json({ message: "Senha incorreta" });
         }
+
         const payload = {
           userId: usuario.id,
           cargoId: usuario.cargoId,
@@ -571,14 +572,7 @@ routes.post("/user/login", (req: Request, res: Response): void => {
           expiresIn: "1h",
         });
 
-        res.cookie("authToken", token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 60 * 60 * 1000,
-        });
-
-        console.log("Cookie Enviado!");
+        console.log("Token Enviado!");
 
         const response = {
           message:
@@ -607,29 +601,19 @@ routes.post("/logout", (req: Request, res: Response): void => {
   res.status(200).json({ message: "Logout realizado com sucesso" });
 });
 
-routes.get("/check-auth", (req: Request, res: Response): void => {
-  const token = req.cookies.authToken;
+routes.post("/auth-enter", (req: Request, res: Response): void => {
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
-    res.status(401).json({ authenticated: false });
+  if (!authHeader) {
+    res.status(401).json({ message: "Token Não Fornecido" });
     return;
   }
 
-  res.json({ authenticated: true });
-  return;
-});
-
-routes.get("/auth-enter", (req: Request, res: Response): void => {
-  const token = req.cookies.authToken;
-
-  if (!token) {
-    res.status(401).json({ message: "Token Invalido" });
-    return;
-  }
+  const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, "default-secret-code");
-    res.status(200).json({ code: decoded });
+    const decoded = jwt.decode(token);
+    res.status(200).json({ cargoId: decoded });
     return;
   } catch (error) {
     res.status(403).json({ message: "Erro no token" });

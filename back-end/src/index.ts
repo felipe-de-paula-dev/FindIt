@@ -32,15 +32,7 @@ export default db;
 
 const app = express();
 
-
-
-app.use(cors({
-    origin: ["https://find-it-adm.vercel.app", "https://find-it-user.vercel.app", "http://localhost:5173", "http://localhost:5174"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
-  })
-);
+app.use(cors());
 
 app.use(bodyParser.json());
 app.use(express.json());
