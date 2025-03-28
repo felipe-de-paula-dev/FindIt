@@ -48,7 +48,7 @@ export function Map() {
           }
         );
         const data = await response.json();
-        setLocalEncontrado(data[0].local_encontrado);
+        setLocalEncontrado(data[0].local_encontrado.toLowerCase());
         setCampus(data[0].campus);
       } catch (err) {
         console.error("Erro ao buscar o mapa:", err);
