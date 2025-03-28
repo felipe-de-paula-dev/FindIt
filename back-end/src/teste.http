@@ -21,3 +21,9 @@ Content-type: multipart/form-data
 ###
 
 POST https://findit-08qb.onrender.com/user/login
+Content-type: application/json
+
+{
+    "user": "felipe",
+    "password": 2007,   
+}
