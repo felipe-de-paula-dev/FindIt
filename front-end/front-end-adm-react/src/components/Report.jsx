@@ -126,4 +126,4 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
   );
 }
 
-//  { selectedOption == "objetos" ? <AddItemSwal /> : ""}
+// {selectedOption == "objetos" ? <AddItemSwal /> : ""}

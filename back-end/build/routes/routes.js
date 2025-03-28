@@ -678,14 +678,30 @@ routes.get("/api/campus/:campus", (req, res) => {
 });
 routes.get("/api/campusDesc/:descricao", (req, res) => {
     const descricao = req.params.descricao;
-    const campus = req.query;
+    const campus = req.query.campus;
     let params;
-    console.log(descricao);
-    console.log(campus.campus);
     let sql = "SELECT * FROM localizacoes ";
     if (descricao != "") {
         sql += " WHERE descricao = ? AND campus = ?";
-        params = [descricao, campus.campus];
+        params = [descricao, campus];
+    }
+    else {
+        params = [];
+    }
+    index_1.default.query(sql, params, (err, result) => {
+        if (err)
+            res.status(403).json({ message: "Erro ao buscar Localizações" });
+        res.json(result);
+    });
+});
+routes.get("/api/campusNome/:nome", (req, res) => {
+    const nome = req.params.nome;
+    const campus = 1;
+    let params;
+    let sql = "SELECT * FROM localizacoes ";
+    if (nome != "") {
+        sql += " WHERE nome = ? AND campus = ?";
+        params = [nome, campus];
     }
     else {
         params = [];

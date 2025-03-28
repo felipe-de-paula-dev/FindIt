@@ -110,11 +110,17 @@ export function ObjetosAprovados() {
             text: "O item foi removido com sucesso.",
             icon: "success",
             timer: 4500,
+            confirmButtonColor: "#696969",
           });
           carregar();
         } catch (err) {
           console.error("Erro ao excluir item:", err);
-          Swal.fire("Erro!", `Falha ao excluir: ${err.message}`, "error");
+          Swal.fire(
+            "Erro!",
+            `Falha ao excluir: ${err.message}`,
+            "error",
+            "confirmButtonColor: #696969"
+          );
         }
       }
     } else {
@@ -123,6 +129,7 @@ export function ObjetosAprovados() {
         title: "Atenção",
         text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
         confirmButtonText: "Entendi",
+        confirmButtonColor: "#696969",
       });
     }
   }
@@ -206,7 +213,10 @@ export function ObjetosAprovados() {
                     Local:{" "}
                     <span className="font-medium text-gray-800">
                       {item.local_encontrado ? (
-                        <DescricaoItem nome={item.local_encontrado} />
+                        <DescricaoItem
+                          nome={item.local_encontrado}
+                          campus={item.campus}
+                        />
                       ) : (
                         "Carregando..."
                       )}

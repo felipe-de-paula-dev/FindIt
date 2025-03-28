@@ -69,7 +69,7 @@ export function VisaoGeral() {
         </div>
         <div className="h-full w-full max-h-screen bg-slate-100 shadow flex flex-col p-3">
           <div className="flex-1 w-full rounded-md shadow overflow-hidden">
-            <Grafico key={campus} dados={dados} />
+            <Grafico key={campus} dados={dados} campus={campus} />
           </div>
           <div className="flex w-full gap-4 mt-4">
             <div className="h-[210px] w-fit bg-slate-100 rounded-md p-2 shadow border border-slate-200">

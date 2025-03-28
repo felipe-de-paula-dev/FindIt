@@ -59,6 +59,8 @@ export function User() {
         showCancelButton: true,
         confirmButtonText: "Sim, excluir",
         cancelButtonText: "Cancelar",
+        confirmButtonColor: "#00BFFF",
+        cancelButtonColor: "#696969",
       });
       if (result.isConfirmed) {
         const response = await fetch(
@@ -73,6 +75,7 @@ export function User() {
             title: "Deletado!",
             text: "O Usuario Foi Deletado Com Sucesso!",
             timer: 3000,
+            confirmButtonColor: "#696969",
           });
           setReload(true);
         } else {
@@ -81,6 +84,7 @@ export function User() {
             title: "Erro!",
             text: "Erro desconhecido",
             timer: 2000,
+            confirmButtonColor: "#696969",
           });
         }
       }
@@ -90,6 +94,7 @@ export function User() {
         title: "Atenção",
         text: "Este usuário não possui permissão para acessar esta área. Por favor, entre em contato com o administrador.",
         confirmButtonText: "Entendi",
+        confirmButtonColor: "#696969",
       });
     }
   }
