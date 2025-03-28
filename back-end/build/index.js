@@ -33,9 +33,14 @@ db.getConnection((err, connection) => {
 exports.default = db;
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: ["https://find-it-adm.vercel.app", "https://find-it-user.vercel.app"],
+    origin: [
+        "https://find-it-adm.vercel.app",
+        "https://find-it-user.vercel.app",
+        "http://localhost:5174",
+    ],
     methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
+    credentials: true,
 };
 app.use((0, cors_1.default)(corsOptions));
 app.use(body_parser_1.default.json());

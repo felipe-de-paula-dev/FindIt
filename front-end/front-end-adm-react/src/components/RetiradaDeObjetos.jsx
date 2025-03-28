@@ -58,16 +58,19 @@ export function RetiradaDeObjetos() {
   }
 
   async function handleAction(action, id) {
+    const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
       "https://findit-08qb.onrender.com/auth-enter",
       {
-        method: "GET",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
     );
-
     const dataToken = await responseToken.json();
-
-    if (dataToken.code.cargoId == 1) {
+    if (dataToken.cargoId.cargoId == 1) {
       try {
         let response;
         if (action === "deletar") {
