@@ -10,16 +10,19 @@ export function AddLocais() {
   const [descricao, setDescricao] = useState("Biblioteca");
 
   async function deletarLocal(id) {
+    const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
       "https://findit-08qb.onrender.com/auth-enter",
       {
-        method: "GET",
-        credentials: "include",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
     );
     const dataToken = await responseToken.json();
-    console.log(dataToken);
-    if (dataToken.code.cargoId == 1 || dataToken.code.cargoId == 3) {
+    if (dataToken.cargoId.cargoId == 1 || dataToken.cargoId.cargoId == 3) {
       Swal.fire({
         icon: "warning",
         title: "Você Deseja Deletar O Local?",

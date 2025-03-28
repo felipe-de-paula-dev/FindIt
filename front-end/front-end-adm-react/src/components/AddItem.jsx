@@ -36,12 +36,19 @@ export function AddItem() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const responseToken = await fetch("https://findit-08qb.onrender.com/auth-enter", {
-      method: "GET",
-      credentials: "include",
-    });
+    const token = sessionStorage.getItem("token");
+    const responseToken = await fetch(
+      "https://findit-08qb.onrender.com/auth-enter",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const dataToken = await responseToken.json();
-    if (dataToken.code.cargoId == 1 || dataToken.code.cargoId == 3) {
+    if (dataToken.cargoId.cargoId == 1 || dataToken.cargoId.cargoId == 3) {
       setIsButtonDisabled(true);
 
       const formData = new FormData();

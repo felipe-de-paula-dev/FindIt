@@ -21,10 +21,7 @@ export function Nav({ onOptionClick, onNavOptionComponent, idClick }) {
       cancelButtonText: "Cancelar",
     });
     if (result.isConfirmed) {
-      await fetch("https://findit-08qb.onrender.com/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      sessionStorage.clear();
       navigate("/");
     }
   }

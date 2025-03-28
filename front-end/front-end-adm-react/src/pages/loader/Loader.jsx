@@ -9,21 +9,10 @@ export function Loader() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function isAuthenticated() {
-      try {
-        const response = await fetch(
-          "https://findit-08qb.onrender.com/check-auth",
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
-        const data = await response.json();
-        setVerifyLogin(data.authenticated);
-      } catch (error) {
-        console.log("Erro na autenticação:", error);
-        setVerifyLogin(false);
-      }
+    const token = sessionStorage.getItem("token");
+    function isAuthenticated() {
+      if (token) setVerifyLogin(true);
+      else setVerifyLogin(false);
     }
     isAuthenticated();
   }, []);

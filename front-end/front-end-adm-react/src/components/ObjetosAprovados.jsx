@@ -52,20 +52,19 @@ export function ObjetosAprovados() {
   }
 
   async function deletarItem(id) {
+    const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
       "https://findit-08qb.onrender.com/auth-enter",
       {
-        method: "GET",
-        credentials: "include",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       }
     );
-
     const dataToken = await responseToken.json();
-    console.log(dataToken);
-
-    alert(id);
-
-    if (dataToken.code.cargoId == 1 || dataToken.code.cargoId == 3) {
+    if (dataToken.cargoId.cargoId == 1 || dataToken.cargoId.cargoId == 3) {
       const confirmationResult = await Swal.fire({
         backdrop: `
         rgba(0,0,0,0.6)
