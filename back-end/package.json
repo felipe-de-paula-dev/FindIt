@@ -25,6 +25,7 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@types/body-parser": "^1.19.5",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",

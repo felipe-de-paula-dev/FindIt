@@ -32,7 +32,12 @@ db.getConnection((err, connection) => {
 });
 exports.default = db;
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+const corsOptions = {
+    origin: ["https://find-it-adm.vercel.app", "https://find-it-user.vercel.app"],
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+};
+app.use((0, cors_1.default)(corsOptions));
 app.use(body_parser_1.default.json());
 app.use(express_1.default.json());
 app.use(routes_1.default);
