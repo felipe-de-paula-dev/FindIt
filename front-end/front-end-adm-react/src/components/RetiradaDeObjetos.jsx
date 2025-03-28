@@ -62,7 +62,6 @@ export function RetiradaDeObjetos() {
       "https://findit-08qb.onrender.com/auth-enter",
       {
         method: "GET",
-        credentials: "include",
       }
     );
 
