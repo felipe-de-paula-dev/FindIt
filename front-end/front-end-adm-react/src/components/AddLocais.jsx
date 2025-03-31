@@ -47,6 +47,7 @@ export function AddLocais() {
                 icon: "success",
                 title: "Local Deletado Com Sucesso!",
                 timer: 2000,
+                confirmButtonColor: "#696969",
               });
             }
             setReload(true);
@@ -56,6 +57,7 @@ export function AddLocais() {
               title: "Não Foi Possivel Deletar",
               text: error,
               timer: 2000,
+              confirmButtonColor: "#696969",
             });
           }
         }

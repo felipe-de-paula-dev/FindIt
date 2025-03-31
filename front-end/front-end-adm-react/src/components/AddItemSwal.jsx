@@ -273,13 +273,6 @@ export function AddItemSwal() {
         const data = await response.json();
         console.log("Resposta do servidor:", data);
 
-        setNome("");
-        setDataEncontrado("");
-        setLocal("");
-        setImagemUrl(null);
-        setCampus("");
-        setPreviewImage("/photos/uploadImg.jpg");
-
         Swal.fire({
           title: "Sucesso!",
           text: "Item adicionado com sucesso!",

@@ -100,18 +100,20 @@ export function ObjetosAprovados() {
             },
           });
 
-          Swal.fire({
-            backdrop: `
-            rgba(0,0,0,0.6)
-            left top
-            no-repeat
-          `,
-            title: "Excluído!",
-            text: "O item foi removido com sucesso.",
-            icon: "success",
-            timer: 4500,
-            confirmButtonColor: "#696969",
-          });
+          setTimeout(() => {
+            Swal.fire({
+              backdrop: `
+              rgba(0,0,0,0.6)
+              left top
+              no-repeat
+            `,
+              title: "Excluído!",
+              text: "O item foi removido com sucesso.",
+              icon: "success",
+              timer: 4500,
+              confirmButtonColor: "#696969",
+            });
+          }, 500);
           carregar();
         } catch (err) {
           console.error("Erro ao excluir item:", err);

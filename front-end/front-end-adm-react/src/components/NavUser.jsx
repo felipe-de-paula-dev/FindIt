@@ -52,7 +52,7 @@ export function NavUser(props) {
             ? "Administrador"
             : campus == 2
             ? "Demo"
-            : campus == 2
+            : campus == 3
             ? "Funcionario"
             : "Não Conectado"}
         </div>
