@@ -130,7 +130,6 @@ export function AddItem() {
               alt="Imagem selecionada"
             />
           </div>
-
           <div className="flex items-center gap-3 p-3 mt-4 border-2 border-gray-400 border-dashed rounded-xl bg-gray-50 w-[400px] justify-center shadow">
             <p className="text-lg text-gray-700">
               {imagemUrl ? "Imagem Selecionada" : "Nenhuma Imagem"}

@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Mail, User, ShieldCheck } from "lucide-react";
 
-export function FormularioRetirada() {
+export function FormularioRetirada({ setCampus }) {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const id = params.get("id");
@@ -11,6 +11,48 @@ export function FormularioRetirada() {
   const [cl, setCl] = useState("");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
+
+  async function sendMail(to) {
+    try {
+      const response = await fetch(
+        "https://findit-08qb.onrender.com/api/sendMail",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: to,
+            subject: "Sua Retirada Foi Agendada! - FindIt",
+            text: "Por Favor Dirija-se A Secretaria Do Cotil / FT Para A Retirada",
+            html: {
+              header: "<h1>Bem-vindo ao FindIt!</h1>",
+              greeting: `<p>Olá, ${nome}</p>`,
+              instructions: `<p><strong>Por Favor Dirija-se A Secretaria Do(a): ${
+                setCampus == 1 ? "Cotil" : "Fca"
+              } Para A Retirada Do Item</strong></p>`,
+              closing:
+                "<p>Com os melhores cumprimentos,<br><em>Equipe FindIt</em></p>",
+              link: "<p><a href='https://find-it-user.vercel.app/' target='_blank'>Acesse nosso site</a></p>",
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.log(errorData.ErroEmail || response.statusText);
+        const errorData = await response.json();
+        throw new Error(
+          `Erro ao enviar e-mail: ${errorData.ErroEmail || response.statusText}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("Email enviado com sucesso:", data);
+    } catch (error) {
+      console.error("Erro ao enviar o e-mail:", error.message);
+    }
+  }
 
   async function confirmarretirada() {
     if (cl === "" || nome === "" || email === "" || nome.length < 2) {
@@ -61,7 +103,9 @@ export function FormularioRetirada() {
         text: "Verifique seu e-mail para mais informações.",
         icon: "success",
         timer: 5000,
+        confirmButtonColor: "#696969",
       });
+      await sendMail(email);
       setCl("");
       setNome("");
       setEmail("");

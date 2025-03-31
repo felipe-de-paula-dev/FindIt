@@ -12,6 +12,7 @@ import {
 import { ReportOption } from "./ReportOption";
 import { useEffect, useState } from "react";
 import { MapaInterativoSwal } from "./MapaInterativoSwal";
+import { AddItemSwal } from "./AddItemSwal";
 
 export function Report({ selectedOption, onOptionComponent, idClick }) {
   const [clicou, setarclick] = useState(0);
@@ -120,10 +121,9 @@ export function Report({ selectedOption, onOptionComponent, idClick }) {
             </ReportOption>
           ))}
           {selectedOption == "mapas" ? <MapaInterativoSwal /> : ""}
+          {selectedOption == "objetos" ? <AddItemSwal /> : ""}
         </ul>
       </div>
     </div>
   );
 }
-
-// {selectedOption == "objetos" ? <AddItemSwal /> : ""}

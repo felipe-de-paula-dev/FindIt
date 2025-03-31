@@ -10,6 +10,7 @@ import { RowDataPacket } from "mysql2"; // Importando tipo para garantir a tipag
 import upload from "../uploads";
 import cloudinary from "cloudinary";
 import crypto from "crypto";
+import transporter from "../services/mailer";
 
 const JWT_SECRET = process.env.JWT_SECRET_CODE || "default-secret-code";
 const routes = Router();
@@ -998,6 +999,26 @@ routes.delete("/api/deletarLocal/:id", (req: Request, res: Response) => {
       res.status(404).json({ message: "Local não encontrado." });
     }
   });
+});
+
+// Envio de Email
+
+routes.post("/api/sendMail", async (req: Request, res: Response) => {
+  const { to, text, subject, html } = req.body;
+  const fullHtml = `${html.header}${html.greeting}${html.instructions}${html.closing}${html.link}`;
+
+  try {
+    const info = await transporter.sendMail({
+      from: `"FindIt" <${process.env.userMAIL}>`,
+      to,
+      subject,
+      text,
+      html: fullHtml,
+    });
+    res.status(200).json({ EmailEnviado: info.messageId });
+  } catch (error) {
+    res.status(500).json({ ErroEmail: error });
+  }
 });
 
 export default routes;

@@ -22,6 +22,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const uploads_1 = __importDefault(require("../uploads"));
 const cloudinary_1 = __importDefault(require("cloudinary"));
 const crypto_1 = __importDefault(require("crypto"));
+const mailer_1 = __importDefault(require("../services/mailer"));
 const JWT_SECRET = process.env.JWT_SECRET_CODE || "default-secret-code";
 const routes = (0, express_1.Router)();
 dotenv_1.default.config();
@@ -776,4 +777,22 @@ routes.delete("/api/deletarLocal/:id", (req, res) => {
         }
     });
 });
+// Envio de Email
+routes.post("/api/sendMail", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { to, text, subject, html } = req.body;
+    const fullHtml = `${html.header}${html.greeting}${html.instructions}${html.closing}${html.link}`;
+    try {
+        const info = yield mailer_1.default.sendMail({
+            from: `"FindIt" <${process.env.userMAIL}>`,
+            to,
+            subject,
+            text,
+            html: fullHtml,
+        });
+        res.status(200).json({ EmailEnviado: info.messageId });
+    }
+    catch (error) {
+        res.status(500).json({ ErroEmail: error });
+    }
+}));
 exports.default = routes;

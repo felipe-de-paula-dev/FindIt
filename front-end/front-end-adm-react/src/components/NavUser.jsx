@@ -1,7 +1,27 @@
 /* eslint-disable react/prop-types */
 import { BellRing, MessageCircleMore, Search } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function NavUser(props) {
+  const [campus, setCampus] = useState();
+  useEffect(() => {
+    async function fetchData() {
+      const token = sessionStorage.getItem("token");
+      const responseToken = await fetch(
+        "https://findit-08qb.onrender.com/auth-enter",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const dataToken = await responseToken.json();
+      setCampus(dataToken.cargoId.cargoId);
+    }
+    fetchData();
+  }, []);
   return (
     <div className="bg-slate-100 w-full h-min p-2 flex justify-between overflow-hidden border-b-1 border-slate-200">
       <ul>
@@ -17,6 +37,25 @@ export function NavUser(props) {
         </select>
       </ul>
       <ul className="flex items-center gap-4">
+        <div
+          className={`${
+            campus == 1
+              ? "bg-blue-300 text-blue-700"
+              : campus == 2
+              ? "bg-orange-300 text-orange-700"
+              : campus == 3
+              ? "bg-green-300 text-green-700"
+              : " bg-red-300 text-red-700"
+          } font-semibold rounded-xl px-1 p-[2px]`}
+        >
+          {campus == 1
+            ? "Administrador"
+            : campus == 2
+            ? "Demo"
+            : campus == 2
+            ? "Funcionario"
+            : "Não Conectado"}
+        </div>
         <div className="p-1 shadow border border-slate-100 rounded-b-md flex">
           <input
             type="text"

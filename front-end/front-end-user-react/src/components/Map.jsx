@@ -4,7 +4,7 @@ import L from "leaflet";
 import { useLocation } from "react-router-dom";
 import { LoaderCircle } from "lucide-react";
 
-export function Map() {
+export function Map({ campusUnicamp }) {
   const [loading, setLoading] = useState(true);
   const [localEncontrado, setLocalEncontrado] = useState(null);
   const [campus, setCampus] = useState(0);
@@ -50,6 +50,7 @@ export function Map() {
         const data = await response.json();
         setLocalEncontrado(data[0].local_encontrado.toLowerCase());
         setCampus(data[0].campus);
+        campusUnicamp(data[0].campus);
       } catch (err) {
         console.error("Erro ao buscar o mapa:", err);
       } finally {

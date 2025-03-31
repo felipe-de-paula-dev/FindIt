@@ -1,13 +1,21 @@
-POST https://findit-08qb.onrender.com/user/create
+POST http://localhost:3333/api/sendMail
 Content-type: application/json
 
 {
-    "user": "felipe",
-    "senha": 1234,
-    "cargo_id": 1,
-    "imgUserPhoto": ""
-    
+  "to": "xxlype@gmail.com",
+  "text": "Por Favor Dirija-se A Secretaria Do Cotil / FT Para A Retirada",
+  "subject": "Sua Retirada Foi Agendada! - FindIt",
+  "html": {
+    "header": "<h1>Bem-vindo ao FindIt!</h1>",
+    "greeting": "<p>Olá,</p>",
+    "instructions": "<p><strong>Por Favor Dirija-se A Secretaria Para A Retirada</strong></p>",
+    "closing": "<p>Com os melhores cumprimentos,<br><em>Equipe FindIt</em></p>",
+    "link": "<p><a href='https://find-it-user.vercel.app/' target='_blank'>Acesse nosso site</a></p>"
+  }
 }
+
+
+
 
 ###
 
