@@ -63,7 +63,7 @@ export function ObjetosV2({ search, location, campus }) {
           <div
             className={`w-full md:w-[330px] bg-white rounded-lg border border-gray-200 shadow-lg p-4 flex flex-col gap-3 ${
               item.campus === 1
-                ? "border-blue-400 border"
+                ? "border-blue-600 border"
                 : "border-red-400 border"
             }`}
             key={index}
