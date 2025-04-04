@@ -1,4 +1,12 @@
-import { RefreshCcw } from "lucide-react";
+import {
+  Check,
+  IdCard,
+  LucideFileQuestion,
+  MapPin,
+  RefreshCcw,
+  User,
+  X,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 import { Filter } from "./Filter";
@@ -190,18 +198,47 @@ export function RetiradaDeObjetos() {
                 key={index}
                 className="flex flex-col gap-2 w-[250px] h-fit sm:w-[300px] bg-white rounded-lg border border-gray-200 shadow-lg p-3"
               >
-                <div className="w-full">
-                  <p className="text-[16px] font-semibold text-gray-700">
-                    Nome Objeto: {item.nomeObjeto}
+                <div className="w-full space-y-1">
+                  <p className="text-xl font-semibold text-gray-800">
+                    <span className="text-gray-900">{item.nomeObjeto}</span>
                   </p>
-                  <p className="text-[16px] text-gray-600">
-                    <strong>Nome:</strong> {item.nome}
+                  <p className="text-[17px] text-gray-800 flex items-center gap-2">
+                    <User />
+                    <span className="font-semibold">Nome:</span> {item.nome}
                   </p>
-                  <p className="text-[16px] text-gray-600">
-                    <strong>Cl:</strong> {item.cl}
+                  <p className="text-[17px] text-gray-800 flex items-center gap-2">
+                    <IdCard />
+                    <span className="font-semibold">Cl:</span> {item.cl}
                   </p>
-                  <p className="text-[16px] text-gray-600">
-                    <strong>Imagem:</strong>
+                  <p className="text-gray-600 text-[17px] flex items-center gap-2">
+                    <MapPin />
+                    Campus:{" "}
+                    <span className="font-medium text-gray-800">
+                      {item.campus == 1 ? (
+                        <div className="bg-blue-200 text-blue-700 px-2 rounded-[10px] w-min h-min text-nowrap">
+                          COTIL / FT
+                        </div>
+                      ) : (
+                        <div className="bg-red-200 text-red-700 px-2 rounded-[10px] w-min h-min text-nowrap">
+                          FCA
+                        </div>
+                      )}
+                    </span>
+                  </p>
+                  <p className="text-gray-600 text-[17px] flex items-center gap-2">
+                    <LucideFileQuestion />
+                    Situação:{" "}
+                    <span className="font-medium text-gray-800 ">
+                      {item.situacao == "pendente" ? (
+                        <div className="bg-red-200 text-red-700 px-2 rounded-[10px] w-min h-min text-nowrap">
+                          Pendente
+                        </div>
+                      ) : (
+                        <div className="bg-green-200 text-green-700 px-2 rounded-[10px] w-min h-min text-nowrap">
+                          Disponivel
+                        </div>
+                      )}
+                    </span>
                   </p>
                 </div>
 
@@ -213,18 +250,18 @@ export function RetiradaDeObjetos() {
                   />
                 </div>
 
-                <div className="flex flex-col gap-3 w-full mt-3 ">
+                <div className="flex justify-center gap-3 w-full mt-3 ">
                   <button
-                    className="text-[16px] font-semibold bg-red-500 w-full text-white py-2 rounded-md shadow-md hover:bg-red-600 transform hover:scale-105 transition-all hover:cursor-pointer"
+                    className="text-[16px] font-semibold bg-red-500 w-min p-3 text-white py-2 rounded-md shadow-md hover:bg-red-600 transform hover:scale-105 transition-all hover:cursor-pointer"
                     onClick={() => handleAction("deletar", item.id_retirada)}
                   >
-                    Rejeitar Retirada?
+                    <X />
                   </button>
                   <button
-                    className="text-[16px] font-semibold bg-green-500 w-full text-white py-2 rounded-md shadow-md hover:bg-green-600 transform hover:scale-105 transition-all hover:cursor-pointer"
+                    className={`text-[16px] font-semibold bg-green-500 w-min p-3 text-white py-2 rounded-md shadow-md hover:bg-green-600 transform hover:scale-105 transition-all hover:cursor-pointer`}
                     onClick={() => handleAction("aprovar", item.id_retirada)}
                   >
-                    Aprovar Retirada?
+                    <Check />
                   </button>
                 </div>
               </div>

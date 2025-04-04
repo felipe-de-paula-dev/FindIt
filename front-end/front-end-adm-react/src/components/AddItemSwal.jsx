@@ -273,12 +273,14 @@ export function AddItemSwal() {
         const data = await response.json();
         console.log("Resposta do servidor:", data);
 
-        Swal.fire({
-          title: "Sucesso!",
-          text: "Item adicionado com sucesso!",
-          icon: "success",
-          confirmButtonText: "OK",
-        });
+        if(response){
+          Swal.fire({
+            title: "Sucesso!",
+            text: "Item adicionado com sucesso!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+        }
       } catch (error) {
         console.error("Erro ao enviar dados:", error);
         Swal.fire({

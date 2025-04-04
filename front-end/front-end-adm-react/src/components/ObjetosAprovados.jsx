@@ -1,4 +1,4 @@
-import { RefreshCcw } from "lucide-react";
+import { CalendarClock, Map, MapPin, RefreshCcw } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { Filter } from "./Filter";
 import { DescricaoItem } from "./DescricaoItem";
@@ -197,40 +197,52 @@ export function ObjetosAprovados() {
           <div className="flex flex-wrap justify-center gap-5 w-[95%] h-full mt-10">
             {data.map((item, index) => (
               <div
+                className={`w-full md:w-[300px] bg-white rounded-lg border border-gray-200 shadow-lg p-4 flex flex-col gap-3 ${
+                  item.campus == 1
+                    ? "border-blue-300 border"
+                    : "border-red-300 border"
+                }`}
                 key={index}
-                className="w-full sm:w-[290px] h-fit bg-white rounded-lg border border-gray-200 shadow-lg p-4 flex flex-col gap-3"
               >
-                <div className="w-full">
-                  <p className="text-lg font-semibold text-gray-700">
-                    Nome:{" "}
-                    <span className="text-gray-900">{item.nome_item}</span>
-                  </p>
-                  <p className="text-gray-600 text-[17px]">
-                    Data:{" "}
-                    <span className="font-medium text-gray-800">
-                      {formatarData(item.data_encontrado)}
-                    </span>
-                  </p>
-                  <p className="text-gray-600 text-[17px]">
-                    Local:{" "}
-                    <span className="font-medium text-gray-800">
-                      {item.local_encontrado ? (
-                        <DescricaoItem
-                          nome={item.local_encontrado}
-                          campus={item.campus}
-                        />
-                      ) : (
-                        "Carregando..."
-                      )}
-                    </span>
-                  </p>
-                  <p className="text-gray-600 text-[17px]">
-                    Campus:{" "}
-                    <span className="font-medium text-gray-800">
-                      {item.campus == 1 ? "Cotil / FT" : "FCA"}
-                    </span>
-                  </p>
-                </div>
+                <p className="text-xl font-semibold text-gray-700">
+                  <span className="text-gray-900">{item.nome_item}</span>
+                </p>
+
+                <p className="text-gray-600 text-[17px] flex items-center gap-1">
+                  <CalendarClock />
+                  Data:{" "}
+                  <span className="font-medium text-gray-800">
+                    {formatarData(item.data_encontrado)}
+                  </span>
+                </p>
+
+                <p className="text-gray-600 text-[17px]  flex items-center gap-1">
+                  <Map />
+                  Local:{" "}
+                  <span className="font-medium text-gray-800 text-nowrap">
+                    {item.local_encontrado ? (
+                      <DescricaoItem nome={item.local_encontrado} />
+                    ) : (
+                      "Carregando..."
+                    )}
+                  </span>
+                </p>
+
+                <p className="text-gray-600 text-[17px] flex items-center gap-2">
+                  <MapPin />
+                  Campus:{" "}
+                  <span className="font-medium text-gray-800">
+                    {item.campus == 1 ? (
+                      <div className="bg-blue-200 text-blue-700 px-2 rounded-[10px] w-min h-min text-nowrap">
+                        COTIL / FT
+                      </div>
+                    ) : (
+                      <div className="bg-red-200 text-red-700 px-2 rounded-[10px] w-min h-min text-nowrap">
+                        FCA
+                      </div>
+                    )}
+                  </span>
+                </p>
 
                 {item.imagem_url ? (
                   <div className="w-full h-[300px] overflow-hidden rounded-md">

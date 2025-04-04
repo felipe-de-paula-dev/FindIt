@@ -7,7 +7,7 @@ export function AddLocais() {
   const [reload, setReload] = useState(false);
   const [campusOptions, setCampusOptions] = useState([]);
   const [campus, setCampus] = useState(1);
-  const [descricao, setDescricao] = useState("Biblioteca");
+  const [descricao, setDescricao] = useState("Salas De Aula");
 
   async function deletarLocal(id) {
     const token = sessionStorage.getItem("token");
@@ -119,10 +119,10 @@ export function AddLocais() {
         </div>
       </div>
       <div className="flex bg-slate-50 shadow w-[95%] h-[500px] mt-5">
-        <div className="w-[45%] bg-slate-50 p-4 h-[500px] flex flex-col gap-1 overflow-auto">
+        <div className="w-[45%] bg-slate-50 p-3 h-[500px] flex flex-col gap-1 overflow-auto">
           <div className="flex w-full justify-evenly p-2 text-xl gap-4">
             <button
-              className={`rounded border-slalte-400 border w-full h-full py-1shadow text-center ${
+              className={`rounded-[15px] border-slalte-400 border w-full h-full py-1shadow text-center ${
                 campus == 1
                   ? "bg-blue-200 text-blue-600 "
                   : "bg-slate-100 text-black"
@@ -154,7 +154,7 @@ export function AddLocais() {
                 } flex items-center justify-between`}
               >
                 {campus.descricao}
-                <button>
+                <button >
                   <Trash2
                     strokeWidth={1}
                     className="text-red-600 scale-105 hover:scale-110 transform transition-all"

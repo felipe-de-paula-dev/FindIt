@@ -4,8 +4,9 @@ import { Footer } from "../components/Footer";
 import { Nav } from "../components/Nav";
 import { Top } from "../components/Top";
 import { NavSuperior } from "../components/NavSuperior";
-import { Objetos } from "../components/Objetos";
+//import { Objetos } from "../components/Objetos";
 import { PrimaryContent } from "../components/PrimaryContent";
+import { ObjetosV2 } from "../components/ObjetosV2";
 
 export function Index() {
   const [search, setSearch] = useState("");
@@ -34,7 +35,7 @@ export function Index() {
       />
       <Top onRolagemTop={rolarParaOTopo} />
       <div className="w-[95%] flex items-center justify-center m-auto">
-        <Objetos search={search} location={location} campus={campus} />
+        <ObjetosV2 search={search} location={location} campus={campus} />
       </div>
       <Footer />
     </div>
