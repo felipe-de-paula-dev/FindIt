@@ -41,5 +41,3 @@ export function Index() {
     </div>
   );
 }
-
-// Ola
