@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Lock, Search, User } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -52,61 +52,69 @@ export function Login() {
   };
 
   return (
-    <div className="bg-gray-900 w-screen h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute w-96 h-96 bg-red-500 opacity-10 blur-3xl animate-blur1"></div>
-      <div className="absolute w-80 h-80 bg-red-400 opacity-10 blur-3xl animate-blur2"></div>
-      <div className="absolute w-96 h-96 bg-red-600 opacity-10 blur-3xl animate-blur3"></div>
+    <div className="bg-gray-900 w-screen h-screen flex items-center justify-center overflow-hidden relative">
+      <div className="absolute w-96 h-96 bg-red-500 opacity-10 blur-3xl animate-blur1" />
+      <div className="absolute w-80 h-80 bg-red-400 opacity-10 blur-3xl animate-blur2" />
+      <div className="absolute w-96 h-96 bg-red-600 opacity-10 blur-3xl animate-blur3" />
 
       <div className="flex flex-col items-center z-10">
-        <ul className="flex items-baseline mb-2">
-          <li>
-            <h1 className="text-white text-4xl font-Mulish font-semibold">
-              Find
-            </h1>
-          </li>
-          <li>
-            <h1 className="text-red-500 text-5xl font-Mulish font-semibold">
-              It
-            </h1>
-          </li>
-          <Search className="text-red-500 ml-1" strokeWidth={3} size={32} />
-        </ul>
-        <div className="bg-gray-200 shadow rouded-[10px] flex items-center justify-center flex-col w-[400px] h-[350px] pt-4 pb-2">
-          <h1 className="self-start ml-6 text-xl font-medium">
+        <div className="flex items-baseline gap-1 mb-4">
+          <h1 className="text-white text-4xl font-bold">Find</h1>
+          <h1 className="text-red-500 text-5xl font-bold">It</h1>
+          <Search className="text-red-500" strokeWidth={3.5} size={36} />
+        </div>
+
+        <div className="bg-white shadow-lg rounded-xl flex flex-col items-center justify-center w-[400px] p-6">
+          <h2 className="text-xl font-semibold self-start text-gray-800">
             Find<span className="text-red-500">It</span> Admin Login
-          </h1>
-          <p className="self-start ml-6 font-normal">
-            Por Favor, Preencha Os Campos Abaixo
+          </h2>
+          <p className="text-sm text-gray-600 mb-6 self-start">
+            Por favor, preencha os campos abaixo
           </p>
 
-          <form action="" className="flex flex-col m-2 gap-5 space-y-3">
-            <input
-              type="text"
-              placeholder="User"
-              value={user}
-              onChange={(event) => setUser(event.target.value)}
-              className="p-2 w-[350px] bg-transparent border-b border-black shadow focus:outline-none focus:ring focus:border-b-red-500 focus:bg-red-100 ring-transparent"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              className="p-2 w-[350px] bg-transparent border-b border-black shadow focus:outline-none focus:ring focus:border-b-red-500 focus:bg-red-100 ring-transparent"
-            />
-            <input
+          <form className="w-full flex flex-col gap-5">
+            <div className="relative">
+              <User
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
+              <input
+                type="text"
+                placeholder="Usuário"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border-b border-gray-400 focus:border-red-500 focus:bg-red-50 transition-all outline-none bg-transparent text-gray-800"
+              />
+            </div>
+
+            <div className="relative">
+              <Lock
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                size={20}
+              />
+              <input
+                type="password"
+                placeholder="Senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border-b border-gray-400 focus:border-red-500 focus:bg-red-50 transition-all outline-none bg-transparent text-gray-800"
+              />
+            </div>
+
+            <button
               type="button"
-              value="Login"
               onClick={goToDashboard}
-              className="p-2 w-[350px] shadow mt-6 bg-red-700 text-white font-medium rounded-[5px] hover:cursor-pointer"
-            />
+              className="mt-4 w-full bg-red-600 hover:bg-red-700 transition-all text-white font-medium py-2 rounded-md shadow"
+            >
+              Entrar
+            </button>
           </form>
         </div>
       </div>
 
       {showAlert && (
         <div
-          className={`fixed top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-md text-white shadow-lg ${
+          className={`fixed top-5 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-md text-white shadow-lg transition-all duration-300 ${
             alertType === "success" ? "bg-green-600" : "bg-red-600"
           }`}
         >

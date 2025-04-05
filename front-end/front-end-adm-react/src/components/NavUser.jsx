@@ -23,68 +23,73 @@ export function NavUser(props) {
     fetchData();
   }, []);
   return (
-    <div className="bg-slate-100 w-full h-min p-2 flex justify-between overflow-hidden border-b-1 border-slate-200">
-      <ul>
-        <select
-          name="status"
-          id="status"
-          className="p-1 shadow border border-slate-100 rounded-b-md w-min"
-        >
-          <option value="Online">🟢 Online</option>
-          <option value="Offline">⭕ Offline</option>
-          <option value="Ausente">🟡 Ausente</option>
-          <option value="Não/Pertube">🔴 Não Pertube</option>
-        </select>
-      </ul>
-      <ul className="flex items-center gap-4">
+    <div className="bg-slate-100 w-full p-3 flex justify-between items-center border-b border-slate-200 shadow-sm">
+      <select
+        name="status"
+        id="status"
+        className="px-3 py-1 shadow-sm border border-slate-300 rounded-md text-sm focus:outline-none"
+      >
+        <option value="Online">🟢 Online</option>
+        <option value="Offline">⭕ Offline</option>
+        <option value="Ausente">🟡 Ausente</option>
+        <option value="Não/Pertube">🔴 Não Perturbe</option>
+      </select>
+
+      <div className="flex items-center gap-4">
         <div
-          className={`${
+          className={`text-sm font-semibold px-2 py-1 rounded-xl ${
             campus == 1
-              ? "bg-blue-300 text-blue-700"
+              ? "bg-blue-200 text-blue-800"
               : campus == 2
-              ? "bg-orange-300 text-orange-700"
+              ? "bg-orange-200 text-orange-800"
               : campus == 3
-              ? "bg-green-300 text-green-700"
-              : " bg-red-300 text-red-700"
-          } font-semibold rounded-xl px-1 p-[2px]`}
+              ? "bg-green-200 text-green-800"
+              : "bg-red-200 text-red-800"
+          }`}
         >
           {campus == 1
             ? "Administrador"
             : campus == 2
             ? "Demo"
             : campus == 3
-            ? "Funcionario"
+            ? "Funcionário"
             : "Não Conectado"}
         </div>
-        <div className="p-1 shadow border border-slate-100 rounded-b-md flex">
+
+        <div className="flex items-center px-2 py-1 border border-slate-300 rounded-md bg-white shadow-sm">
           <input
             type="text"
-            name=""
-            id=""
-            className="mr-2 border-r-1 border-slate-300"
+            placeholder="Buscar..."
+            className="bg-transparent outline-none pr-2 text-sm"
           />
-          <Search size={24} />
+          <Search size={20} className="text-slate-500" />
         </div>
-        <BellRing
-          className="p-1 shadow border border-slate-100 rounded-b-md"
-          size={32}
-        />
-        <div className="p-1 shadow border border-slate-100 rounded-b-md w-min flex gap-1">
-          <MessageCircleMore />
-          <select name="status" id="status">
-            <option value="Mensagens" selected>
+
+        <button className="p-1 border border-slate-300 rounded-md bg-white shadow-sm hover:bg-slate-200 transition">
+          <BellRing size={24} className="text-slate-600" />
+        </button>
+
+        <div className="flex items-center px-2 py-1 border border-slate-300 rounded-md bg-white shadow-sm gap-1">
+          <MessageCircleMore size={20} className="text-slate-600" />
+          <select
+            name="mensagens"
+            id="mensagens"
+            className="text-sm bg-transparent outline-none"
+          >
+            <option value="Mensagens" defaultValue={"Mensagens"}>
               Mensagens
             </option>
           </select>
         </div>
-        <div className="flex w-[36px] h-[36px] items-center justify-center  overflow-hidden object-cover rounded-full">
+
+        <div className="w-9 h-9 rounded-full overflow-hidden border border-slate-300 shadow-sm">
           <img
             src={props.imagemUser}
             alt="Imagem do usuário"
-            className="rounded-full"
+            className="object-cover w-full h-full"
           />
         </div>
-      </ul>
+      </div>
     </div>
   );
 }

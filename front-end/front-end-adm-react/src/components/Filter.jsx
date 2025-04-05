@@ -48,41 +48,40 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
 
   return (
     <div
-      className="flex items-center w-[95%] mt-4 border-b border-slate-200 pb-6"
+      className="flex flex-col items-center justify-between w-full gap-2 mt-10"
       ref={localRef}
       id="filtro"
     >
       <div className="flex gap-2 flex-col w-full items-center">
-        <div className="flex  items-center gap-2">
-          <Search />
+        <div className="flex items-center gap-2">
+          <Search className="text-red-500" />
           <p className="text-2xl font-semibold">Pesquise</p>
         </div>
         <div className="w-[80%] flex items-center">
           <input
             type="search"
-            className="bg-slate-100 p-1 shadow rounded-sm rounded-br-none rounded-tr-none w-full focus:ring-red-600 focus:border-b-1 focus:bg-red-100 border-red-600 focus:outline-none transition-all pl-2"
+            className="bg-gray-50 p-2 py-[8.5px] w-full border border-gray-300 rounded-lg focus:bg-red-50 focus:ring-1 focus:ring-red-500  focus:outline-none transition-all"
             placeholder="Digite Aqui"
             value={search}
             onKeyDown={handleKeyDown}
             onChange={(e) => setSearchInput(e.target.value)}
           />
           <Search
-            className="bg-red-600 w-[35px] h-[33px] p-1 rounded-tr-sm rounded-br-sm text-white hover:cursor-pointer"
-            size={64}
+            className="bg-red-600 w-auto h-full p-1 border ring-1 ring-red-500 border-red-600 rounded-tr-sm rounded-br-sm text-white hover:cursor-pointer transform translate-x-[-3px]"
+            size={33}
             onClick={() => setSearch(search)}
           />
         </div>
       </div>
-      <div className="border border-slate-200 h-full"></div>
-      <div className="flex gap-2 flex-col w-full items-center">
+      <div className="flex gap-2 flex-col items-center w-full mt-3">
         <div className="flex items-center gap-2">
-          <FilterIcon />
+          <FilterIcon className="text-red-500" />
           <p className="text-2xl font-semibold">Filtros</p>
         </div>
-        <div className="w-[80%] gap-2 flex items-center">
+        <div className="flex flex-col sm:flex-row  gap-4 w-[80%]">
           <select
             name="campus"
-            className="bg-slate-100 rounded-sm shadow p-1 w-full"
+            className="bg-gray-50 p-2 rounded-lg w-full border border-gray-300 focus:ring-1 transition-all focus:ring-red-500 focus:outline-none"
             defaultValue=""
             value={campus}
             onChange={(e) => {
@@ -95,13 +94,13 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
           </select>
           <select
             name="localizacao"
-            className="bg-slate-100 rounded-sm shadow p-1 w-full"
+            className="bg-gray-50 p-2 rounded-lg w-full border border-gray-300 focus:ring-1 transition-all focus:ring-red-500 focus:outline-none"
             defaultValue=""
             value={location}
             onChange={(e) => {
               const selectedLocation = e.target.value;
-              setLocationSelect(selectedLocation);
-              setLocation(selectedLocation);
+              setLocationSelect(selectedLocation),
+                setLocation(selectedLocation);
             }}
           >
             {campus === "1" || campus === "2" ? (
@@ -122,6 +121,10 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
           </select>
         </div>
       </div>
+      <h1 className="mt-5 text-3xl font-semibold text-gray-800">
+        Veja Os Itens <span className="text-red-500">Abaixo</span>
+      </h1>
+      <div className="border-b w-[95%] border-gray-300 mt-4 blur-[1px]"></div>
     </div>
   );
 };

@@ -199,24 +199,28 @@ export function Map({ campusUnicamp }) {
   }
 
   return (
-    <div className="flex flex-col items-center mt-4 text-center w-full">
-      <div className="w-[95%] border-t border-slate-300 mb-5"></div>
-      <h1 className="text-4xl font-[600]">Local Do Seu Item</h1>
-      <p className="text-[19px] my-3">
-        Retire Seu Item Preenchendo o formulario{" "}
+    <div className="flex flex-col items-center mt-4 text-center w-full max-w-[1200px] mx-auto px-4">
+      <div className="w-full border-t border-slate-300 mb-6"></div>
+      <h1 className="text-4xl font-semibold text-gray-800">
+        Local do Seu Item
+      </h1>
+      <p className="text-lg text-gray-700 my-3">
+        Retire seu item preenchendo o formulário{" "}
         <span className="text-red-600 font-semibold">abaixo</span>
       </p>
+
       <div
         id="mapa"
         style={{ width: "100%", height: "50vh" }}
-        className="rounded-md z-10"
+        className="rounded-xl overflow-hidden shadow-lg border border-gray-300 z-10"
       />
+
       {showMessage && (
         <p
-          className={`text-white font-semibold mt-8 text-xl  p-4 rounded z-50 ${
-            typeMessage == "success"
-              ? "bg-green-500 text-green-500"
-              : "bg-red-500 text-red-500"
+          className={`mt-8 text-lg font-semibold px-6 py-3 rounded-xl shadow-md animate-fadeIn ${
+            typeMessage === "success"
+              ? "bg-green-100 text-green-700 border border-green-300"
+              : "bg-red-100 text-red-700 border border-red-300"
           }`}
         >
           {messageBox}

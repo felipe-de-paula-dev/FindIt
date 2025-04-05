@@ -121,58 +121,59 @@ export function FormularioRetirada({ setCampus }) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full text-center mt-9 mb-10">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+    <div className="flex flex-col items-center justify-center w-full text-center mt-12 mb-16 px-4">
+      <h1 className="text-4xl font-semibold text-gray-800 mb-8">
         Confirme a Retirada
       </h1>
-      <div className="flex flex-col w-[80%] sm:w-2/4 mt-5 gap-6">
-        <div className="relative w-full">
+
+      <div className="flex flex-col w-full max-w-md gap-6 bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+        <div className="relative">
           <ShieldCheck
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-            size={20}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={22}
           />
           <input
             type="number"
-            placeholder="CL"
+            placeholder="Digite seu RA"
             max={999999}
             value={cl}
             onChange={(e) => e.target.value.length < 8 && setCl(e.target.value)}
-            className="pl-10 pr-4 rounded w-full py-3 border-b-2 border-gray-300 outline-none focus:border-red-500 focus:bg-red-200"
+            className="pl-11 pr-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-red-50 text-gray-800 placeholder-gray-400 transition-all"
           />
         </div>
 
-        <div className="relative w-full">
+        <div className="relative">
           <User
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-            size={20}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={22}
           />
           <input
             type="text"
-            placeholder="Nome"
+            placeholder="Nome Completo"
             maxLength={20}
             value={nome}
             onChange={(e) => setNome(e.target.value)}
-            className="pl-10 pr-4 rounded w-full py-3 border-b-2 border-gray-300 outline-none focus:border-red-500 focus:bg-red-200"
+            className="pl-11 pr-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-red-50 text-gray-800 placeholder-gray-400 transition-all"
           />
         </div>
 
-        <div className="relative w-full">
+        <div className="relative">
           <Mail
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-            size={20}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={22}
           />
           <input
             type="email"
-            placeholder="Email"
+            placeholder="Seu Email Institucional"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="pl-10 pr-4 rounded w-full py-3 border-b-2 border-gray-300 outline-none focus:border-red-500 focus:bg-red-200"
+            className="pl-11 pr-4 py-3 w-full rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-red-50 text-gray-800 placeholder-gray-400 transition-all"
           />
         </div>
 
         <button
           onClick={confirmarretirada}
-          className="bg-red-600 hover:bg-red-700 w-full h-[50px] rounded text-white"
+          className="bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-lg transition-all duration-200"
         >
           Confirmar Retirada
         </button>

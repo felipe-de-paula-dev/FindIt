@@ -69,7 +69,7 @@ const Filter = forwardRef(
           <div className="w-[80%] flex items-center">
             <input
               type="search"
-              className="bg-gray-100 p-2 w-full border border-gray-300 rounded-sm focus:bg-red-50 focus:ring-1 focus:ring-red-500  focus:outline-none transition-all"
+              className="bg-gray-50 p-2 py-[8.5px] w-full border border-gray-300 rounded-lg focus:bg-red-50 focus:ring-1 focus:ring-red-500  focus:outline-none transition-all"
               placeholder="Digite Aqui"
               value={search}
               onKeyDown={handleKeyDown}
@@ -87,10 +87,10 @@ const Filter = forwardRef(
             <FilterIcon className="text-red-500" />
             <p className="text-2xl font-semibold">Filtros</p>
           </div>
-          <div className="flex gap-4 w-[80%]">
+          <div className="flex flex-col sm:flex-row  gap-4 w-[80%]">
             <select
               name="campus"
-              className="bg-gray-100 p-2 rounded-lg w-full border border-gray-300 focus:ring-1 transition-all focus:ring-red-500 focus:outline-none"
+              className="bg-gray-50 p-2 rounded-lg w-full border border-gray-300 focus:ring-1 transition-all focus:ring-red-500 focus:outline-none"
               defaultValue=""
               value={campus}
               onChange={(e) => {
@@ -103,7 +103,7 @@ const Filter = forwardRef(
             </select>
             <select
               name="localizacao"
-              className="bg-gray-100 p-2 rounded-lg w-full border border-gray-300 focus:ring-1 transition-all focus:ring-red-500 focus:outline-none"
+              className="bg-gray-50 p-2 rounded-lg w-full border border-gray-300 focus:ring-1 transition-all focus:ring-red-500 focus:outline-none"
               defaultValue=""
               value={location}
               onChange={(e) => {
