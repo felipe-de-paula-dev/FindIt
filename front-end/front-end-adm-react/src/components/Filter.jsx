@@ -121,9 +121,6 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
           </select>
         </div>
       </div>
-      <h1 className="mt-5 text-3xl font-semibold text-gray-800">
-        Veja Os Itens <span className="text-red-500">Abaixo</span>
-      </h1>
       <div className="border-b w-[95%] border-gray-300 mt-4 blur-[1px]"></div>
     </div>
   );
