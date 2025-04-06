@@ -931,37 +931,37 @@ routes.post("/api/adicionarLocal", (req: Request, res: Response) => {
   const criado_em = new Date().toISOString().slice(0, 19).replace("T", " ");
 
   const sqlSelect =
-    "SELECT COUNT(*) AS count FROM localizacoes where nome = ? AND campus = ?";
+    "SELECT COUNT(*) AS count FROM localizacoes WHERE nome = ? AND campus = ?";
 
   db.query(sqlSelect, [nome, campus], (err, result: mysql.RowDataPacket[]) => {
     if (err) {
       console.error("Erro ao realizar a consulta", err);
-      return;
+      return res.status(500).json({ message: "Erro ao verificar local" });
     }
+
     if (result[0]?.count > 0) {
-      res
-        .status(500)
+      return res
+        .status(400)
         .json({ message: "Já existe um local com esse nome nesse campus" });
-      return;
     }
-  });
 
-  const sql =
-    "INSERT INTO localizacoes (nome, descricao, latitude, longitude, campus, criado_em) VALUES (?,?,?,?,?,?)";
-  const values = [nome, descricao, latitude, longitude, campus, criado_em];
+    const sql =
+      "INSERT INTO localizacoes (nome, descricao, latitude, longitude, campus, criado_em) VALUES (?,?,?,?,?,?)";
+    const values = [nome, descricao, latitude, longitude, campus, criado_em];
 
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({
-        message: "Ocorreu um erro ao inserir a localização nova",
-        error: err,
+    db.query(sql, values, (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).json({
+          message: "Ocorreu um erro ao inserir a localização nova",
+          error: err,
+        });
+      }
+
+      console.log("Localização inserida");
+      return res.status(201).json({
+        message: "Localização inserida com sucesso!",
       });
-    }
-
-    console.log("Localizacao Inserida");
-    res.status(200).json({
-      message: "Localização inserida com sucesso!",
     });
   });
 });
