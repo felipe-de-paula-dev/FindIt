@@ -1,6 +1,6 @@
 import express from "express";
 import routes from "./routes/routes";
-import mysql, { Connection } from "mysql2";
+import { Pool } from 'pg';
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -8,23 +8,23 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const db = mysql.createPool({
+const db = new Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  connectTimeout: 10000,
+  port: 5432, 
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
 });
 
-db.getConnection((err, connection) => {
+db.connect((err, client, release) => {
   if (err) {
-    console.error("Erro ao conectar ao MySQL:", err);
+    console.error("Erro ao conectar ao PostgreSQL:", err.stack);
   } else {
-    console.log("Conectado ao MySQL");
-    connection.release();
+    console.log("Conectado ao PostgreSQL com sucesso!");
+    release();
   }
 });
 
@@ -34,10 +34,7 @@ const app = express();
 
 const corsOptions = {
   origin: [
-    "https://find-it-adm.vercel.app",
-    "https://find-it-user.vercel.app",
-    "http://localhost:5174",
-    "http://localhost:5173",
+    "https://find.felipedepauladev.site",
   ],
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type,Authorization",
