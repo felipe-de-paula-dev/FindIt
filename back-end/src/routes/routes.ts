@@ -8,7 +8,6 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { RowDataPacket } from "mysql2"; // Importando tipo para garantir a tipagem
 import upload from "../uploads";
-import cloudinary from "cloudinary";
 import crypto from "crypto";
 import transporter from "../services/mailer";
 
@@ -64,7 +63,9 @@ routes.post(
   async (req: Request, res: Response): Promise<void> => {
     try {
       const { nome_item, data_encontrado, local_encontrado, campus } = req.body;
-      const imagem_url = req.file ? req.file.path : null;
+      
+      // Agora o path será o caminho local (ex: uploads/12345.jpg)
+      const imagem_url = req.file ? req.file.path : null; 
       const status = "Disponivel";
 
       if (!req.file) {
@@ -72,52 +73,57 @@ routes.post(
         return;
       }
 
-      const sqlInsert =
-        "INSERT INTO itens_perdidos (nome_item, data_encontrado, local_encontrado, status, imagem_url, campus) VALUES (?, ?, ?, ?, ?, ?)";
-      const [result]: any = await db
-        .promise()
-        .execute(sqlInsert, [
-          nome_item,
-          data_encontrado,
-          local_encontrado,
-          status,
-          imagem_url,
-          campus,
-        ]);
+      // 1. Inserção no PostgreSQL com RETURNING
+      const sqlInsert = `
+        INSERT INTO itens_perdidos (nome_item, data_encontrado, local_encontrado, status, imagem_url, campus) 
+        VALUES ($1, $2, $3, $4, $5, $6) 
+        RETURNING id_item`;
+        
+      const result = await db.query(sqlInsert, [
+        nome_item,
+        data_encontrado,
+        local_encontrado,
+        status,
+        imagem_url,
+        campus,
+      ]);
 
-      const itemId = result.insertId;
+      // No Postgres, o ID vem em rows[0]
+      const itemId = result.rows[0].id_item;
 
-      //log
+      // 2. Configuração do Log
       const retirado_por = "Não Retirado";
       const situacao = "adicionado";
       const clAluno = "N/D";
 
-      const sqlinsertologs =
-        "INSERT INTO logs (id_item, nome_item, data_adicionado, data_movimentacao, localizacao, campus, situacao, retirado_por, clAluno) VALUES (?,?,?,?,?,?,?,?,?)";
-      await db
-        .promise()
-        .execute(sqlinsertologs, [
-          itemId,
-          nome_item,
-          data_encontrado,
-          data_encontrado,
-          local_encontrado,
-          campus,
-          situacao,
-          retirado_por,
-          clAluno,
-        ]);
-      console.log("Item adicionado na tabela logs");
+      const sqlinsertologs = `
+        INSERT INTO logs (id_item, nome_item, data_adicionado, data_movimentacao, localizacao, campus, situacao, retirado_por, clAluno) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+      
+      await db.query(sqlinsertologs, [
+        itemId,
+        nome_item,
+        data_encontrado, // data_adicionado
+        data_encontrado, // data_movimentacao
+        local_encontrado,
+        campus,
+        situacao,
+        retirado_por,
+        clAluno,
+      ]);
+
+      console.log(`Item ${itemId} adicionado localmente e log registrado.`);
 
       res.status(200).json({
         message: "Item adicionado com sucesso!",
         id: itemId,
-        imagem: imagem_url,
+        imagem: imagem_url, // URL local para o front salvar
       });
+
     } catch (error) {
-      console.error("Erro ao adicionar item no log: ", error);
+      console.error("Erro na operação:", error);
       res.status(500).json({
-        message: "Erro ao adicionar item no log.",
+        message: "Erro ao adicionar item ou log.",
       });
     }
   }

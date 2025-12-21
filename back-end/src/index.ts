@@ -5,6 +5,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import path from "path";
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ const corsOptions = {
   credentials: true,
 };
 
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use(cors(corsOptions));
 
 app.use(bodyParser.json());

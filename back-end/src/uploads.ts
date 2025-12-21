@@ -1,31 +1,25 @@
-import { v2 as cloudinary } from "cloudinary";
-import { CloudinaryStorage } from "multer-storage-cloudinary";
-import multer from "multer";
-import dotenv from "dotenv";
-import { Request, Response } from "express";
-import { format } from "mysql2";
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
-dotenv.config();
+const uploadDir = 'uploads';
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: async (req: Request, res: Response) => {
-    console.log("Req body:", req.body);
-    const folderName = req.body.folder == "user" ? "uploadsUser" : "uploads";
-    console.log("Pasta: ", folderName);
-    return {
-      folder: folderName,
-      public_id: `img_${Date.now()}`,
-    };
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
   },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
 });
 
-const upload = multer({ storage });
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 } 
+});
 
 export default upload;
