@@ -64,7 +64,7 @@ routes.post(
     try {
       const { nome_item, data_encontrado, local_encontrado, campus } = req.body;
       
-      // Agora o path será o caminho local (ex: uploads/12345.jpg)
+      // Mantemos o path local que você configurou no uploads.ts
       const imagem_url = req.file ? req.file.path : null; 
       const status = "Disponivel";
 
@@ -73,13 +73,13 @@ routes.post(
         return;
       }
 
-      // 1. Inserção no PostgreSQL com RETURNING
+      // 1. Inserção no MySQL (Voltamos para '?' e removemos o RETURNING)
       const sqlInsert = `
         INSERT INTO itens_perdidos (nome_item, data_encontrado, local_encontrado, status, imagem_url, campus) 
-        VALUES ($1, $2, $3, $4, $5, $6) 
-        RETURNING id_item`;
+        VALUES (?, ?, ?, ?, ?, ?)`;
         
-      const result = await db.query(sqlInsert, [
+      // No MySQL, usamos .promise() e pegamos o result como o primeiro item do array
+      const [result]: any = await db.promise().execute(sqlInsert, [
         nome_item,
         data_encontrado,
         local_encontrado,
@@ -88,8 +88,8 @@ routes.post(
         campus,
       ]);
 
-      // No Postgres, o ID vem em rows[0]
-      const itemId = result.rows[0].id_item;
+      // No MySQL, o ID gerado vem em .insertId
+      const itemId = result.insertId;
 
       // 2. Configuração do Log
       const retirado_por = "Não Retirado";
@@ -98,13 +98,13 @@ routes.post(
 
       const sqlinsertologs = `
         INSERT INTO logs (id_item, nome_item, data_adicionado, data_movimentacao, localizacao, campus, situacao, retirado_por, clAluno) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`;
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       
-      await db.query(sqlinsertologs, [
+      await db.promise().execute(sqlinsertologs, [
         itemId,
         nome_item,
-        data_encontrado, // data_adicionado
-        data_encontrado, // data_movimentacao
+        data_encontrado, 
+        data_encontrado, 
         local_encontrado,
         campus,
         situacao,
@@ -112,12 +112,12 @@ routes.post(
         clAluno,
       ]);
 
-      console.log(`Item ${itemId} adicionado localmente e log registrado.`);
+      console.log(`Item ${itemId} adicionado ao MySQL e log registrado.`);
 
       res.status(200).json({
         message: "Item adicionado com sucesso!",
         id: itemId,
-        imagem: imagem_url, // URL local para o front salvar
+        imagem: imagem_url,
       });
 
     } catch (error) {
@@ -303,26 +303,6 @@ routes.delete("/itens/excluir/:id", async (req: Request, res: Response) => {
     const publicId = path.basename(imgUrl, path.extname(imgUrl));
     const fullPublicId = `uploads/${publicId}`;
 
-    console.log("Tentando excluir imagem no Cloudinary:", fullPublicId);
-
-    cloudinary.v2.uploader.destroy(fullPublicId, async (err, result) => {
-      if (err) {
-        console.error("Erro ao excluir imagem no Cloudinary", err);
-        return res
-          .status(500)
-          .json({ error: "Erro ao excluir imagem no Cloudinary" });
-      }
-
-      console.log("Imagem excluída do Cloudinary", result);
-
-      const sqlDelete = "DELETE FROM itens_perdidos WHERE id_item = ?";
-      db.query(sqlDelete, [id], async (err) => {
-        if (err) {
-          console.error("Erro ao excluir item", err);
-          return res.status(500).json({ error: "Erro ao excluir item" });
-        }
-      });
-    });
   });
 });
 
@@ -682,19 +662,6 @@ routes.delete("/user/delete/:id", (req: Request, res: Response) => {
     }
 
     const publicId = path.basename(urlImagem, path.extname(urlImagem));
-    const fullPublicId = `uploadsUser/${publicId}`;
-
-    console.log("Tentando excluir imagem no Cloudinary:", fullPublicId);
-
-    cloudinary.v2.uploader.destroy(fullPublicId, async (err, result) => {
-      if (err) {
-        console.error("Erro ao excluir imagem no Cloudinary", err);
-        return res
-          .status(500)
-          .json({ error: "Erro ao excluir imagem no Cloudinary" });
-      }
-
-      console.log("Imagem excluída do Cloudinary", result);
 
       db.query("DELETE FROM usuarios WHERE id = ?", [id], (err) => {
         if (err) {
@@ -706,7 +673,6 @@ routes.delete("/user/delete/:id", (req: Request, res: Response) => {
       });
     });
   });
-});
 
 routes.post(
   "/user/create",

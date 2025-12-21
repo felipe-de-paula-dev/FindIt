@@ -1,6 +1,6 @@
 import express from "express";
 import routes from "./routes/routes";
-import { Pool } from 'pg';
+import mysql from "mysql2"; // Voltando para mysql2
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -9,23 +9,25 @@ import path from "path";
 
 dotenv.config();
 
-const db = new Pool({
+// Configuração do Pool para MySQL
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: 5432, 
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  connectTimeout: 10000,
 });
 
-db.connect((err, client, release) => {
+// Teste de conexão (MySQL usa getConnection)
+db.getConnection((err, connection) => {
   if (err) {
-    console.error("Erro ao conectar ao PostgreSQL:", err.stack);
+    console.error("Erro ao conectar ao MySQL:", err.message);
   } else {
-    console.log("Conectado ao PostgreSQL com sucesso!");
-    release();
+    console.log("Conectado ao MySQL com sucesso!");
+    connection.release();
   }
 });
 
@@ -36,23 +38,24 @@ const app = express();
 const corsOptions = {
   origin: [
     "https://find.felipedepauladev.site",
+    "http://localhost:5173", // Adicionei os locais para facilitar seu teste
   ],
   methods: "GET,POST,PUT,DELETE",
   allowedHeaders: "Content-Type,Authorization",
   credentials: true,
 };
 
+// Servindo a pasta de uploads local
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
-app.use(cors(corsOptions));
 
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(routes);
 
-app.use(cookieParser());
-
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
