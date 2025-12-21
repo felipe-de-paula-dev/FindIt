@@ -14,7 +14,7 @@ const Filter = ({ setSearch, setLocation, setCampusFunction }) => {
       if (campus == 0) return;
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/api/campus/${campus}`,
+          `https://finditapi.felipedepauladev.site/api/campus/${campus}`,
           {
             method: "GET",
           }

@@ -21,7 +21,7 @@ export function Logs() {
   async function removerLog(id) {
     const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
-      "https://findit-08qb.onrender.com/auth-enter",
+      "https://finditapi.felipedepauladev.site/auth-enter",
       {
         method: "POST",
         headers: {
@@ -44,7 +44,7 @@ export function Logs() {
       }).then((result) => {
         if (result.isConfirmed) {
           setReload(true);
-          fetch(`https://findit-08qb.onrender.com/logs/excluir/${id}`, {
+          fetch(`https://finditapi.felipedepauladev.site/logs/excluir/${id}`, {
             method: "DELETE",
           })
             .then(() => {
@@ -73,7 +73,7 @@ export function Logs() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("https://findit-08qb.onrender.com/logs", {
+        const response = await fetch("https://finditapi.felipedepauladev.site/logs", {
           method: "GET",
         });
         const data = await response.json();

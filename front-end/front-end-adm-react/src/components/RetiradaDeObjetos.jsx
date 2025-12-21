@@ -24,7 +24,7 @@ export function RetiradaDeObjetos() {
     async function fetchData() {
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/retirada/search?query=${search}&location=${locationObject}&campus=${campus}`
+          `https://finditapi.felipedepauladev.site/retirada/search?query=${search}&location=${locationObject}&campus=${campus}`
         );
         const result = await response.json();
         setData(result);
@@ -68,7 +68,7 @@ export function RetiradaDeObjetos() {
   async function handleAction(action, id) {
     const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
-      "https://findit-08qb.onrender.com/auth-enter",
+      "https://finditapi.felipedepauladev.site/auth-enter",
       {
         method: "POST",
         headers: {
@@ -95,7 +95,7 @@ export function RetiradaDeObjetos() {
 
           if (result.isConfirmed) {
             await fetch(
-              `https://findit-08qb.onrender.com/retirada/excluir/${id}`,
+              `https://finditapi.felipedepauladev.site/retirada/excluir/${id}`,
               {
                 method: "DELETE",
               }
@@ -122,7 +122,7 @@ export function RetiradaDeObjetos() {
 
           if (result.isConfirmed) {
             response = await fetch(
-              `https://findit-08qb.onrender.com/retirada/aprovar/${id}`,
+              `https://finditapi.felipedepauladev.site/retirada/aprovar/${id}`,
               {
                 method: "PUT",
               }

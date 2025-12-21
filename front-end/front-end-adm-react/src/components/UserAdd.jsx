@@ -21,7 +21,7 @@ export function UserAdd() {
     event.preventDefault();
     const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
-      "https://findit-08qb.onrender.com/auth-enter",
+      "https://finditapi.felipedepauladev.site/auth-enter",
       {
         method: "POST",
         headers: {
@@ -42,7 +42,7 @@ export function UserAdd() {
 
       try {
         const response = await fetch(
-          "https://findit-08qb.onrender.com/user/create",
+          "https://finditapi.felipedepauladev.site/user/create",
           {
             method: "POST",
             body: formData,

@@ -8,7 +8,7 @@ export function NavUser(props) {
     async function fetchData() {
       const token = sessionStorage.getItem("token");
       const responseToken = await fetch(
-        "https://findit-08qb.onrender.com/auth-enter",
+        "https://finditapi.felipedepauladev.site/auth-enter",
         {
           method: "POST",
           headers: {

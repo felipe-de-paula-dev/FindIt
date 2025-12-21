@@ -31,7 +31,7 @@ export function ObjetosAprovados() {
     async function fetchData() {
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/itens/disponiveis/search?query=${search}&location=${locationObject}&campus=${campus}`
+          `https://finditapi.felipedepauladev.site/itens/disponiveis/search?query=${search}&location=${locationObject}&campus=${campus}`
         );
         const data = await response.json();
         setData(data);
@@ -54,7 +54,7 @@ export function ObjetosAprovados() {
   async function deletarItem(id) {
     const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
-      "https://findit-08qb.onrender.com/auth-enter",
+      "https://finditapi.felipedepauladev.site/auth-enter",
       {
         method: "POST",
         headers: {
@@ -84,7 +84,7 @@ export function ObjetosAprovados() {
       if (confirmationResult.isConfirmed) {
         try {
           await fetch(
-            `https://findit-08qb.onrender.com/logs/excluirIdItem/${id}`,
+            `https://finditapi.felipedepauladev.site/logs/excluirIdItem/${id}`,
             {
               method: "DELETE",
               headers: {
@@ -93,7 +93,7 @@ export function ObjetosAprovados() {
             }
           );
 
-          await fetch(`https://findit-08qb.onrender.com/itens/excluir/${id}`, {
+          await fetch(`https://finditapi.felipedepauladev.site/itens/excluir/${id}`, {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",

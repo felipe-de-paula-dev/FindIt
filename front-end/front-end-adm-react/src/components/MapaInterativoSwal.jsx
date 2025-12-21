@@ -18,7 +18,7 @@ export function MapaInterativoSwal() {
   async function setarNomeDescricao() {
     const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
-      "https://findit-08qb.onrender.com/auth-enter",
+      "https://finditapi.felipedepauladev.site/auth-enter",
       {
         method: "POST",
         headers: {
@@ -105,7 +105,7 @@ export function MapaInterativoSwal() {
       try {
         const data = { nome, descricao, localizacao: novoLocal, campus };
         const res = await fetch(
-          "https://findit-08qb.onrender.com/api/adicionarLocal",
+          "https://finditapi.felipedepauladev.site/api/adicionarLocal",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },

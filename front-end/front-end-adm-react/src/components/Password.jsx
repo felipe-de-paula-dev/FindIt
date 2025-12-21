@@ -13,7 +13,7 @@ export function Password({ password }) {
     };
     try {
       const responsePass = await fetch(
-        "https://findit-08qb.onrender.com/decryptPass",
+        "https://finditapi.felipedepauladev.site/decryptPass",
         {
           method: "POST",
           headers: {
@@ -36,7 +36,7 @@ export function Password({ password }) {
     if (!visible) {
       const token = sessionStorage.getItem("token");
       const responseToken = await fetch(
-        "https://findit-08qb.onrender.com/auth-enter",
+        "https://finditapi.felipedepauladev.site/auth-enter",
         {
           method: "POST",
           headers: {

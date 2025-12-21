@@ -11,7 +11,7 @@ export function User() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("https://findit-08qb.onrender.com/users", {
+        const response = await fetch("https://finditapi.felipedepauladev.site/users", {
           method: "GET",
         });
         const data = await response.json();
@@ -41,7 +41,7 @@ export function User() {
   async function deleteUser(id) {
     const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
-      "https://findit-08qb.onrender.com/auth-enter",
+      "https://finditapi.felipedepauladev.site/auth-enter",
       {
         method: "POST",
         headers: {
@@ -64,7 +64,7 @@ export function User() {
       });
       if (result.isConfirmed) {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/user/delete/${id}`,
+          `https://finditapi.felipedepauladev.site/user/delete/${id}`,
           {
             method: "DELETE",
           }

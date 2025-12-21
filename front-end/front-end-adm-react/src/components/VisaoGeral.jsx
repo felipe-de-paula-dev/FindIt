@@ -16,7 +16,7 @@ export function VisaoGeral() {
     async function fetchDataRetirada() {
       const campusQuery = campus === "" ? 0 : campus;
       const result = await fetch(
-        `https://findit-08qb.onrender.com/itens/contagem-itens?campus=${campusQuery}`,
+        `https://finditapi.felipedepauladev.site/itens/contagem-itens?campus=${campusQuery}`,
         {
           method: "GET",
         }

@@ -14,7 +14,7 @@ export function Login() {
   const goToDashboard = async () => {
     try {
       const response = await fetch(
-        "https://findit-08qb.onrender.com/user/login",
+        "https://finditapi.felipedepauladev.site/user/login",
         {
           method: "POST",
           headers: {

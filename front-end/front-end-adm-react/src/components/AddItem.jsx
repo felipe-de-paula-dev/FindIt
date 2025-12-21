@@ -19,7 +19,7 @@ export function AddItem() {
       if (campus == 0) return;
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/api/campus/${campus}`,
+          `https://finditapi.felipedepauladev.site/api/campus/${campus}`,
           {
             method: "GET",
           }
@@ -38,7 +38,7 @@ export function AddItem() {
     e.preventDefault();
     const token = sessionStorage.getItem("token");
     const responseToken = await fetch(
-      "https://findit-08qb.onrender.com/auth-enter",
+      "https://finditapi.felipedepauladev.site/auth-enter",
       {
         method: "POST",
         headers: {
@@ -61,7 +61,7 @@ export function AddItem() {
       formData.append("folder", folderType);
       try {
         const response = await fetch(
-          "https://findit-08qb.onrender.com/adicionar",
+          "https://finditapi.felipedepauladev.site/adicionar",
           {
             method: "POST",
             body: formData,

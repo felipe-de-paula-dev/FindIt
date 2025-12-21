@@ -26,7 +26,7 @@ export function Grafico({ dados }) {
   async function fetchDescricao(nome) {
     try {
       const response = await fetch(
-        `https://findit-08qb.onrender.com/api/descricao/${nome}`,
+        `https://finditapi.felipedepauladev.site/api/descricao/${nome}`,
         {
           method: "GET",
         }

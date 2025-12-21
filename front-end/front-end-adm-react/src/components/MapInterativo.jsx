@@ -21,7 +21,7 @@ const MapInterativo = ({ descricao, campus, latLng }) => {
     async function fetchData() {
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/api/campusDesc/${descricao}?campus=${campus}`
+          `https://finditapi.felipedepauladev.site/api/campusDesc/${descricao}?campus=${campus}`
         );
         const data = await response.json();
         if (data[0]?.latitude && data[0]?.longitude) {
