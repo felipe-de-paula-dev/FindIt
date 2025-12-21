@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  findit-backend:
+    build: .
+    container_name: findit_backend
+    restart: always
+    ports:
+      - "3335:3335" 
+    environment:
+      - PORT=3335
+      - DB_HOST=172.17.0.1  
+      - DB_USER=seu_usuario_psql
+      - DB_PASSWORD=sua_senha_psql
+      - DB_NAME=nome_do_banco_psql
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
