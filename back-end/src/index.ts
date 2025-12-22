@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import path from "path";
+import { setupDatabase } from "./database/init";
 
 dotenv.config();
 
@@ -55,7 +56,9 @@ app.use(cookieParser());
 
 app.use(routes);
 
-const PORT = process.env.PORT || 3333;
+setupDatabase(db);
+
+const PORT = process.env.PORT || 3335;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
