@@ -2,8 +2,6 @@ version: '3.8'
 
 services:
   findit-backend:
-    volumes:
-        - ./uploads:/app/uploads
     build: .
     container_name: findit_backend
     restart: always
@@ -11,9 +9,12 @@ services:
       - "3335:3335" 
     environment:
       - PORT=3335
-      - DB_HOST=findit-db       
-      - DB_USER=
-      - DB_PASSWORD=
+      - DB_HOST=172.17.0.1  
+      - DB_USER=felipe
+      - DB_PASSWORD=2007
       - DB_NAME=findit_db
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+
+
