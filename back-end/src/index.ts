@@ -56,7 +56,7 @@ app.use(cookieParser());
 
 app.use(routes);
 
-setupDatabase(db);
+setupDatabase(db.promise());
 
 const PORT = process.env.PORT || 3335;
 app.listen(PORT, () => {

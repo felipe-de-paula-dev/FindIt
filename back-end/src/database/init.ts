@@ -1,4 +1,4 @@
-import { Pool } from 'mysql2/typings/mysql/lib/Pool';
+import { Pool } from 'mysql2/promise';
 
 export const setupDatabase = async (connection: Pool) => {
     console.log("🛠️ Iniciando verificação do esquema MySQL...");
