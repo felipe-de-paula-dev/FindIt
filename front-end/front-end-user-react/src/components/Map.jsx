@@ -22,7 +22,7 @@ export function Map({ campusUnicamp }) {
       if (campus == 0) return;
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/api/campus/${campus}`,
+          `https://finditapi.felipedepauladev.site/api/campus/${campus}`,
           {
             method: "GET",
           }
@@ -42,7 +42,7 @@ export function Map({ campusUnicamp }) {
     async function fetchData() {
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/mapa/${id}`,
+          `https://finditapi.felipedepauladev.site/mapa/${id}`,
           {
             method: "GET",
           }

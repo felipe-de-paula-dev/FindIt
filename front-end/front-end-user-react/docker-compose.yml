@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  findit-front-adm:
+    build: .
+    container_name: findit_front_user
+    restart: always
+    ports:
+      - "3007:80"
+    environment:
+      - NODE_ENV=production

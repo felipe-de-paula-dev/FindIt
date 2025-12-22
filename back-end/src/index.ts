@@ -39,6 +39,7 @@ const app = express();
 const corsOptions = {
   origin: [
     "https://findit.felipedepauladev.site",
+    "https://findit-user.felipedepauladev.site",
     "http://localhost:5173" // Adicionei os locais para facilitar seu teste
   ],
   methods: "GET,POST,PUT,DELETE",

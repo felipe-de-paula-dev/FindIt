@@ -9,7 +9,7 @@ export function Nav() {
           <p
             className="font-bold text-white text-xl hover:cursor-pointer"
             onClick={() =>
-              window.open("https://find-it-adm.vercel.app/", "_blank")
+              window.open("https://findit.felipedepauladev.site/", "_blank")
             }
           >
             <span className="text-white">L</span>ogin

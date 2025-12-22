@@ -6,7 +6,7 @@ export function DescricaoItem({ nome }) {
     async function fetchDescricao() {
       try {
         const response = await fetch(
-          `https://findit-08qb.onrender.com/api/descricao/${nome}`,
+          `https://finditapi.felipedepauladev.site/api/descricao/${nome}`,
           {
             method: "GET",
           }

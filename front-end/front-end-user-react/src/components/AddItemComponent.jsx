@@ -52,7 +52,7 @@ export function AddItemComponent() {
     formData.append("campus", campus);
     try {
       const response = await fetch(
-        "https://findit-08qb.onrender.com/adicionar",
+        "https://finditapi.felipedepauladev.site/adicionar",
         {
           method: "POST",
           body: formData,

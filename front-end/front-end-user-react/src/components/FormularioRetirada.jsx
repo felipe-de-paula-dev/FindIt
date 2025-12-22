@@ -15,7 +15,7 @@ export function FormularioRetirada({ setCampus }) {
   async function sendMail(to) {
     try {
       const response = await fetch(
-        "https://findit-08qb.onrender.com/api/sendMail",
+        "https://finditapi.felipedepauladev.site/api/sendMail",
         {
           method: "POST",
           headers: {
@@ -89,7 +89,7 @@ export function FormularioRetirada({ setCampus }) {
 
     try {
       const response = await fetch(
-        "https://findit-08qb.onrender.com/itens/retiradas",
+        "https://finditapi.felipedepauladev.site/itens/retiradas",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
