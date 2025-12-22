@@ -818,12 +818,13 @@ routes.get("/itens/contagem-itens", (req: Request, res: Response) => {
                           error: "Erro ao buscar itens não retirados",
                         });
                       }
+                      // No final da cascata de queries, altere o res.json para:
                       res.json({
-                        retirados: resultRetirados[0].count,
-                        naoRetirados: resultNaoRetirados[0].count,
-                        totalItens: resultTotalItens[0].count,
-                        itensPorLocal: resultItensLocal,
-                        itensPorNome: resultItensNome,
+                        retirados: resultRetirados[0]?.count || 0,
+                        naoRetirados: resultNaoRetirados[0]?.count || 0,
+                        totalItens: resultTotalItens[0]?.count || 0,
+                        itensPorLocal: Array.isArray(resultItensLocal) ? resultItensLocal : [],
+                        itensPorNome: Array.isArray(resultItensNome) ? resultItensNome : [],
                       });
                     }
                   );
