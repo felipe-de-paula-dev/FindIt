@@ -741,101 +741,61 @@ routes.delete("/users/remove/:id", (req: Request, res: Response) => {
   res.status(200).send({ message: "Usuario apagado com sucesso!" });
 });
 
-routes.get("/itens/contagem-itens", (req: Request, res: Response) => {
+routes.get("/itens/contagem-itens", async (req: Request, res: Response) => {
   const campus = req.query.campus;
   const campusNumber = campus ? parseInt(campus as string) : 0;
 
-  let queryBase = "SELECT nome_item, COUNT(*) AS count FROM logs";
-  let queryLocal = "SELECT localizacao, COUNT(*) AS count FROM logs";
+  try {
+    const promiseDb = db.promise();
 
-  if (campusNumber !== 0) {
-    queryBase += ` WHERE campus = ${campus}`;
-    queryLocal += ` WHERE campus = ${campus}`;
-  }
+    // Queries com '?' para evitar SQL Injection e erro de .escape()
+    let qBase = "SELECT nome_item, COUNT(*) AS count FROM logs";
+    let qLocal = "SELECT localizacao, COUNT(*) AS count FROM logs";
+    let qTotal = "SELECT COUNT(*) AS count FROM logs";
+    
+    let params: any[] = [];
+    let whereClause = "";
 
-  queryBase += " GROUP BY nome_item ORDER BY count DESC LIMIT 6";
-  queryLocal += " GROUP BY localizacao ORDER BY count DESC LIMIT 6";
-
-  console.log(queryBase);
-
-  //BUSCA ITENS PELO NOME
-  db.query(
-    queryBase,
-    (
-      err: mysql.QueryError | null,
-      resultItensNome: { count: Number; local: string }
-    ) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ error: "Erro ao buscar nomes com mais itens achados" });
-      }
-      //BUSCA ITENS PELO LOCAL
-      db.query(
-        queryLocal,
-        (
-          err: mysql.QueryError | null,
-          resultItensLocal: { count: number; local: string }
-        ) => {
-          if (err) {
-            return res
-              .status(500)
-              .json({ error: "Erro ao buscar locais com mais itens achados" });
-          }
-          db.query(
-            //BUSCAR TODOS OS ITENS
-            "SELECT COUNT(*) AS count FROM logs",
-            (
-              err: mysql.QueryError | null,
-              resultTotalItens: { count: number }[]
-            ) => {
-              if (err) {
-                return res
-                  .status(500)
-                  .json({ error: "Erro ao buscar total dos itens" });
-              }
-              //BUSCAR APENAS ITENS NAO RETIRADOS
-              db.query(
-                "SELECT COUNT(*) AS count FROM logs WHERE situacao = 'adicionado'",
-                (
-                  err: mysql.QueryError | null,
-                  resultNaoRetirados: { count: number }[]
-                ) => {
-                  if (err) {
-                    return res
-                      .status(500)
-                      .json({ error: "Erro ao buscar itens retirados" });
-                  }
-                  //BUSCAR APENAS ITENS RETIRADOS
-                  db.query(
-                    "SELECT COUNT(*) AS count FROM logs WHERE situacao = 'retirado'",
-                    (
-                      err: mysql.QueryError | null,
-                      resultRetirados: { count: number }[]
-                    ) => {
-                      if (err) {
-                        return res.status(500).json({
-                          error: "Erro ao buscar itens não retirados",
-                        });
-                      }
-                      // No final da cascata de queries, altere o res.json para:
-                      res.json({
-                        retirados: resultRetirados[0]?.count || 0,
-                        naoRetirados: resultNaoRetirados[0]?.count || 0,
-                        totalItens: resultTotalItens[0]?.count || 0,
-                        itensPorLocal: Array.isArray(resultItensLocal) ? resultItensLocal : [],
-                        itensPorNome: Array.isArray(resultItensNome) ? resultItensNome : [],
-                      });
-                    }
-                  );
-                }
-              );
-            }
-          );
-        }
-      );
+    if (campusNumber !== 0) {
+      whereClause = " WHERE campus = ?";
+      params.push(campusNumber);
     }
-  );
+
+    qBase += `${whereClause} GROUP BY nome_item ORDER BY count DESC LIMIT 6`;
+    qLocal += `${whereClause} GROUP BY localizacao ORDER BY count DESC LIMIT 6`;
+    qTotal += whereClause;
+
+    const qNaoRetirados = `SELECT COUNT(*) AS count FROM logs WHERE situacao = 'adicionado' ${campusNumber !== 0 ? "AND campus = ?" : ""}`;
+    const qRetirados = `SELECT COUNT(*) AS count FROM logs WHERE situacao = 'retirado' ${campusNumber !== 0 ? "AND campus = ?" : ""}`;
+
+    // Executamos as queries passando os parâmetros [params]
+    const [rowsNome, rowsLocal, rowsTotal, rowsNaoRetirados, rowsRetirados] = await Promise.all([
+      promiseDb.query(qBase, params).then(r => r[0] as any[]),
+      promiseDb.query(qLocal, params).then(r => r[0] as any[]),
+      promiseDb.query(qTotal, params).then(r => r[0] as any[]),
+      promiseDb.query(qNaoRetirados, campusNumber !== 0 ? [campusNumber] : []).then(r => r[0] as any[]),
+      promiseDb.query(qRetirados, campusNumber !== 0 ? [campusNumber] : []).then(r => r[0] as any[])
+    ]);
+
+    res.json({
+      retirados: rowsRetirados[0]?.count || 0,
+      naoRetirados: rowsNaoRetirados[0]?.count || 0,
+      totalItens: rowsTotal[0]?.count || 0,
+      itensPorLocal: rowsLocal || [],
+      itensPorNome: rowsNome || []
+    });
+
+  } catch (error) {
+    console.error("❌ Erro na contagem:", error);
+    res.status(500).json({ 
+      error: "Erro interno no servidor",
+      retirados: 0,
+      naoRetirados: 0,
+      totalItens: 0,
+      itensPorLocal: [], 
+      itensPorNome: [] 
+    });
+  }
 });
 
 routes.get("/api/campus/:campus", (req: Request, res: Response) => {
