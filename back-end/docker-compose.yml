@@ -13,7 +13,7 @@ services:
       - DB_USER=felipe
       - DB_PASSWORD=2007
       - DB_NAME=findit_db
-      - SECRET=finditfinditfindit
+      - JWT_SECRET_CODE=finditfinditfindit
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
