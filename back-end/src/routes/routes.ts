@@ -19,7 +19,7 @@ routes.use(cookieParser());
 
 // 'Pendente','Disponivel', 'Retirado'
 
-const AES_SECRET_KEY = process.env.AES_SECRET_KEY || "crypto-password";
+const AES_SECRET_KEY = "crypto-password";
 
 function getAESKey(key: any) {
   return crypto.createHash("sha256").update(key).digest();

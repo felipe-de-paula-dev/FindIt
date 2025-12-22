@@ -64,7 +64,7 @@ export const setupDatabase = async (connection: Pool) => {
         const [rows]: any = await connection.query("SELECT COUNT(*) as count FROM usuarios");
         if (rows[0].count === 0) {
             const adminUser = "admin";
-            const adminPass = "admin"; // Recomendo trocar e usar bcrypt depois
+            const adminPass = "934758f334a1796075902047a06660f5"; // Recomendo trocar e usar bcrypt depois
             await connection.query(
                 "INSERT INTO usuarios (user, senha, cargoId) VALUES (?, ?, ?)",
                 [adminUser, adminPass, 1]
