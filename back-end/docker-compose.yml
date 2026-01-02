@@ -7,9 +7,12 @@ services:
     restart: always
     ports:
       - "3335:3335" 
+    volumes:
+    - ./uploads:/app/uploads
     environment:
       - PORT=3335
-      - DB_HOST=172.17.0.1  
+      - DB_PORT=3306
+      - DB_HOST=172.17.0.1
       - DB_USER=felipe
       - DB_PASSWORD=2007
       - DB_NAME=findit_db

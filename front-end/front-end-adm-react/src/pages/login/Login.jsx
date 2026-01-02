@@ -108,6 +108,7 @@ export function Login() {
             >
               Entrar
             </button>
+	    <h1 className="text-center text-gray-700 w-full"><b>User: </b>admin | <b>Pass: </b>admin</h1>
           </form>
         </div>
       </div>

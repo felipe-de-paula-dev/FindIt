@@ -10,9 +10,12 @@ import { RowDataPacket } from "mysql2"; // Importando tipo para garantir a tipag
 import upload from "../uploads";
 import crypto from "crypto";
 import transporter from "../services/mailer";
+import fs from "fs";
 
 const JWT_SECRET = process.env.JWT_SECRET_CODE || "default-secret-code";
 const routes = Router();
+
+routes.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 dotenv.config();
 routes.use(cookieParser());
@@ -64,8 +67,7 @@ routes.post(
     try {
       const { nome_item, data_encontrado, local_encontrado, campus } = req.body;
       
-      // Mantemos o path local que você configurou no uploads.ts
-      const imagem_url = req.file ? req.file.path : null; 
+      const imagem_url = req.file ? `https://finditapi.felipedepauladev.site/uploads/${req.file.filename}` : null;
       const status = "Disponivel";
 
       if (!req.file) {
@@ -267,8 +269,7 @@ routes.put("/retirarItem/:id_item", async (req: Request, res: Response) => {
 
 routes.delete("/itens/excluir/:id", async (req: Request, res: Response) => {
   const { id } = req.params;
-
-  console.log(id);
+  console.log("Iniciando exclusão do item:", id);
 
   const sql = "SELECT imagem_url FROM itens_perdidos WHERE id_item = ?";
 
@@ -278,7 +279,7 @@ routes.delete("/itens/excluir/:id", async (req: Request, res: Response) => {
 
   db.query<Iurl[]>(sql, [id], (err, results) => {
     if (err) {
-      console.error("Erro Banco de dados", err);
+      console.error("Erro Banco de dados:", err);
       return res.status(500).json({ error: "Erro ao buscar a imagem" });
     }
 
@@ -288,21 +289,36 @@ routes.delete("/itens/excluir/:id", async (req: Request, res: Response) => {
 
     const imgUrl = results[0].imagem_url;
 
-    if (!imgUrl) {
+    // Função auxiliar para deletar do banco e responder ao cliente
+    const deleteFromDatabase = () => {
       const sqlDelete = "DELETE FROM itens_perdidos WHERE id_item = ?";
       db.query(sqlDelete, [id], (err) => {
         if (err) {
-          console.error("Erro ao excluir item", err);
-          return res.status(500).json({ error: "Erro ao excluir item" });
+          console.error("Erro ao excluir registro no banco:", err);
+          return res.status(500).json({ error: "Erro ao excluir registro" });
         }
-        res.json({ message: "Item excluído, mas sem imagem para deletar." });
+        return res.json({ message: "Item excluído com sucesso (Banco + Local)." });
       });
-      return;
+    };
+
+    if (imgUrl) {
+      // Tenta deletar o arquivo físico na VPS
+      const fileName = path.basename(imgUrl);
+      const localFilePath = path.join(__dirname, "..", "uploads", fileName);
+
+      fs.unlink(localFilePath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error("Aviso: Arquivo físico não encontrado ou erro ao deletar:", localFilePath);
+          // Mesmo com erro no arquivo (ex: arquivo já não existe), deletamos do banco
+        } else {
+          console.log("Arquivo físico deletado:", localFilePath);
+        }
+        deleteFromDatabase();
+      });
+    } else {
+      // Se não tem imagem, deleta direto do banco
+      deleteFromDatabase();
     }
-
-    const publicId = path.basename(imgUrl, path.extname(imgUrl));
-    const fullPublicId = `uploads/${publicId}`;
-
   });
 });
 
@@ -924,12 +940,12 @@ routes.delete("/api/deletarLocal/:id", (req: Request, res: Response) => {
 
   db.query(sql, [id], (err, result: mysql.ResultSetHeader) => {
     if (err) {
-      res.status(500).json({ message: "Ocorreu um erro ao deletar o local" });
+      return res.status(500).json({ message: "Ocorreu um erro ao deletar o local" });
     }
     if (result.affectedRows > 0) {
-      res.status(200).json({ message: "Local deletado com sucesso!" });
+      return res.status(200).json({ message: "Local deletado com sucesso!" });
     } else {
-      res.status(404).json({ message: "Local não encontrado." });
+      return res.status(404).json({ message: "Local não encontrado." });
     }
   });
 });
