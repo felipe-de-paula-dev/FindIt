@@ -117,7 +117,7 @@ routes.post(
       console.log(`Item ${itemId} adicionado ao MySQL e log registrado.`);
 
       res.status(200).json({
-        message: "Item adicionado com sucesso!",
+        message: "Item adicionado com sucesso! VITOR VITORIA YURE FELIPE",
         id: itemId,
         imagem: imagem_url,
       });
